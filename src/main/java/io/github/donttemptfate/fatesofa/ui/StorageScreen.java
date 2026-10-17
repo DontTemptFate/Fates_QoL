@@ -88,7 +88,6 @@ public final class StorageScreen extends Screen {
 		String keep = search == null ? initial : search.getValue();
 		int sx = px + 10 + SIDE_W + 4;
 		search = new EditBox(this.font, sx, py + 9, px + pw - 10 - sx, 14, Component.literal("Search storage"));
-		search.setHint(Component.literal("Search everything stored…").withStyle(ChatFormatting.DARK_GRAY));
 		search.setValue(keep);
 		search.setResponder(v -> mainScroll = 0);
 		addRenderableWidget(search);
@@ -111,6 +110,7 @@ public final class StorageScreen extends Screen {
 		hits.clear();
 		StorageCache c = cache();
 		List<StorageCache.Page> pages = c == null ? List.of() : c.pages();
+		if (search.getValue().isEmpty()) g.text(font, "Search everything stored…", search.getX() + 4, search.getY() + 3, 0xFF5A5A6A, false);
 		// header: title and the total of everything remembered
 		Ui.draw(g, Ui.t("STORAGE", Ui.Role.TITLE, Ui.accent()), Ui.Role.TITLE, px + 10, py + 19);
 		if (!pages.isEmpty()) {
@@ -136,7 +136,7 @@ public final class StorageScreen extends Screen {
 		if (search.getValue().isBlank()) page(g, pages, mainX, top - mainScroll, mainW, mx, my, hovered);
 		else results(g, c, mainX, top - mainScroll, mainW, bottom, mx, my, hovered, note);
 		g.disableScissor();
-		footer(g, search.getValue().isBlank() ? "Click a page · type to search every page · /ofa find <item> works anywhere"
+		footer(g, search.getValue().isBlank() ? "Click a page · type to search all pages · /ofa find <item>"
 				: "Click a page name to open it · Esc clears the search");
 
 		if (hovered[0] != null && my >= top && my < bottom) {
@@ -265,9 +265,12 @@ public final class StorageScreen extends Screen {
 				g.fill(cx, ry, cx + cw, ry + 17, 0x14FFFFFF);
 				g.item(st, cx + 1, ry);
 				String val = Fmt.shortNum(v.total());
-				g.text(font, val, cx + 20, ry + 1, Ui.GOLD, false);
-				String cnt = v.count() > 1 ? v.count() + "×" : "";
-				if (!cnt.isEmpty()) Ui.draw(g, Ui.t(cnt, Ui.Role.LABEL, Ui.GRAY), Ui.Role.LABEL, cx + 20, ry + 15);
+				g.text(font, val, cx + 21, ry + 5, Ui.GOLD, false);
+				if (v.count() > 1) {
+					String cnt = v.count() + "×";
+					int cxr = cx + cw - 3 - font.width(cnt);
+					if (cxr > cx + 21 + font.width(val) + 3) g.text(font, cnt, cxr, ry + 5, Ui.DARK, false);
+				}
 				if (mx >= cx && mx < cx + cw && my >= ry && my < ry + 17) hovered[0] = st;
 				ry += 20;
 			}
