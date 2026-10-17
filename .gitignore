@@ -29,3 +29,5 @@ config/fatesofa*.json
 
 # Local copies of built jars (not tracked)
 release/
+__pycache__/
+*.pyc
