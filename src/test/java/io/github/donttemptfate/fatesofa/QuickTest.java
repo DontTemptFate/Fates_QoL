@@ -33,7 +33,7 @@ public class QuickTest {
 
 		var back = QuickCommands.fromJson(JsonParser.parseString(QuickCommands.toJson(list).toString()));
 		assertEquals(list, back);
-		assertEquals("minecraft:paper", back.get(0).icon()); // blank icon gets a default
+		assertEquals("paper", back.get(0).icon()); // blank icon gets a default
 	}
 
 	@Test

@@ -18,7 +18,7 @@ public final class QuickCommands {
 	/**
 	 * @param name    shown on the tab's tooltip and in the editor
 	 * @param command what is sent, without the leading slash ("pets", "warp crimson")
-	 * @param icon    a Minecraft item id ("minecraft:bone") or a SkyBlock item id ("HYPERION")
+	 * @param icon    a Minecraft item id ("bone") or a SkyBlock item id in capitals ("HYPERION")
 	 * @param tab     shown as a tab above menus
 	 * @param alias   a short command that sends it ("ch" → /ch); empty for none
 	 */
@@ -26,7 +26,8 @@ public final class QuickCommands {
 		public Entry {
 			name = name == null ? "" : name.strip();
 			command = clean(command);
-			icon = icon == null || icon.isBlank() ? "minecraft:paper" : icon.strip();
+			icon = icon == null || icon.isBlank() ? "paper" : icon.strip();
+			if (icon.startsWith("minecraft:")) icon = icon.substring(10);
 			alias = alias == null ? "" : alias.strip().toLowerCase(Locale.ROOT);
 		}
 
@@ -40,14 +41,19 @@ public final class QuickCommands {
 	/** Names that would hide OFA's own or common Minecraft commands. */
 	static final List<String> RESERVED = List.of("ofa", "help", "me", "msg", "tell", "w", "r", "reply", "say", "list", "trigger");
 
+	/** True when an icon names a SkyBlock item (capitals, like the repo's ids) rather than a Minecraft one. */
+	public static boolean skyblockIcon(String icon) {
+		return icon != null && !icon.equals(icon.toLowerCase(Locale.ROOT));
+	}
+
 	public static List<Entry> defaults() {
 		return List.of(
-				new Entry("Storage", "storage", "minecraft:ender_chest", true, ""),
-				new Entry("Pets", "pets", "minecraft:bone", true, ""),
-				new Entry("Wardrobe", "wardrobe", "minecraft:leather_chestplate", true, ""),
-				new Entry("Accessory Bag", "accessories", "minecraft:rabbit_foot", true, ""),
-				new Entry("Skills", "skills", "minecraft:diamond_sword", true, ""),
-				new Entry("Warp menu", "warp", "minecraft:ender_eye", true, ""));
+				new Entry("Storage", "storage", "ender_chest", true, ""),
+				new Entry("Pets", "pets", "bone", true, ""),
+				new Entry("Wardrobe", "wardrobe", "leather_chestplate", true, ""),
+				new Entry("Accessory Bag", "accessories", "rabbit_foot", true, ""),
+				new Entry("Skills", "skills", "diamond_sword", true, ""),
+				new Entry("Warp menu", "warp", "ender_eye", true, ""));
 	}
 
 	/** "/Warp  crimson " → "warp crimson"; control characters and a leading slash removed, length capped. */

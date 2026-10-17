@@ -119,13 +119,17 @@ public final class QuickCommandsFeature extends Feature {
 	}
 
 	ItemStack icon(QuickCommands.Entry e) {
-		return icons.computeIfAbsent(e.icon(), id -> {
-			if (!id.contains(":")) {
-				var repo = Ofa.get().repo.items().get(id);
-				if (repo != null) return Stacks.of(repo);
-			}
-			return Stacks.build(id.contains(":") ? id : "minecraft:paper", null, "", List.of(), null, 1);
-		});
+		return icons.computeIfAbsent(e.icon(), QuickCommandsFeature::iconStack);
+	}
+
+	/** A SkyBlock item (from the item data) or a Minecraft item by id; paper when neither exists. */
+	public static ItemStack iconStack(String id) {
+		if (QuickCommands.skyblockIcon(id)) {
+			var repo = Ofa.get().repo.items().get(id);
+			if (repo != null) return Stacks.of(repo);
+			return Stacks.build("minecraft:paper", null, "", List.of(), null, 1);
+		}
+		return Stacks.build(id.contains(":") ? id : "minecraft:" + id, null, "", List.of(), null, 1);
 	}
 
 	/**

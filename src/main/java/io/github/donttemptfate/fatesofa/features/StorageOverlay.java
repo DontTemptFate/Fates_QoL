@@ -119,7 +119,7 @@ public final class StorageOverlay extends Feature {
 		Screens.getWidgets(s).add(box);
 		boxes.put(s, box);
 
-		ScreenEvents.afterExtract(s).register((sc, g, mx, my, d) -> guard(() -> draw(s, box, g, mx, my)));
+		ScreenEvents.afterExtract(s).register((sc, g, mx, my, d) -> guard(() -> draw(s, box, g, mx, my, d)));
 		ScreenMouseEvents.allowMouseClick(s).register((sc, e) -> guard(() -> !click(s, box, e.x(), e.y()), true));
 		ScreenKeyboardEvents.allowKeyPress(s).register((sc, e) -> guard(() -> {
 			if (!box.isFocused()) return true;
@@ -145,7 +145,7 @@ public final class StorageOverlay extends Feature {
 	}
 
 	/** Panel rows: [y, page index] for the clickable page list. */
-	void draw(AbstractContainerScreen<?> s, EditBox box, GuiGraphicsExtractor g, int mx, int my) {
+	void draw(AbstractContainerScreen<?> s, EditBox box, GuiGraphicsExtractor g, int mx, int my, float delta) {
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
 		int x = edge(s) - W - 6, y = a.fatesofa$topPos();
 		StorageCache c = cache();
@@ -156,6 +156,7 @@ public final class StorageOverlay extends Feature {
 		int listTop = y + 42, rowH = 11;
 		int bottom = Math.min(s.height - 6, listTop + Math.max(1, pages.size()) * rowH + 6);
 		Ui.frame(g, x, y, W, bottom - y, 0.94f);
+		box.extractRenderState(g, mx, my, delta); // the frame was drawn over the box: put it back on top
 		double all = 0;
 		for (StorageCache.Page p : pages) all += values.of(p);
 		Ui.draw(g, Ui.t("STORAGE", Ui.Role.LABEL, Ui.accent()), Ui.Role.LABEL, x + 6, y + 11);

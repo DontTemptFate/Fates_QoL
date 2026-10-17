@@ -5,7 +5,6 @@ import io.github.donttemptfate.fatesofa.features.QuickCommandsFeature;
 import io.github.donttemptfate.fatesofa.game.Game;
 import io.github.donttemptfate.fatesofa.game.Keys;
 import io.github.donttemptfate.fatesofa.hud.Rect;
-import io.github.donttemptfate.fatesofa.items.Stacks;
 import io.github.donttemptfate.fatesofa.quick.QuickCommands;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -29,6 +28,7 @@ public final class QuickCommandsScreen extends Screen {
 	private final Widgets.Hits hits = new Widgets.Hits();
 	private int px, py, pw, ph, scroll, focusRow;
 	private String note = "";
+	private final java.util.Map<String, net.minecraft.world.item.ItemStack> icons = new java.util.HashMap<>();
 
 	/** Opened from settings or /ofa quick: the list as it is. */
 	public QuickCommandsScreen(Screen parent) {
@@ -45,7 +45,7 @@ public final class QuickCommandsScreen extends Screen {
 		this.work = new ArrayList<>(f == null ? QuickCommands.defaults() : f.entries());
 		this.focusRow = focusRow == OPEN ? -1 : focusRow;
 		if (focusRow == -1 && f != null) { // "+": start with a new row
-			this.work.add(new QuickCommands.Entry("", "", "minecraft:paper", true, ""));
+			this.work.add(new QuickCommands.Entry("", "", "paper", true, ""));
 			this.focusRow = work.size() - 1;
 		}
 	}
@@ -73,7 +73,7 @@ public final class QuickCommandsScreen extends Screen {
 			EditBox name = box(x + 22, y, 88, e.name(), "Name", v -> set(i, v, null, null, null));
 			box(cmdX, y, x + w - 18 - cmdX, e.command(), "command, without /", v -> set(i, null, v, null, null));
 			box(x + 22, y + 17, 60, e.alias(), "alias", v -> set(i, null, null, null, v));
-			box(x + 22 + 64, y + 17, 110, e.icon(), "icon: item id", v -> set(i, null, null, v, null));
+			box(x + 22 + 64, y + 17, 110, e.icon(), "icon (e.g. bone, HYPERION)", v -> set(i, null, null, v, null));
 			if (focusRow == -2 - i) {
 				setFocused(name);
 				focusRow = -1;
@@ -110,14 +110,14 @@ public final class QuickCommandsScreen extends Screen {
 		hits.clear();
 		int x = px + 10, w = pw - 20;
 		Ui.draw(g, Ui.t("QUICK COMMANDS", Ui.Role.TITLE, Ui.accent()), Ui.Role.TITLE, x, py + 18);
-		Ui.draw(g, Ui.t("One click, key press or alias sends one command. Rows 1–9 use the Quick command keys in Controls.",
+		Ui.draw(g, Ui.t("One click, key or alias = one command · rows 1–9 get the Quick command keys (Controls)",
 				Ui.Role.SMALL, Ui.GRAY), Ui.Role.SMALL, x, py + 28);
 		for (int r = 0; r < visibleRows() && scroll + r < work.size(); r++) {
 			int i = scroll + r, y = py + HEADER_H + r * ROW_H;
 			QuickCommands.Entry e = work.get(i);
 			g.fill(x - 2, y - 2, x + w + 2, y + ROW_H - 4, 0x18FFFFFF);
 			g.fill(x - 2, y - 2, x, y + ROW_H - 4, Ui.accent() & 0x60FFFFFF);
-			g.item(Stacks.build(e.icon().contains(":") ? e.icon() : "minecraft:paper", null, "", List.of(), null, 1), x + 2, y);
+			g.item(icons.computeIfAbsent(e.icon(), QuickCommandsFeature::iconStack), x + 2, y);
 			g.text(font, Integer.toString(i + 1), x + 6, y + 21, Ui.DARK, false);
 			// remove
 			Rect del = new Rect(x + w - 14, y + 1, 12, 12);
@@ -133,7 +133,7 @@ public final class QuickCommandsScreen extends Screen {
 			g.text(font, "Tab", lx + 24, y + 20, Ui.GRAY, false);
 			hits.add(new Rect(lx, y + 17, 46, 14), () -> work.set(i, new QuickCommands.Entry(e.name(), e.command(), e.icon(), !e.tab(), e.alias())), null);
 			String key = i < Keys.quick.length && Keys.quick[i] != null
-					? (Keys.quick[i].isUnbound() ? "Key: set in Controls" : "Key: " + Keys.quick[i].getTranslatedKeyMessage().getString()) : "";
+					? (Keys.quick[i].isUnbound() ? "no key" : "Key " + Keys.quick[i].getTranslatedKeyMessage().getString()) : "";
 			g.text(font, key, lx + 52, y + 20, Keys.quick.length > i && Keys.quick[i] != null && !Keys.quick[i].isUnbound() ? Ui.AQUA : Ui.DARK, false);
 			Rect up = new Rect(x + w - 28, y + 17, 12, 12), down = new Rect(x + w - 14, y + 17, 12, 12);
 			if (i > 0) {
@@ -149,7 +149,7 @@ public final class QuickCommandsScreen extends Screen {
 		}
 		if (work.size() > visibleRows()) {
 			String more = (scroll + 1) + "–" + Math.min(work.size(), scroll + visibleRows()) + " of " + work.size() + " · scroll for more";
-			g.text(font, more, px + pw - 10 - font.width(more), py + ph - FOOTER_H - 8, Ui.DARK, false);
+			g.text(font, more, px + pw / 2 - font.width(more) / 2 + 40, py + ph - FOOTER_H + 5, Ui.DARK, false);
 		}
 		// footer
 		int fy = py + ph - FOOTER_H + 2;
@@ -166,7 +166,7 @@ public final class QuickCommandsScreen extends Screen {
 						note = "That's the most quick commands (" + QuickCommands.MAX + ").";
 						return;
 					}
-					work.add(new QuickCommands.Entry("", "", "minecraft:paper", true, ""));
+					work.add(new QuickCommands.Entry("", "", "paper", true, ""));
 					focusRow = work.size() - 1;
 					rebuildWidgets();
 				};
