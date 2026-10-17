@@ -25,6 +25,7 @@ public final class Ofa {
 	public final RepoManager repo;
 	public final Protection protection = new Protection();
 	public final ChatFilter chat = new ChatFilter();
+	public final io.github.donttemptfate.fatesofa.data.Patterns patterns = new io.github.donttemptfate.fatesofa.data.Patterns();
 	public final String version;
 
 	public Ofa(Path dir, String version, Consumer<String> log) {

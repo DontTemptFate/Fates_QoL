@@ -66,4 +66,27 @@ public class LogicTest {
 	static void room(byte[] c, int x0, int y0, int size, int colour) {
 		for (int y = y0; y < y0 + size; y++) for (int x = x0; x < x0 + size; x++) c[y * 128 + x] = (byte) colour;
 	}
+
+	@Test
+	public void skyblockTime() {
+		var t = io.github.donttemptfate.fatesofa.activity.SkyBlockTime.class;
+		var d = io.github.donttemptfate.fatesofa.activity.SkyBlockTime.at(io.github.donttemptfate.fatesofa.activity.SkyBlockTime.EPOCH_MS);
+		assertEquals(1, d.year());
+		assertEquals(0, d.month());
+		assertEquals(1, d.day());
+		long y2 = io.github.donttemptfate.fatesofa.activity.SkyBlockTime.start(2, 7, 29);
+		var d2 = io.github.donttemptfate.fatesofa.activity.SkyBlockTime.at(y2 + 1000);
+		assertEquals(2, d2.year());
+		assertEquals("Autumn 29th, Year 2", d2.label());
+		long now = 1_760_720_000_000L; // 17 Oct 2026
+		var ev = io.github.donttemptfate.fatesofa.activity.SkyBlockTime.upcoming(now);
+		assertEquals(8, ev.size());
+		for (var e : ev) {
+			assertTrue(e.name(), e.endMs() > now);
+			assertTrue(e.name(), e.startMs() < e.endMs());
+		}
+		var jacob = ev.stream().filter(e -> e.name().startsWith("Jacob")).findFirst().get();
+		assertEquals(15, (int) ((jacob.startMs() / 60_000) % 60));
+		assertTrue(t != null);
+	}
 }

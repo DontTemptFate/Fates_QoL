@@ -115,10 +115,10 @@ public final class ProtectionFeature extends Feature {
 
 	// ---- called from the mixin ----------------------------------------------------------------------
 
-	public static boolean blockClick(int slotId, int button, ContainerInput input, Player player) {
+	public static boolean blockClick(int containerId, int slotId, int button, ContainerInput input, Player player) {
 		ProtectionFeature f = INSTANCE;
 		if (f == null) return false;
-		return f.guard(() -> f.checkClick(slotId, button, input, player), false);
+		return f.guard(() -> f.checkClick(containerId, slotId, button, input, player), false);
 	}
 
 	public static boolean blockDrop(LocalPlayer player) {
@@ -131,10 +131,12 @@ public final class ProtectionFeature extends Feature {
 		}, false);
 	}
 
-	boolean checkClick(int slotId, int button, ContainerInput input, Player player) {
+	boolean checkClick(int containerId, int slotId, int button, ContainerInput input, Player player) {
 		Ofa o = Ofa.get();
 		if (!o.state.onSkyBlock() && !Boolean.getBoolean("fatesofa.test")) return false;
+		// the window the click belongs to (normally the player's open menu)
 		AbstractContainerMenu menu = player.containerMenu;
+		if (Minecraft.getInstance().gui.screen() instanceof AbstractContainerScreen<?> open && open.getMenu().containerId == containerId) menu = open.getMenu();
 		if (menu == null) return false;
 		if (slotId == -999) {
 			ItemStack carried = menu.getCarried();

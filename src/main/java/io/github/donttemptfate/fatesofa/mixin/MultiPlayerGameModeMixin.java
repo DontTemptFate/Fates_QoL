@@ -17,6 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MultiPlayerGameModeMixin {
 	@Inject(method = "handleContainerInput", at = @At("HEAD"), cancellable = true)
 	private void fatesofa$protectClick(int containerId, int slotId, int button, ContainerInput input, Player player, CallbackInfo ci) {
-		if (ProtectionFeature.blockClick(slotId, button, input, player)) ci.cancel();
+		if (ProtectionFeature.blockClick(containerId, slotId, button, input, player)) ci.cancel();
 	}
 }

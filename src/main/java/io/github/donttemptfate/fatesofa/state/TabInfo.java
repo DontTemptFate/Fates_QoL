@@ -14,20 +14,44 @@ import java.util.regex.Pattern;
  * "Bank: 1.2B / 50M"). First occurrence wins. Section titles and widget lines without a colon are
  * kept in {@link #lines()} for features that read their own widget.
  */
-public record TabInfo(Map<String, String> values, List<String> lines) {
+public record TabInfo(Map<String, String> values, List<String> lines, List<String> withBlanks) {
 	static final Pattern KV = Pattern.compile("^([A-Za-z][A-Za-z '\\-]{1,30}):\\s*(.*)$");
 
 	public static TabInfo parse(List<String> raw) {
 		Map<String, String> map = new LinkedHashMap<>();
 		List<String> lines = new java.util.ArrayList<>();
+		List<String> blanks = new java.util.ArrayList<>();
 		for (String r : raw) {
 			String l = Strip.clean(r);
+			blanks.add(l);
 			if (l.isEmpty()) continue;
 			lines.add(l);
 			Matcher m = KV.matcher(l);
 			if (m.matches()) map.putIfAbsent(m.group(1).trim(), m.group(2).trim());
 		}
-		return new TabInfo(Collections.unmodifiableMap(map), List.copyOf(lines));
+		return new TabInfo(Collections.unmodifiableMap(map), List.copyOf(lines), List.copyOf(blanks));
+	}
+
+	/**
+	 * A tab-list widget's lines: those after the header line (e.g. "Commissions:") up to the next blank
+	 * line or the next widget header. Empty when the widget isn't shown.
+	 */
+	public List<String> widget(String header) {
+		List<String> out = new java.util.ArrayList<>();
+		boolean in = false;
+		for (String l : withBlanks) {
+			if (!in) {
+				if (l.equalsIgnoreCase(header) || l.startsWith(header + " ") || l.startsWith(header + ":")) {
+					in = true;
+					String rest = l.length() > header.length() ? l.substring(header.length()).replaceFirst("^:?\\s*", "") : "";
+					if (!rest.isEmpty() && !rest.startsWith("(")) out.add(rest);
+				}
+				continue;
+			}
+			if (l.isEmpty() || (l.endsWith(":") && !l.contains(": "))) break;
+			out.add(l);
+		}
+		return out;
 	}
 
 	public String get(String key) {

@@ -95,9 +95,9 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			// protection: lock the Hyperion, then a THROW click on it must be stopped
 			ctx.runOnClient(mc -> {
 				o.protection.toggleItem("hyperion", "HYPERION");
-				boolean blocked = ProtectionFeature.blockClick(1, 0, ContainerInput.THROW, mc.player);
+				boolean blocked = ProtectionFeature.blockClick(0, 1, 0, ContainerInput.THROW, mc.player);
 				check(blocked, "dropping a locked item wasn't stopped");
-				check(!ProtectionFeature.blockClick(0, 0, ContainerInput.THROW, mc.player), "an unlocked item was stopped");
+				check(!ProtectionFeature.blockClick(0, 0, 0, ContainerInput.THROW, mc.player), "an unlocked item was stopped");
 			});
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("08_locked_item");

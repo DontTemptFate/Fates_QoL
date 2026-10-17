@@ -30,8 +30,7 @@ public final class RepoManager {
 	private volatile State state = State.NOT_LOADED;
 	private volatile String message = "";
 	private volatile long lastCheck;
-	private volatile Runnable onLoaded = () -> {
-	};
+	private final java.util.List<Runnable> onLoaded = new java.util.concurrent.CopyOnWriteArrayList<>();
 
 	public volatile boolean autoUpdate = true;
 
@@ -41,8 +40,9 @@ public final class RepoManager {
 		this.log = log;
 	}
 
+	/** Called (on a background thread) every time new data is loaded. */
 	public void onLoaded(Runnable r) {
-		this.onLoaded = r;
+		onLoaded.add(r);
 	}
 
 	public ItemRepo items() {
@@ -70,6 +70,18 @@ public final class RepoManager {
 			c = com.google.gson.JsonParser.parseString(Files.readString(f)).getAsJsonObject();
 			constants.put(name, c);
 			return c;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/** A SkyHanni-REPO constants file ({@code constants/<path>.json}), or null. Not cached (read once by callers). */
+	public com.google.gson.JsonObject skyhanni(String path) {
+		if (!path.matches("[A-Za-z_/]{1,60}")) return null;
+		try {
+			Path f = dir(SKYHANNI).resolve("constants").resolve(path + ".json");
+			if (!Files.isRegularFile(f) || Files.size(f) > 32L * 1024 * 1024) return null;
+			return com.google.gson.JsonParser.parseString(Files.readString(f)).getAsJsonObject();
 		} catch (Exception e) {
 			return null;
 		}
@@ -123,7 +135,13 @@ public final class RepoManager {
 				state = State.READY;
 				message = items.size() + " items (" + shortSha(items.commit()) + ")";
 				log.accept("item repo loaded: " + message + " in " + (System.currentTimeMillis() - t) + " ms");
-				onLoaded.run();
+				for (Runnable r : onLoaded) {
+					try {
+						r.run();
+					} catch (RuntimeException e) {
+						log.accept("data listener failed: " + e);
+					}
+				}
 			} catch (Exception e) {
 				log.accept("item repo load failed: " + e);
 				state = State.FAILED;
@@ -142,7 +160,7 @@ public final class RepoManager {
 				if (latest.equals(have)) continue;
 				log.accept(r.label() + ": downloading " + shortSha(latest));
 				r.download(latest, dir(r));
-				if (r == NEU) changed = true;
+				changed = true;
 			} catch (Exception e) {
 				log.accept(r.label() + ": update failed: " + e);
 				if (items.size() == 0) {

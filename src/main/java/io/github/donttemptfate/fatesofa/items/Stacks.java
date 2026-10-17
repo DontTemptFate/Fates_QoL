@@ -62,7 +62,7 @@ public final class Stacks {
 			}
 			if (nbt != null) {
 				Matcher m = MODEL.matcher(nbt);
-				if (m.find()) st.set(DataComponents.ITEM_MODEL, Identifier.parse(m.group(1)));
+				if (m.find() && modelExists(m.group(1))) st.set(DataComponents.ITEM_MODEL, Identifier.parse(m.group(1)));
 				Matcher t = TEXTURE.matcher(nbt);
 				if (t.find() && item == Items.PLAYER_HEAD) {
 					ResolvableProfile p = profile(t.group(1));
@@ -79,7 +79,7 @@ public final class Stacks {
 	public static ItemStack stored(io.github.donttemptfate.fatesofa.storage.StoredItem si) {
 		ItemStack st = build(si.itemId(), si.key(), si.name(), si.lore(), null, si.count());
 		try {
-			if (si.model() != null) st.set(DataComponents.ITEM_MODEL, Identifier.parse(si.model()));
+			if (si.model() != null && modelExists(si.model())) st.set(DataComponents.ITEM_MODEL, Identifier.parse(si.model()));
 			if (si.profile() != null) {
 				com.google.gson.JsonElement j = com.google.gson.JsonParser.parseString(si.profile());
 				ResolvableProfile.CODEC.parse(JsonOps.INSTANCE, j).result().ifPresent(p -> st.set(DataComponents.PROFILE, p));
@@ -103,6 +103,32 @@ public final class Stacks {
 		return new io.github.donttemptfate.fatesofa.storage.StoredItem(slot, BuiltInRegistries.ITEM.getKey(st.getItem()).toString(),
 				io.github.donttemptfate.fates.common.item.Items.key(st), Texts.legacy(io.github.donttemptfate.fates.common.item.Items.name(st)),
 				io.github.donttemptfate.fates.common.item.Items.loreLegacy(st), model, profile, st.getCount());
+	}
+
+	private static final Map<String, Boolean> MODELS = new ConcurrentHashMap<>();
+
+	/**
+	 * True when the loaded resource packs have this item model (Hypixel's SkyBlock pack provides
+	 * {@code hypixel_skyblock:} models only while it's active). Without it, the plain item looks better than
+	 * the missing-texture cube.
+	 */
+	static boolean modelExists(String id) {
+		return MODELS.computeIfAbsent(id, k -> {
+			try {
+				Identifier i = Identifier.parse(k);
+				if (i.getNamespace().equals("minecraft")) return true;
+				var rm = net.minecraft.client.Minecraft.getInstance().getResourceManager();
+				return rm.getResource(Identifier.fromNamespaceAndPath(i.getNamespace(), "items/" + i.getPath() + ".json")).isPresent();
+			} catch (RuntimeException e) {
+				return false;
+			}
+		});
+	}
+
+	/** Resource packs changed (e.g. Hypixel's pack loaded): look models up again. */
+	public static void resourcesChanged() {
+		MODELS.clear();
+		CACHE.clear();
 	}
 
 	static Item item(String id) {

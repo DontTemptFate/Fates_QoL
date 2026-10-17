@@ -55,3 +55,8 @@ net.minecraft.client.resources.sounds
 net.minecraft.core.registries
 net.minecraft.core
 net.minecraft.world.item.component
+net.minecraft.gizmos
+net.minecraft.client.renderer.gizmos
+net.minecraft.client.renderer.feature
+net.minecraft.client.renderer.debug
+net.minecraft.world.level.saveddata.maps

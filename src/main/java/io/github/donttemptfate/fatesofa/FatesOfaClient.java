@@ -2,16 +2,7 @@ package io.github.donttemptfate.fatesofa;
 
 import io.github.donttemptfate.fatesofa.core.Features;
 import io.github.donttemptfate.fatesofa.data.Http;
-import io.github.donttemptfate.fatesofa.features.ChatFeature;
-import io.github.donttemptfate.fatesofa.features.ContainerValue;
-import io.github.donttemptfate.fatesofa.features.ItemListFeature;
-import io.github.donttemptfate.fatesofa.features.PetTooltip;
-import io.github.donttemptfate.fatesofa.features.RarityBackground;
-import io.github.donttemptfate.fatesofa.features.StorageFeature;
-import io.github.donttemptfate.fatesofa.features.ValueTooltip;
-import io.github.donttemptfate.fatesofa.features.General;
-import io.github.donttemptfate.fatesofa.features.LocationHud;
-import io.github.donttemptfate.fatesofa.features.ProtectionFeature;
+import io.github.donttemptfate.fatesofa.features.*;
 import io.github.donttemptfate.fatesofa.game.Game;
 import io.github.donttemptfate.fatesofa.game.Hooks;
 import io.github.donttemptfate.fatesofa.hud.Hud;
@@ -44,6 +35,7 @@ public final class FatesOfaClient implements ClientModInitializer {
 		o.settings.load();
 		General.apply(o);
 
+		o.repo.onLoaded(() -> o.patterns.load(o.repo.skyhanni("regexesModern")));
 		Hud.init(o.settings);
 		Hooks.register(o);
 		Features.initAll();
@@ -59,6 +51,15 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new RarityBackground());
 		Features.add(new ContainerValue());
 		Features.add(new StorageFeature());
+		Features.add(new EventTimers());
+		Features.add(new GardenFeature());
+		Features.add(new MiningFeature());
+		Features.add(new FishingFeature());
+		Features.add(new SlayerFeature());
+		Features.add(new RiftFeature());
+		Features.add(new DianaFeature());
+		Features.add(new HoppityFeature());
+		Features.add(new BingoFeature());
 		Features.add(new ChatFeature());
 		Features.add(new LocationHud());
 	}

@@ -77,8 +77,9 @@ public final class ContainerValue extends Feature {
 		}
 		c.add(kv);
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
-		int x = a.fatesofa$leftPos() - c.width() - 6;
-		if (x < 2) x = 2;
-		c.draw(g, x, a.fatesofa$topPos(), 1f);
+		int room = a.fatesofa$leftPos() - 8;
+		float scale = Math.min(1f, Math.max(0.5f, room / (float) c.width()));
+		int x = Math.max(2, a.fatesofa$leftPos() - Math.round(c.width() * scale) - 6);
+		c.draw(g, x, a.fatesofa$topPos(), scale);
 	}
 }

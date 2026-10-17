@@ -17,6 +17,7 @@ public final class Hooks {
 
 	public static void register(Ofa o) {
 		Keys.register();
+		ChatBus.register(); // before any feature's chat hook, so filters never hide a message from trackers
 		ModApi.register(o.state);
 		ClientCommandRegistrationCallback.EVENT.register((d, ctx) -> Commands.register(d));
 		ClientTickEvents.END_CLIENT_TICK.register(mc -> {
@@ -31,7 +32,10 @@ public final class Hooks {
 			o.state.worldChanged(System.currentTimeMillis());
 		});
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, mc) -> o.state.setOnHypixel(false));
-		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((mc, level) -> o.state.worldChanged(System.currentTimeMillis()));
+		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((mc, level) -> {
+			o.state.worldChanged(System.currentTimeMillis());
+			io.github.donttemptfate.fatesofa.items.Stacks.resourcesChanged(); // Hypixel's pack may have (un)loaded
+		});
 		ClientLifecycleEvents.CLIENT_STOPPING.register(mc -> {
 			save(o);
 			o.io.shutdownNow();
