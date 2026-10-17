@@ -386,7 +386,7 @@ public final class SettingsScreen extends Screen {
 			}
 
 			public int height(int w) {
-				return 14 + desc(w).size() * 10 + (f.failed() ? 10 : 0) + 2;
+				return 14 + desc(w).size() * 10 + (f.failed() ? 10 : 0) + (f.actions().isEmpty() ? 0 : 17) + 2;
 			}
 
 			public void draw(GuiGraphicsExtractor g, int x, int y, int w, int mx, int my) {
@@ -410,7 +410,18 @@ public final class SettingsScreen extends Screen {
 					g.text(font, l, x + 2, ly, Ui.WHITE, true);
 					ly += 10;
 				}
-				if (f.failed()) g.text(font, "Switched off after errors: " + f.errors().lastError(), x + 2, ly, Ui.RED, true);
+				if (f.failed()) {
+					g.text(font, "Switched off after errors: " + f.errors().lastError(), x + 2, ly, Ui.RED, true);
+					ly += 10;
+				}
+				int bx = x + 2;
+				for (Feature.Action a : f.actions()) {
+					int bw = Ui.width(Ui.t(a.label(), Ui.Role.BODY_BOLD, 0), Ui.Role.BODY_BOLD) + 14;
+					Rect br = new Rect(bx, ly + 2, bw, 13);
+					Widgets.button(g, br.x(), br.y(), br.w(), br.h(), a.label(), br.contains(mx, my), false);
+					hits.add(br, a.run(), null);
+					bx += bw + 4;
+				}
 			}
 		};
 	}

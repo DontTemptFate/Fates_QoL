@@ -70,6 +70,7 @@ public final class ContainerValue extends Feature {
 		if (!o.state.onSkyBlock() && !Boolean.getBoolean("fatesofa.test")) return null;
 		String title = Strip.clean(s.getTitle().getString());
 		if (s.getMenu().slots.stream().allMatch(sl -> sl.container instanceof Inventory)) return null; // player inventory
+		if (StorageOverlay.INSTANCE != null && StorageOverlay.INSTANCE.covers(s)) return null; // the storage panel shows values there
 		if (get(where).equals("storage") && !STORAGE.matcher(title).matches()) return null;
 		long now = System.currentTimeMillis();
 		List<Valuer.Valued> vals = new ArrayList<>();
@@ -98,9 +99,11 @@ public final class ContainerValue extends Feature {
 
 	void place(AbstractContainerScreen<?> s, GuiGraphicsExtractor g, Card c) {
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
-		int room = a.fatesofa$leftPos() - 8;
+		int reserve = QuickCommandsFeature.INSTANCE == null ? 0 : QuickCommandsFeature.INSTANCE.leftReserve(s);
+		int edge = a.fatesofa$leftPos() - reserve;
+		int room = edge - 8;
 		float scale = Math.min(1f, Math.max(0.5f, room / (float) c.width()));
-		int x = Math.max(2, a.fatesofa$leftPos() - Math.round(c.width() * scale) - 6);
+		int x = Math.max(2, edge - Math.round(c.width() * scale) - 6);
 		c.draw(g, x, a.fatesofa$topPos(), scale);
 	}
 }

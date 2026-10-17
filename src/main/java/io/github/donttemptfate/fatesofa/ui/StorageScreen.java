@@ -136,8 +136,9 @@ public final class StorageScreen extends Screen {
 		if (search.getValue().isBlank()) page(g, pages, mainX, top - mainScroll, mainW, mx, my, hovered);
 		else results(g, c, mainX, top - mainScroll, mainW, bottom, mx, my, hovered, note);
 		g.disableScissor();
-		footer(g, search.getValue().isBlank() ? "Click a page · type to search all pages · /ofa find <item>"
-				: "Click a page name to open it · Esc clears the search");
+		footer(g, openHint != null ? openHint : search.getValue().isBlank() ? "Click a page · type to search all pages · /ofa find <item>"
+				: "Click an item to open its page in game · Esc clears the search");
+		openHint = null;
 
 		if (hovered[0] != null && my >= top && my < bottom) {
 			List<Component> lines = new ArrayList<>(Screen.getTooltipFromItem(this.minecraft, hovered[0]));
@@ -194,6 +195,16 @@ public final class StorageScreen extends Screen {
 		}
 	}
 
+	private String openHint;
+
+	/** Opens the real page (one command) and carries the search into it so the item is lit up there. */
+	void openInGame(String id, String query) {
+		if (io.github.donttemptfate.fatesofa.features.StorageOverlay.INSTANCE != null) {
+			io.github.donttemptfate.fatesofa.features.StorageOverlay.INSTANCE.open(id, query);
+			this.minecraft.gui.setScreen(null);
+		}
+	}
+
 	void open(String id) {
 		pageId = id;
 		mainScroll = 0;
@@ -208,7 +219,17 @@ public final class StorageScreen extends Screen {
 			pageId = page.id();
 		}
 		// page header: name, when it was seen, its value
-		Ui.draw(g, Ui.t(StorageCache.label(page.id()), Ui.Role.NAME, Ui.WHITE), Ui.Role.NAME, x, y + 8);
+		Component title = Ui.t(StorageCache.label(page.id()), Ui.Role.NAME, Ui.WHITE);
+		Ui.draw(g, title, Ui.Role.NAME, x, y + 8);
+		if (StorageCache.openCommand(page.id()) != null) {
+			String bl = "Open in game";
+			int bw = Ui.width(Ui.t(bl, Ui.Role.BODY_BOLD, 0), Ui.Role.BODY_BOLD) + 12;
+			Rect b = new Rect(x + Ui.width(title, Ui.Role.NAME) + 8, y - 1, bw, 12);
+			Widgets.button(g, b.x(), b.y(), b.w(), b.h(), bl, b.contains(mx, my), false);
+			String id = page.id();
+			hits.add(b, () -> openInGame(id, null), null);
+			if (b.contains(mx, my)) openHint = "runs /" + StorageCache.openCommand(id);
+		}
 		String sub = page.items().size() + " stacks · seen " + Fmt.duration(System.currentTimeMillis() - page.updatedAt()) + " ago";
 		Ui.draw(g, Ui.t(sub, Ui.Role.SMALL, Ui.GRAY), Ui.Role.SMALL, x, y + 18);
 		double total = pageValue(page);
@@ -321,8 +342,10 @@ public final class StorageScreen extends Screen {
 				if (mx >= sx && mx < sx + CELL && my >= sy && my < sy + CELL && my < bottom) {
 					g.fill(sx + 1, sy + 1, sx + CELL - 1, sy + CELL - 1, 0x40FFFFFF);
 					hovered[0] = st;
-					note[0] = label + ", slot " + (it.slot() + 1);
+					note[0] = label + ", slot " + (it.slot() + 1) + " · click to open it in game";
 				}
+				String pid = e.getKey();
+				if (sy < bottom) hits.add(new Rect(sx, sy, CELL, CELL), () -> openInGame(pid, search.getValue()), null);
 			}
 			gy += ((list.size() + perRow - 1) / perRow) * CELL + 6;
 		}

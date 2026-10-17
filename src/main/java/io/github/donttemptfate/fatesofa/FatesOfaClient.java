@@ -52,6 +52,7 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new RarityBackground());
 		Features.add(new ContainerValue());
 		Features.add(new StorageFeature());
+		Features.add(new StorageOverlay());
 		Features.add(new EventTimers());
 		Features.add(new GardenFeature());
 		Features.add(new VisitorHelper());
@@ -69,6 +70,7 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new BingoFeature());
 		Features.add(new PlannerFeature());
 		Features.add(new WaypointFeature());
+		Features.add(new QuickCommandsFeature());
 		Features.add(new ChatFeature());
 		Features.add(new LocationHud());
 	}

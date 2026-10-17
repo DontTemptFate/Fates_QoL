@@ -60,6 +60,14 @@ public final class StorageCache {
 		return id;
 	}
 
+	/** The command that opens a stored page in the game ("ec 2", "backpack 3"); null if unknown. */
+	public static String openCommand(String id) {
+		if (id == null) return null;
+		if (id.startsWith("ender:")) return "ec " + id.substring(6);
+		if (id.startsWith("backpack:")) return "backpack " + id.substring(9);
+		return null;
+	}
+
 	/** Switches to a profile's cache (loading it), saving the previous one. */
 	public synchronized void profile(String name) {
 		String p = name == null ? null : name.replaceAll("[^A-Za-z0-9_-]", "");

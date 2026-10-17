@@ -42,6 +42,10 @@ public final class Commands {
 							return 1;
 						})))
 				.then(ClientCommands.literal("status").executes(c -> status()))
+				.then(ClientCommands.literal("quick").executes(c -> {
+					Game.openNextTick(io.github.donttemptfate.fatesofa.ui.QuickCommandsScreen::new);
+					return 1;
+				}))
 				.then(ClientCommands.literal("record")
 						.executes(c -> {
 							if (io.github.donttemptfate.fatesofa.record.PlayRecorder.on()) io.github.donttemptfate.fatesofa.record.PlayRecorder.stop(true);
@@ -160,7 +164,7 @@ public final class Commands {
 
 	static int help() {
 		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa storage · /ofa find <text> · /ofa wp add|remove|clear · "
-				+ "/ofa rooms [export|import|update] · /ofa record [on|off] · /ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
+				+ "/ofa quick — quick buttons, hotkeys & aliases · /ofa rooms [export|import|update] · /ofa record [on|off] · /ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
 		return 1;
 	}
 

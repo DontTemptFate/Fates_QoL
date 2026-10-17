@@ -20,17 +20,24 @@ public final class Keys {
 	public static KeyMapping hudEditor;
 	public static KeyMapping lock;
 	public static KeyMapping itemList;
+	/** Quick command 1–9: each sends the matching entry of the player's quick command list. */
+	public static final KeyMapping[] quick = new KeyMapping[io.github.donttemptfate.fatesofa.quick.QuickCommands.HOTKEYS];
 
 	static void register() {
 		settings = KeyMappingHelper.registerKeyMapping(Compat.unboundKey("key.fatesofa.settings", CATEGORY));
 		hudEditor = KeyMappingHelper.registerKeyMapping(Compat.unboundKey("key.fatesofa.hud_editor", CATEGORY));
 		lock = KeyMappingHelper.registerKeyMapping(Compat.unboundKey("key.fatesofa.lock", CATEGORY));
 		itemList = KeyMappingHelper.registerKeyMapping(Compat.unboundKey("key.fatesofa.item_list", CATEGORY));
+		for (int i = 0; i < quick.length; i++) quick[i] = KeyMappingHelper.registerKeyMapping(Compat.unboundKey("key.fatesofa.quick_" + (i + 1), CATEGORY));
 	}
 
 	static void tick(Minecraft mc) {
 		if (pressed(settings)) mc.gui.setScreen(new SettingsScreen(mc.gui.screen()));
 		if (pressed(hudEditor)) mc.gui.setScreen(new HudEditorScreen(mc.gui.screen()));
+		for (int i = 0; i < quick.length; i++) {
+			if (pressed(quick[i]) && io.github.donttemptfate.fatesofa.features.QuickCommandsFeature.INSTANCE != null)
+				io.github.donttemptfate.fatesofa.features.QuickCommandsFeature.INSTANCE.hotkey(i);
+		}
 	}
 
 	/** One press = one action; held or queued presses are dropped. */

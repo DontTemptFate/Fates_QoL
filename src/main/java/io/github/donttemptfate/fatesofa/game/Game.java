@@ -59,6 +59,29 @@ public final class Game {
 		send(prefix().append(Component.literal(Strip.codes(text)).withStyle(ChatFormatting.RED)));
 	}
 
+	/** Minimum time between two commands OFA sends for the player, so a double click or key repeat stays one command. */
+	static final long COMMAND_GAP_MS = 400;
+	private static long lastCommandAt;
+	/** The last command sent (for tests). */
+	public static volatile String lastCommand;
+
+	/**
+	 * Sends one command the player asked for with a click or key press (quick buttons, hotkeys, aliases, opening a
+	 * storage page). Never called on a timer or in a sequence: one player action, at most one command.
+	 * Returns false when nothing was sent (no connection, empty, or too soon after the last one).
+	 */
+	public static boolean runCommand(String command) {
+		Minecraft mc = mc();
+		String c = io.github.donttemptfate.fatesofa.quick.QuickCommands.clean(command);
+		if (c.isEmpty() || mc.player == null || mc.getConnection() == null) return false;
+		long now = System.currentTimeMillis();
+		if (now - lastCommandAt < COMMAND_GAP_MS) return false;
+		lastCommandAt = now;
+		lastCommand = c;
+		mc.getConnection().sendCommand(c);
+		return true;
+	}
+
 	public static boolean isHypixel(Minecraft mc) {
 		var server = mc.getCurrentServer();
 		if (server == null || server.ip == null) return false;

@@ -135,6 +135,15 @@ public abstract class Feature {
 		return r;
 	}
 
+	/** A button shown on this feature's card in settings (e.g. "Edit quick commands…"). */
+	public record Action(String label, Runnable run) {
+	}
+
+	/** Buttons for this feature's settings card. */
+	public java.util.List<Action> actions() {
+		return java.util.List.of();
+	}
+
 	/** Words the settings search should also match. */
 	public Set<String> keywords() {
 		return Set.of();

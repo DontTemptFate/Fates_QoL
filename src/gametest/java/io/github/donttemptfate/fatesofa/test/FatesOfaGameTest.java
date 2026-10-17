@@ -173,6 +173,50 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.runOnClient(mc -> mc.gui.setScreen(new StorageScreen(null, "diamond")));
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("09d_storage_search");
+			// a search result opens the real page (one command) and the search carries into it, lighting up the match
+			ctx.runOnClient(mc -> {
+				io.github.donttemptfate.fatesofa.features.StorageOverlay.INSTANCE.open("backpack:3", "diamond");
+				check("backpack 3".equals(io.github.donttemptfate.fatesofa.game.Game.lastCommand), "opening a page didn't send /backpack 3: " + io.github.donttemptfate.fatesofa.game.Game.lastCommand);
+				SimpleContainer page = new SimpleContainer(27);
+				page.setItem(0, sb(Items.DIAMOND, "ENCHANTED_DIAMOND", "§aEnchanted Diamond", "§a§lUNCOMMON", 12));
+				page.setItem(7, sb(Items.BOW, "TERMINATOR", "§6Terminator", "§6§lLEGENDARY BOW", 1));
+				page.setItem(12, sb(Items.GOLD_INGOT, "ENCHANTED_GOLD", "§aEnchanted Gold", "§a§lUNCOMMON", 64));
+				mc.gui.setScreen(new ContainerScreen(ChestMenu.threeRows(1, mc.player.getInventory(), page), mc.player.getInventory(),
+						Component.literal("Large Backpack (Slot #3)")));
+			});
+			ctx.waitTicks(15);
+			ctx.takeScreenshot("09f_real_page_with_storage_panel");
+
+			// quick buttons: a tab click sends its one command; a hotkey sends the matching entry
+			ctx.waitTicks(10);
+			ctx.runOnClient(mc -> {
+				var q = io.github.donttemptfate.fatesofa.features.QuickCommandsFeature.INSTANCE;
+				var screen = (net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<?>) mc.gui.screen();
+				var tabs = q.testLayout(screen);
+				check(tabs != null && tabs.size() >= 3, "no quick buttons on the page");
+				int[] pets = tabs.get(1);
+				check(q.click(screen, pets[0] + 11, pets[1] + 10, 0), "click on the Pets tab wasn't taken");
+				check("pets".equals(io.github.donttemptfate.fatesofa.game.Game.lastCommand), "Pets tab didn't send /pets: " + io.github.donttemptfate.fatesofa.game.Game.lastCommand);
+				check(q.entries().size() == 6, "default quick commands missing");
+			});
+			ctx.waitTicks(10);
+			ctx.runOnClient(mc -> {
+				io.github.donttemptfate.fatesofa.features.QuickCommandsFeature.INSTANCE.hotkey(2);
+				check("wardrobe".equals(io.github.donttemptfate.fatesofa.game.Game.lastCommand), "hotkey 3 didn't send /wardrobe");
+				mc.gui.setScreen(new io.github.donttemptfate.fatesofa.ui.QuickCommandsScreen(null));
+			});
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("09g_quick_commands_editor");
+			// a tall menu with no room above it: the tabs go down the left side
+			ctx.runOnClient(mc -> {
+				SimpleContainer big = new SimpleContainer(54);
+				big.setItem(4, sb(Items.BONE, "SUMMONING_RING", "§9Summoning Ring", "§9§lRARE ACCESSORY", 1));
+				mc.gui.setScreen(new ContainerScreen(ChestMenu.sixRows(2, mc.player.getInventory(), big), mc.player.getInventory(),
+						Component.literal("Ender Chest (1/9)")));
+			});
+			ctx.waitTicks(15);
+			ctx.takeScreenshot("09h_tall_menu_side_tabs");
+
 			ctx.runOnClient(mc -> {
 				o.settings.set(io.github.donttemptfate.fatesofa.features.General.THEME, "midnight");
 				mc.gui.setScreen(new StorageScreen(null, ""));
