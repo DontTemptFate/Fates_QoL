@@ -42,6 +42,16 @@ public final class Commands {
 							return 1;
 						})))
 				.then(ClientCommands.literal("status").executes(c -> status()))
+				.then(ClientCommands.literal("planner").executes(c -> {
+					Game.openNextTick(io.github.donttemptfate.fatesofa.ui.PlannerScreen::new);
+					return 1;
+				}))
+				.then(ClientCommands.literal("reset")
+						.then(ClientCommands.literal("slayer").executes(c -> {
+							if (io.github.donttemptfate.fatesofa.features.SlayerFeature.INSTANCE != null) io.github.donttemptfate.fatesofa.features.SlayerFeature.INSTANCE.tracker.reset();
+							Game.ok("Slayer tracker reset.");
+							return 1;
+						})))
 				.then(ClientCommands.literal("storage")
 						.executes(c -> {
 							Game.openNextTick(p -> new io.github.donttemptfate.fatesofa.ui.StorageScreen(p, ""));
@@ -94,7 +104,7 @@ public final class Commands {
 	}
 
 	static int help() {
-		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa storage · /ofa find <text> · "
+		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa storage · /ofa find <text> · "
 				+ "/ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
 		return 1;
 	}

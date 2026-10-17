@@ -102,6 +102,21 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("08_locked_item");
 
+			// trackers fed with real-looking messages
+			ctx.runOnClient(mc -> {
+				var slayer = io.github.donttemptfate.fatesofa.features.SlayerFeature.INSTANCE;
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("  SLAYER QUEST STARTED!"), false);
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("RARE DROP! Revenant Viscera (+80% ✯ Magic Find)"), false);
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("  SLAYER QUEST COMPLETE!"), false);
+				check(slayer.tracker.kills().size() == 1, "slayer kill not counted");
+			});
+			ctx.runOnClient(mc -> mc.gui.setScreen(new io.github.donttemptfate.fatesofa.ui.PlannerScreen(null)));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("09a_planner");
+			ctx.runOnClient(mc -> mc.gui.setScreen(new HudEditorScreen(null)));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("09b_hud_editor_all_samples");
+
 			// storage overview (empty and with a remembered page)
 			ctx.runOnClient(mc -> mc.gui.setScreen(new StorageScreen(null, "")));
 			ctx.waitTicks(10);

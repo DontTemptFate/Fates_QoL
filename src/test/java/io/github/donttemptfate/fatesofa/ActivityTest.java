@@ -76,4 +76,14 @@ public class ActivityTest {
 		assertEquals(3, TabWidgets.pests(t).alive());
 		assertEquals("2, 5", TabWidgets.pests(t).plots());
 	}
+
+	@Test
+	public void visitor() {
+		var o = io.github.donttemptfate.fatesofa.activity.VisitorOffer.parse(List.of("Items Required:", " Enchanted Wheat x24", " Hay Bale", "", "Rewards:",
+				" +2 Garden Experience", " +45 Copper", " Jacob's Ticket x2", "", "Click to give!"));
+		assertEquals(2, o.wanted().size());
+		assertEquals(24, o.wanted().get(0).amount(), 0);
+		assertEquals(45, o.copper(), 0);
+		assertEquals("Jacob's Ticket", o.rewards().get(0).name());
+	}
 }

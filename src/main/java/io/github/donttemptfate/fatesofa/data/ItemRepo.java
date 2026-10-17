@@ -34,6 +34,17 @@ public final class ItemRepo {
 
 	public static final ItemRepo EMPTY = new ItemRepo(Map.of(), Map.of(), null);
 
+	/** A repo from given items (tests, previews). */
+	public static ItemRepo of(Collection<RepoItem> list) {
+		Map<String, RepoItem> items = new HashMap<>();
+		Map<String, List<Recipe>> usedIn = new HashMap<>();
+		for (RepoItem it : list) {
+			items.put(it.key(), it);
+			for (Recipe r : it.recipes()) for (Ingredient in : r.inputs()) usedIn.computeIfAbsent(in.key(), k -> new ArrayList<>()).add(r);
+		}
+		return new ItemRepo(Collections.unmodifiableMap(items), Collections.unmodifiableMap(usedIn), null);
+	}
+
 	/** Loads {@code dir/items/*.json}. Broken files are skipped and counted. */
 	public static ItemRepo load(Path dir) throws IOException {
 		Path itemsDir = dir.resolve("items");
