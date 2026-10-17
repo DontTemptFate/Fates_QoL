@@ -132,6 +132,30 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.runOnClient(mc -> mc.gui.setScreen(new StorageScreen(null, "")));
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("09_storage_empty");
+			// storage with remembered pages: browse one page, then search across all of them
+			ctx.runOnClient(mc -> {
+				var cache = io.github.donttemptfate.fatesofa.features.StorageFeature.INSTANCE.cache();
+				cache.profile("Test");
+				long now = System.currentTimeMillis();
+				cache.put("ender:1", "Ender Chest (1/9)", List.of(
+						stored(0, "minecraft:iron_sword", "HYPERION", "§6Hyperion", 1),
+						stored(1, "minecraft:diamond", "ENCHANTED_DIAMOND", "§aEnchanted Diamond", 64),
+						stored(2, "minecraft:diamond", "ENCHANTED_DIAMOND", "§aEnchanted Diamond", 32),
+						stored(9, "minecraft:gold_ingot", "ENCHANTED_GOLD", "§aEnchanted Gold", 64),
+						stored(10, "minecraft:bone", "SUMMONING_RING", "§9Summoning Ring", 1),
+						stored(20, "minecraft:diamond_chestplate", "NECRON_CHESTPLATE", "§6Necron's Chestplate", 1)), now - 3_600_000);
+				cache.put("ender:2", "Ender Chest (2/9)", List.of(
+						stored(4, "minecraft:emerald", "ENCHANTED_EMERALD", "§aEnchanted Emerald", 48)), now - 600_000);
+				cache.put("backpack:3", "Large Backpack (Slot #3)", List.of(
+						stored(0, "minecraft:diamond", "ENCHANTED_DIAMOND", "§aEnchanted Diamond", 12),
+						stored(7, "minecraft:bow", "TERMINATOR", "§6Terminator", 1)), now - 120_000);
+				mc.gui.setScreen(new StorageScreen(null, ""));
+			});
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("09c_storage_page");
+			ctx.runOnClient(mc -> mc.gui.setScreen(new StorageScreen(null, "diamond")));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("09d_storage_search");
 			ctx.runOnClient(mc -> mc.gui.setScreen(null));
 			ctx.waitTicks(5);
 
@@ -203,6 +227,10 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		st.set(DataComponents.CUSTOM_NAME, io.github.donttemptfate.fates.common.text.Texts.fromLegacy(name));
 		st.set(DataComponents.LORE, new ItemLore(List.of(Component.literal("A test item"), io.github.donttemptfate.fates.common.text.Texts.fromLegacy(rarityLine))));
 		return st;
+	}
+
+	static io.github.donttemptfate.fatesofa.storage.StoredItem stored(int slot, String item, String key, String name, int count) {
+		return new io.github.donttemptfate.fatesofa.storage.StoredItem(slot, item, key, name, List.of("§7A remembered item"), null, null, count);
 	}
 
 	static void check(boolean ok, String msg) {

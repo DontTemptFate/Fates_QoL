@@ -69,7 +69,16 @@ public final class StorageScreen extends Screen {
 		StorageCache c = cache();
 		g.text(font, "STORAGE", px + 10, py + 11, Ui.accent(), true);
 		if (c == null || c.pages().isEmpty()) {
-			g.text(font, "Nothing remembered yet: open your ender chest pages and backpacks once.", px + 10, py + 34, Ui.GRAY, true);
+			int ty = py + 34;
+			for (String line : List.of("Nothing remembered yet.", "",
+					"Open each ender chest page and backpack once (on any island). OFA remembers what's inside, "
+							+ "so you can browse and search it here from anywhere: /ofa storage, or /ofa find <item>.")) {
+				for (var seq : font.split(Component.literal(line), pw - 20)) {
+					g.text(font, seq, px + 10, ty, line.startsWith("Nothing") ? Ui.WHITE : Ui.GRAY, true);
+					ty += 10;
+				}
+				if (line.isEmpty()) ty += 2;
+			}
 			return;
 		}
 		List<StorageCache.Page> pages = c.pages();
