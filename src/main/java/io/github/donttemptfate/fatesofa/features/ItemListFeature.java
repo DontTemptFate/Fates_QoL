@@ -43,6 +43,8 @@ public final class ItemListFeature extends Feature {
 			.keywords("search find storage"));
 	final Setting<Boolean> startShown = setting(Setting.bool("itemlist.shown", "Show the item list", true)
 			.help("The list beside inventory windows. The item list key shows or hides it."));
+	final Setting<Integer> maxCols = setting(Setting.integer("itemlist.cols", "Item list width (columns)", 12, 6, 24)
+			.help("The most columns the list may use. It sits against the right edge of the screen and uses fewer when there's less room."));
 
 	private volatile ItemIndex index;
 	private String query = "";
@@ -91,14 +93,17 @@ public final class ItemListFeature extends Feature {
 		}
 	}
 
-	static Panel panel(AbstractContainerScreen<?> s) {
+	/** The list's place: against the right edge of the screen, as wide as the room right of the window allows. */
+	Panel panel(AbstractContainerScreen<?> s) {
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
-		int x = a.fatesofa$leftPos() + a.fatesofa$imageWidth() + 8;
-		int w = s.width - x - 4;
-		if (w < 60) return null;
-		int cols = Math.min(12, (w - 4) / 18);
+		int windowRight = a.fatesofa$leftPos() + a.fatesofa$imageWidth();
+		int margin = 4, room = s.width - margin - (windowRight + 8);
+		int cols = Math.min(get(maxCols), (room - 4) / 18);
+		if (cols < 3) return null;
+		int w = cols * 18 + 4;
+		int x = s.width - margin - w;
 		int rows = Math.max(1, (s.height - 20 - 18 - 6) / 18);
-		return new Panel(x, 4, cols * 18 + 4, s.height - 8, cols, rows);
+		return new Panel(x, 4, w, s.height - 8, cols, rows);
 	}
 
 	void attach(Minecraft mc, AbstractContainerScreen<?> s) {
