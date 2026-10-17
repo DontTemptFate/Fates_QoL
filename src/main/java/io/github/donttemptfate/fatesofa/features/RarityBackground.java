@@ -25,8 +25,10 @@ public final class RarityBackground extends Feature {
 		if (f == null || !f.active()) return;
 		f.guard(() -> {
 			ItemStack st = slot.getItem();
-			if (st.isEmpty() || Items.tag(st) == null) return;
-			Rarity r = Items.rarity(st);
+			if (st.isEmpty()) return;
+			var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(st);
+			if (!facts.skyblock()) return;
+			Rarity r = facts.rarity();
 			if (r == null) return;
 			int a = (int) Math.round(f.get(f.opacity) * 2.55);
 			g.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, (a << 24) | r.rgb);

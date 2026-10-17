@@ -64,7 +64,17 @@ public final class StorageFeature extends Feature {
 		if (tick % 600 == 0) cache.save();
 	}
 
+	private Object openedScreen;
+	private long openedAt;
+
 	void snapshot(AbstractContainerScreen<?> s, String id, String title) {
+		// give Hypixel a moment to fill a window that just opened
+		if (s != openedScreen) {
+			openedScreen = s;
+			openedAt = System.currentTimeMillis();
+			return;
+		}
+		if (System.currentTimeMillis() - openedAt < 750) return;
 		List<StoredItem> items = new ArrayList<>();
 		int i = 0;
 		for (Slot sl : s.getMenu().slots) {

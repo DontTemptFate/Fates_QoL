@@ -40,7 +40,12 @@ public final class Hud {
 	public static void init(Settings s) {
 		settings = s;
 		HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, Identifier.fromNamespaceAndPath(FatesOfaClient.MOD_ID, "hud"), (g, delta) -> {
-			if (!editing) draw(g, false);
+			if (editing) return;
+			try {
+				draw(g, false);
+			} catch (Throwable e) {
+				FatesOfaClient.LOG.warn("HUD error", e);
+			}
 		});
 	}
 

@@ -103,7 +103,8 @@ public final class ProtectionFeature extends Feature {
 		for (Slot s : screen.getMenu().slots) {
 			boolean slotLock = s.container instanceof Inventory && o.protection.slotLocked(s.getContainerSlot());
 			ItemStack st = s.getItem();
-			boolean itemLock = !st.isEmpty() && o.protection.itemLocked(Items.uuid(st), Items.uuid(st) == null ? Items.key(st) : null);
+			var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(st);
+			boolean itemLock = !st.isEmpty() && o.protection.itemLocked(facts.uuid(), facts.uuid() == null ? facts.key() : null);
 			if (!slotLock && !itemLock) continue;
 			int x = lx + s.x, y = ty + s.y;
 			int c = itemLock ? 0xFFFF5555 : 0xFFFFAA00;
@@ -150,8 +151,14 @@ public final class ProtectionFeature extends Feature {
 		if (own && o.protection.slotLocked(slot.getContainerSlot()) && input != ContainerInput.CLONE) {
 			return note("Slot " + slot.getContainerSlot() + " is locked.");
 		}
-		if (input == ContainerInput.SWAP && button >= 0 && button < 9 && o.protection.slotLocked(button)) {
-			return note("Hotbar slot " + button + " is locked.");
+		if (input == ContainerInput.SWAP && button >= 0 && button < 9) {
+			if (o.protection.slotLocked(button)) return note("Hotbar slot " + button + " is locked.");
+			// the hotbar item moves into the clicked slot: same rules as clicking it there
+			ItemStack hot = player.getInventory().getItem(button);
+			if (!hot.isEmpty() && !own) {
+				Protection.Action a = menuAction(menu);
+				if (decide(a != null ? a : Protection.Action.TRADE, hot, button)) return true;
+			}
 		}
 		if (input == ContainerInput.THROW) return decide(Protection.Action.DROP, st, slotId);
 		if (!own || st.isEmpty()) return false;

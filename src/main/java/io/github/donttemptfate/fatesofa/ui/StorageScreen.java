@@ -23,6 +23,13 @@ public final class StorageScreen extends Screen {
 	private String pageId;
 	private final Widgets.Hits hits = new Widgets.Hits();
 	private int px, py, pw, ph;
+	private final java.util.Map<StoredItem, ItemStack> stacks = new java.util.HashMap<>();
+	private String lastQuery;
+	private List<StorageCache.Hit> lastHits = List.of();
+
+	ItemStack stack(StoredItem it) {
+		return stacks.computeIfAbsent(it, Stacks::stored);
+	}
 
 	public StorageScreen(Screen parent, String query) {
 		super(Component.literal("Storage"));
@@ -84,7 +91,11 @@ public final class StorageScreen extends Screen {
 		ItemStack hovered = null;
 		String hoverNote = null;
 		if (!search.getValue().isBlank()) {
-			List<StorageCache.Hit> hitsFound = c.search(search.getValue());
+			if (!search.getValue().equals(lastQuery)) {
+				lastQuery = search.getValue();
+				lastHits = c.search(lastQuery);
+			}
+			List<StorageCache.Hit> hitsFound = lastHits;
 			g.text(font, hitsFound.size() + " found", gx, gy, Ui.GRAY, true);
 			gy += 12;
 			int cols = Math.max(1, (pw - 100) / 18);
@@ -92,7 +103,7 @@ public final class StorageScreen extends Screen {
 				int x = gx + (i % cols) * 18, y = gy + (i / cols) * 18;
 				if (y > py + ph - 20) break;
 				StoredItem it = hitsFound.get(i).item();
-				ItemStack st = Stacks.stored(it);
+				ItemStack st = stack(it);
 				g.item(st, x, y);
 				g.itemDecorations(font, st, x, y);
 				if (mx >= x && mx < x + 16 && my >= y && my < y + 16) {
@@ -112,7 +123,7 @@ public final class StorageScreen extends Screen {
 			for (StoredItem it : page.items()) {
 				int x = gx + (it.slot() % 9) * 18, y = gy + (it.slot() / 9) * 18;
 				g.fill(x - 1, y - 1, x + 17, y + 17, 0x30000000);
-				ItemStack st = Stacks.stored(it);
+				ItemStack st = stack(it);
 				g.item(st, x, y);
 				g.itemDecorations(font, st, x, y);
 				if (mx >= x && mx < x + 16 && my >= y && my < y + 16) hovered = st;

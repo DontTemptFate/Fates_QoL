@@ -38,7 +38,7 @@ public final class HoppityFeature extends Feature {
 	public void init() {
 		Ofa o = Ofa.get();
 		ChatBus.onChat(m -> guard(() -> {
-			Pattern sp = o.patterns.get("misc.chocolatefactory.egg.spawned");
+			Pattern sp = o.patterns.get("misc.chocolatefactory.egg.spawned", "meal");
 			Matcher s = (sp != null ? sp : SPAWNED).matcher(m.plain());
 			if (s.matches()) {
 				synchronized (waiting) {
@@ -50,7 +50,7 @@ public final class HoppityFeature extends Feature {
 				}
 				return;
 			}
-			Pattern fp = o.patterns.get("misc.chocolatefactory.egg.found");
+			Pattern fp = o.patterns.get("misc.chocolatefactory.egg.found", "meal");
 			Matcher f = (fp != null ? fp : FOUND).matcher(m.plain());
 			if (f.matches()) {
 				synchronized (waiting) {

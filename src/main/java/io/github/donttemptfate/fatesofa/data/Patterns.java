@@ -18,13 +18,13 @@ import java.util.regex.PatternSyntaxException;
  */
 public final class Patterns {
 	private final Map<String, String> fallback = new HashMap<>();
-	private final Map<String, Pattern> compiled = new ConcurrentHashMap<>();
+	private volatile Map<String, Pattern> compiled = new ConcurrentHashMap<>();
 	private volatile Map<String, String> repo = Map.of();
 
 	/** Registers OFA's own pattern for a key (used when the repo doesn't have it or it doesn't compile). */
 	public Patterns define(String key, String regex) {
 		fallback.put(key, regex);
-		compiled.remove(key);
+		compiled = new ConcurrentHashMap<>();
 		return this;
 	}
 
@@ -38,7 +38,7 @@ public final class Patterns {
 			}
 		}
 		repo = m;
-		compiled.clear();
+		compiled = new ConcurrentHashMap<>();
 	}
 
 	public int repoSize() {
@@ -47,7 +47,8 @@ public final class Patterns {
 
 	/** The pattern for a key (repo first, then OFA's own), without colour codes; null when neither exists. */
 	public Pattern get(String key) {
-		Pattern p = compiled.get(key);
+		Map<String, Pattern> cache = compiled;
+		Pattern p = cache.get(key);
 		if (p != null) return p;
 		String src = repo.get(key);
 		p = src == null ? null : compileColourless(src);
@@ -55,8 +56,20 @@ public final class Patterns {
 			String fb = fallback.get(key);
 			p = fb == null ? null : compileColourless(fb);
 		}
-		if (p != null) compiled.put(key, p);
+		if (p != null) cache.put(key, p);
 		return p;
+	}
+
+	/**
+	 * Like {@link #get(String)}, but the repo pattern is only used when it has every named group OFA reads;
+	 * otherwise OFA's own pattern is used.
+	 */
+	public Pattern get(String key, String... groups) {
+		Pattern p = get(key);
+		if (p == null || groups.length == 0) return p;
+		if (p.namedGroups().keySet().containsAll(java.util.List.of(groups))) return p;
+		String fb = fallback.get(key);
+		return fb == null ? null : compileColourless(fb);
 	}
 
 	/** Removes Minecraft colour codes from a pattern so it matches plain text. */

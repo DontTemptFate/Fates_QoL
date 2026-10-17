@@ -99,6 +99,10 @@ public final class RepoManager {
 			try {
 				loadLocal();
 				if (autoUpdate) update(false);
+				if (state == State.LOADING) {
+					state = State.NOT_LOADED;
+					message = "item data not downloaded yet (online data is off)";
+				}
 			} finally {
 				busy.set(false);
 			}

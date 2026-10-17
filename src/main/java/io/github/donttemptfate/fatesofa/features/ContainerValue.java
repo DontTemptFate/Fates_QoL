@@ -49,22 +49,39 @@ public final class ContainerValue extends Feature {
 		});
 	}
 
+	private Object cachedFor;
+	private long cachedAt;
+	private Card cached;
+
 	void draw(AbstractContainerScreen<?> s, GuiGraphicsExtractor g) {
+		long t0 = System.currentTimeMillis();
+		if (s == cachedFor && t0 - cachedAt < 250) {
+			if (cached != null) place(s, g, cached);
+			return;
+		}
+		cachedFor = s;
+		cachedAt = t0;
+		cached = build(s);
+		if (cached != null) place(s, g, cached);
+	}
+
+	Card build(AbstractContainerScreen<?> s) {
 		Ofa o = Ofa.get();
-		if (!o.state.onSkyBlock() && !Boolean.getBoolean("fatesofa.test")) return;
+		if (!o.state.onSkyBlock() && !Boolean.getBoolean("fatesofa.test")) return null;
 		String title = Strip.clean(s.getTitle().getString());
-		if (s.getMenu().slots.stream().allMatch(sl -> sl.container instanceof Inventory)) return; // player inventory
-		if (get(where).equals("storage") && !STORAGE.matcher(title).matches()) return;
+		if (s.getMenu().slots.stream().allMatch(sl -> sl.container instanceof Inventory)) return null; // player inventory
+		if (get(where).equals("storage") && !STORAGE.matcher(title).matches()) return null;
 		long now = System.currentTimeMillis();
 		List<Valuer.Valued> vals = new ArrayList<>();
 		for (Slot sl : s.getMenu().slots) {
 			if (sl.container instanceof Inventory) continue;
 			ItemStack st = sl.getItem();
 			if (st.isEmpty()) continue;
-			Valuer.Valued v = Valuer.value(o.prices, Items.key(st), Items.plainName(st), st.getCount(), now);
+			var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(st);
+			Valuer.Valued v = Valuer.value(o.prices, facts.key(), facts.name(), st.getCount(), now);
 			if (v != null && v.total() >= get(minK) * 1000.0) vals.add(v);
 		}
-		if (vals.isEmpty()) return;
+		if (vals.isEmpty()) return null;
 		double total = Valuer.total(vals);
 		List<Valuer.Valued> top = Valuer.top(vals, get(topN));
 		Card c = new Card(0.88f, 90, 170);
@@ -76,6 +93,10 @@ public final class ContainerValue extends Feature {
 			kv.row(Card.seg((v.count() > 1 ? v.count() + "× " : "") + name, Ui.Role.SMALL, Ui.WHITE), Card.seg(Fmt.shortNum(v.total()), Ui.Role.SMALL, Ui.GOLD));
 		}
 		c.add(kv);
+		return c;
+	}
+
+	void place(AbstractContainerScreen<?> s, GuiGraphicsExtractor g, Card c) {
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
 		int room = a.fatesofa$leftPos() - 8;
 		float scale = Math.min(1f, Math.max(0.5f, room / (float) c.width()));

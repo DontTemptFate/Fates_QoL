@@ -235,11 +235,7 @@ public final class ItemListFeature extends Feature {
 	}
 
 	static boolean matches(ItemStack st, String[] words) {
-		StringBuilder b = new StringBuilder(Items.plainName(st));
-		for (String l : Items.lorePlain(st)) b.append(' ').append(l);
-		String key = Items.key(st);
-		if (key != null) b.append(' ').append(key.replace('_', ' '));
-		String t = Strip.clean(b.toString()).toLowerCase(Locale.ROOT);
+		String t = io.github.donttemptfate.fates.common.item.ItemFacts.of(st).searchText();
 		for (String w : words) if (!t.contains(w)) return false;
 		return true;
 	}

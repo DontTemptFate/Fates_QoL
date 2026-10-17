@@ -87,7 +87,17 @@ public final class Settings {
 			else values.add(s.key, e);
 			dirty = true;
 		}
-		for (Consumer<String> l : listeners) l.accept(s.key);
+		fire(s.key);
+	}
+
+	void fire(String key) {
+		for (Consumer<String> l : listeners) {
+			try {
+				l.accept(key);
+			} catch (RuntimeException e) {
+				// a listener's problem never breaks changing a setting
+			}
+		}
 	}
 
 	/** Back to the default value. */
@@ -96,7 +106,7 @@ public final class Settings {
 			if (values.remove(s.key) == null) return;
 			dirty = true;
 		}
-		for (Consumer<String> l : listeners) l.accept(s.key);
+		fire(s.key);
 	}
 
 	public synchronized boolean isDefault(Setting<?> s) {
@@ -221,7 +231,9 @@ public final class Settings {
 			if (raw.length > 512 * 1024) return -1;
 			JsonObject root = JsonParser.parseString(new String(raw, StandardCharsets.UTF_8)).getAsJsonObject();
 			version = root.get("version").getAsInt();
+			if (!root.has("values") || !root.get("values").isJsonObject()) return -1;
 			v = migrate(root.getAsJsonObject("values"), version);
+			if (v == null) return -1;
 		} catch (RuntimeException e) {
 			return -1;
 		}
@@ -237,7 +249,7 @@ public final class Settings {
 			}
 			if (applied > 0) dirty = true;
 		}
-		for (String k : changed) for (Consumer<String> l : listeners) l.accept(k);
+		for (String k : changed) fire(k);
 		return applied;
 	}
 }

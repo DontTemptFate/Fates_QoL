@@ -38,6 +38,7 @@ public final class StorageCache {
 	private final Map<String, Page> pages = new LinkedHashMap<>();
 	private String profile;
 	private boolean dirty;
+	private String pendingEmpty;
 
 	public StorageCache(Path dir) {
 		this.dir = dir;
@@ -77,6 +78,15 @@ public final class StorageCache {
 		if (profile == null) return;
 		Page old = pages.get(id);
 		if (old != null && old.items().equals(items)) return;
+		// a window that just opened may not have its items yet: an empty read only replaces a full page
+		// when it is seen twice in a row
+		if (items.isEmpty() && old != null && !old.items().isEmpty()) {
+			if (!id.equals(pendingEmpty)) {
+				pendingEmpty = id;
+				return;
+			}
+		}
+		pendingEmpty = null;
 		pages.put(id, new Page(id, title, now, List.copyOf(items)));
 		dirty = true;
 	}
@@ -148,7 +158,11 @@ public final class StorageCache {
 			Files.createDirectories(dir);
 			Path tmp = file().resolveSibling(file().getFileName() + ".tmp");
 			Files.writeString(tmp, new Gson().toJson(root), StandardCharsets.UTF_8);
-			Files.move(tmp, file(), StandardCopyOption.REPLACE_EXISTING);
+			try {
+				Files.move(tmp, file(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+			} catch (java.nio.file.AtomicMoveNotSupportedException e) {
+				Files.move(tmp, file(), StandardCopyOption.REPLACE_EXISTING);
+			}
 			dirty = false;
 		} catch (IOException ignored) {
 			// try again next time

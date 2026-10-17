@@ -38,6 +38,13 @@ public final class Hooks {
 		});
 		ClientLifecycleEvents.CLIENT_STOPPING.register(mc -> {
 			save(o);
+			try {
+				if (io.github.donttemptfate.fatesofa.features.StorageFeature.INSTANCE != null) io.github.donttemptfate.fatesofa.features.StorageFeature.INSTANCE.saveNow();
+				if (io.github.donttemptfate.fatesofa.features.PlannerFeature.INSTANCE != null && io.github.donttemptfate.fatesofa.features.PlannerFeature.INSTANCE.data() != null)
+					io.github.donttemptfate.fatesofa.features.PlannerFeature.INSTANCE.data().save();
+			} catch (Throwable e) {
+				FatesOfaClient.LOG.warn("couldn't save data on exit: {}", e.toString());
+			}
 			o.io.shutdownNow();
 		});
 	}

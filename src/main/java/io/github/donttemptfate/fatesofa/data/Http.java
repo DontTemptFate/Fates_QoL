@@ -35,22 +35,40 @@ public final class Http {
 		}
 	}
 
-	/** GET {@code url}; reads at most {@code maxBytes} (after gunzip). Only https URLs. */
-	public static Response get(String url, long maxBytes, String ifNoneMatch) throws IOException, InterruptedException {
+	/** Hosts OFA may contact. Anything else is refused. */
+	static final java.util.Set<String> HOSTS = java.util.Set.of("github.com", "codeload.github.com", "api.hypixel.net", "fatesflipper.com");
+
+	static URI check(String url) throws IOException {
 		URI uri = URI.create(url);
 		if (!"https".equals(uri.getScheme())) throw new IOException("only https is allowed: " + url);
+		if (uri.getHost() == null || !HOSTS.contains(uri.getHost().toLowerCase(java.util.Locale.ROOT))) throw new IOException("host not allowed: " + uri.getHost());
+		return uri;
+	}
+
+	/**
+	 * GET {@code url}; at most {@code maxBytes} (after gunzip). The whole exchange, body included, must finish
+	 * within 90 seconds.
+	 */
+	public static Response get(String url, long maxBytes, String ifNoneMatch) throws IOException, InterruptedException {
+		URI uri = check(url);
 		HttpRequest.Builder b = HttpRequest.newBuilder(uri)
-				.timeout(Duration.ofSeconds(60))
+				.timeout(Duration.ofSeconds(30))
 				.header("User-Agent", userAgent)
 				.header("Accept-Encoding", "gzip")
 				.GET();
 		if (ifNoneMatch != null) b.header("If-None-Match", ifNoneMatch);
-		HttpResponse<InputStream> r = CLIENT.send(b.build(), HttpResponse.BodyHandlers.ofInputStream());
-		byte[] body;
-		try (InputStream raw = r.body()) {
-			boolean gz = r.headers().firstValue("Content-Encoding").map(v -> v.equalsIgnoreCase("gzip")).orElse(false);
-			body = readCapped(gz ? new GZIPInputStream(raw) : raw, maxBytes);
+		HttpResponse<byte[]> r;
+		try {
+			r = CLIENT.sendAsync(b.build(), HttpResponse.BodyHandlers.ofByteArray()).get(90, java.util.concurrent.TimeUnit.SECONDS);
+		} catch (java.util.concurrent.ExecutionException e) {
+			throw new IOException(e.getCause() == null ? e.toString() : e.getCause().toString());
+		} catch (java.util.concurrent.TimeoutException e) {
+			throw new IOException("timed out: " + uri.getHost());
 		}
+		byte[] raw = r.body();
+		if (raw.length > maxBytes) throw new IOException("response larger than " + maxBytes + " bytes");
+		boolean gz = r.headers().firstValue("Content-Encoding").map(v -> v.equalsIgnoreCase("gzip")).orElse(false);
+		byte[] body = gz ? readCapped(new GZIPInputStream(new java.io.ByteArrayInputStream(raw)), maxBytes) : raw;
 		long retry = r.headers().firstValue("Retry-After").map(v -> {
 			try {
 				return Long.parseLong(v.trim());
@@ -61,24 +79,20 @@ public final class Http {
 		return new Response(r.statusCode(), body, r.headers().firstValue("ETag").orElse(null), retry);
 	}
 
-	/** Streams a GET straight into {@code file} (for big downloads). Returns the status code. */
+	/** Streams a GET into {@code file} (big downloads), within 5 minutes and {@code maxBytes}. Returns the status. */
 	public static int download(String url, java.nio.file.Path file, long maxBytes) throws IOException, InterruptedException {
-		URI uri = URI.create(url);
-		if (!"https".equals(uri.getScheme())) throw new IOException("only https is allowed: " + url);
-		HttpRequest req = HttpRequest.newBuilder(uri).timeout(Duration.ofMinutes(5)).header("User-Agent", userAgent).GET().build();
-		HttpResponse<InputStream> r = CLIENT.send(req, HttpResponse.BodyHandlers.ofInputStream());
-		try (InputStream in = r.body(); var out = java.nio.file.Files.newOutputStream(file)) {
-			if (r.statusCode() != 200) return r.statusCode();
-			byte[] buf = new byte[64 * 1024];
-			long total = 0;
-			int n;
-			while ((n = in.read(buf)) > 0) {
-				total += n;
-				if (total > maxBytes) throw new IOException("download larger than " + maxBytes + " bytes");
-				out.write(buf, 0, n);
-			}
+		URI uri = check(url);
+		HttpRequest req = HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(30)).header("User-Agent", userAgent).GET().build();
+		HttpResponse<java.nio.file.Path> r;
+		try {
+			r = CLIENT.sendAsync(req, HttpResponse.BodyHandlers.ofFile(file)).get(5, java.util.concurrent.TimeUnit.MINUTES);
+		} catch (java.util.concurrent.ExecutionException e) {
+			throw new IOException(e.getCause() == null ? e.toString() : e.getCause().toString());
+		} catch (java.util.concurrent.TimeoutException e) {
+			throw new IOException("download timed out: " + uri.getHost());
 		}
-		return 200;
+		if (r.statusCode() == 200 && java.nio.file.Files.size(file) > maxBytes) throw new IOException("download larger than " + maxBytes + " bytes");
+		return r.statusCode();
 	}
 
 	static byte[] readCapped(InputStream in, long max) throws IOException {

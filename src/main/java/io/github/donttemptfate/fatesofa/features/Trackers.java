@@ -32,17 +32,17 @@ final class Trackers {
 	}
 
 	private static Map<String, String> nameToKey = new HashMap<>();
-	private static int builtFor = -1;
+	private static Object builtFor;
 
 	/** NEU key for an item's display name ("Revenant Viscera" → REVENANT_VISCERA), or null. */
 	static String keyForName(String name) {
 		Ofa o = Ofa.get();
 		var repo = o.repo.items();
-		if (repo.size() != builtFor) {
+		if (repo != builtFor) {
 			Map<String, String> m = new HashMap<>();
 			for (RepoItem it : repo.all()) m.putIfAbsent(it.plainName().toLowerCase(Locale.ROOT), it.key());
 			nameToKey = m;
-			builtFor = repo.size();
+			builtFor = repo;
 		}
 		return nameToKey.get(name.toLowerCase(Locale.ROOT).trim());
 	}

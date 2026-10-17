@@ -39,18 +39,29 @@ public final class ChatBus {
 	static void register() {
 		ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
 			try {
-				Msg m = new Msg(Strip.clean(message.getString()), message, System.currentTimeMillis());
+				String plain = Strip.clean(message.getString());
+				// patterns only ever need the start of a line; very long lines are cut so no pattern runs away
+				if (plain.length() > 600) plain = plain.substring(0, 600);
+				Msg m = new Msg(plain, message, System.currentTimeMillis());
 				if (overlay) {
 					lastActionBar = m.plain();
-					for (Consumer<Msg> l : ACTION_BAR) l.accept(m);
+					for (Consumer<Msg> l : ACTION_BAR) safe(l, m);
 				} else {
-					for (Consumer<Msg> l : CHAT) l.accept(m);
+					for (Consumer<Msg> l : CHAT) safe(l, m);
 				}
 			} catch (Throwable e) {
 				FatesOfaClient.LOG.warn("chat listener error", e);
 			}
 			return true;
 		});
+	}
+
+	static void safe(Consumer<Msg> l, Msg m) {
+		try {
+			l.accept(m);
+		} catch (Throwable e) {
+			FatesOfaClient.LOG.warn("chat listener error", e);
+		}
 	}
 
 	/** For tests: feed a message as if the server sent it. */

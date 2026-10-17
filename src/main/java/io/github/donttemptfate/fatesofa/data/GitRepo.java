@@ -77,8 +77,12 @@ public final class GitRepo {
 			Files.deleteIfExists(zip);
 		}
 		Files.writeString(tmp.resolve(".commit"), commit, StandardCharsets.UTF_8);
-		deleteTree(target);
-		Files.move(tmp, target, StandardCopyOption.ATOMIC_MOVE);
+		// swap: old copy aside, new one in, then remove the old one (never a half-deleted copy with a commit id)
+		Path old = target.resolveSibling(target.getFileName() + ".old");
+		deleteTree(old);
+		if (Files.exists(target)) Files.move(target, old);
+		Files.move(tmp, target);
+		deleteTree(old);
 	}
 
 	/** Unpacks a GitHub zip (one top folder) keeping paths {@code keep} accepts; refuses paths leaving {@code dir}. */
