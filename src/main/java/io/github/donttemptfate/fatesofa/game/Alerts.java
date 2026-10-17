@@ -22,6 +22,6 @@ public final class Alerts {
 
 	public static void ding() {
 		Minecraft mc = Minecraft.getInstance();
-		mc.execute(() -> mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING, 2.0f, 1.0f)));
+		mc.execute(() -> mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.NOTE_BLOCK_PLING.value(), 2.0f, 1.0f)));
 	}
 }

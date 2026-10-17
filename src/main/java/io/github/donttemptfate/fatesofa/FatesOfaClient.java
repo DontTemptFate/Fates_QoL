@@ -57,6 +57,9 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new FishingFeature());
 		Features.add(new SlayerFeature());
 		Features.add(new RiftFeature());
+		Features.add(new DungeonFeature());
+		Features.add(new DungeonHelpers());
+		Features.add(new KuudraFeature());
 		Features.add(new DianaFeature());
 		Features.add(new HoppityFeature());
 		Features.add(new BingoFeature());
