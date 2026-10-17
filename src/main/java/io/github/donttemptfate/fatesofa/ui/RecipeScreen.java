@@ -117,7 +117,7 @@ public final class RecipeScreen extends Screen {
 		for (int i = 0; i <= tabs.size(); i++) {
 			boolean isUsed = i == tabs.size();
 			String label = isUsed ? "Used in (" + repo.usedIn(key).size() + ")" : tabs.get(i);
-			int tw = font.width(label) + 10;
+			int tw = Ui.width(Ui.t(label, Ui.Role.BODY_BOLD, 0), Ui.Role.BODY_BOLD) + 12;
 			boolean active = isUsed ? usedIn : !usedIn && tab == i;
 			Rect r = new Rect(tx, y, tw, 13);
 			Widgets.button(g, r.x(), r.y(), r.w(), r.h(), label, r.contains(mx, my), active);

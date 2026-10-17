@@ -21,6 +21,7 @@ public final class HudEditorScreen extends Screen {
 	private Hud.Placed dragging;
 	private double grabX, grabY;
 	private int dragX, dragY;
+	private boolean showAll;
 
 	public HudEditorScreen(Screen parent) {
 		super(Component.literal("Fates OFA — HUD editor"));
@@ -40,7 +41,7 @@ public final class HudEditorScreen extends Screen {
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
 		super.extractRenderState(g, mouseX, mouseY, delta);
-		if (dragging == null) placed = Hud.layout(this.width, this.height, true);
+		if (dragging == null) placed = Hud.layout(this.width, this.height, true, showAll);
 		// guides: thirds, so the anchor zones are visible
 		int c = 0x22FFFFFF;
 		g.fill(this.width / 3, 0, this.width / 3 + 1, this.height, c);
@@ -68,7 +69,7 @@ public final class HudEditorScreen extends Screen {
 			g.text(this.font, label, x, Math.max(0, y - 10), hidden ? 0xFF888888 : 0xFFFFFFFF, true);
 		}
 		Card help = new Card(0.94f, 0, 300).add(Card.Line.of(Card.seg("HUD EDITOR", Ui.Role.LABEL, Ui.accent())))
-				.add(new Card.Text(Ui.t("Drag to move · wheel to resize · right-click to hide · middle-click to reset · Esc to save",
+				.add(new Card.Text(Ui.t("Drag to move · wheel to resize · right-click to hide · middle-click to reset · A: show switched-off features · Esc to save",
 						Ui.Role.SMALL, Ui.GRAY), Ui.Role.SMALL, 0, 3));
 		help.draw(g, (this.width - help.width()) / 2, this.height / 2 - help.height() / 2, 1f);
 	}
@@ -130,6 +131,10 @@ public final class HudEditorScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(KeyEvent e) {
+		if (e.key() == 65) { // A
+			showAll = !showAll;
+			return true;
+		}
 		return super.keyPressed(e);
 	}
 

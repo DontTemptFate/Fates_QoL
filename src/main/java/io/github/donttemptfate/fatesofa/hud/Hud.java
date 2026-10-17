@@ -75,12 +75,18 @@ public final class Hud {
 	 * example content where there's nothing live).
 	 */
 	public static List<Placed> layout(int screenW, int screenH, boolean sample) {
+		return layout(screenW, screenH, sample, false);
+	}
+
+	/** {@code all}: in the editor, include elements of switched-off features too. */
+	public static List<Placed> layout(int screenW, int screenH, boolean sample, boolean all) {
 		List<HudElement> els = new ArrayList<>(ELEMENTS.values());
 		els.sort(Comparator.comparingInt(e -> -e.priority));
 		List<Layout.Item> items = new ArrayList<>();
 		Map<String, Card> cards = new LinkedHashMap<>();
 		for (HudElement e : els) {
 			if (!sample && (hidden(e) || !e.owner.active())) continue;
+			if (sample && !all && !e.owner.active()) continue;
 			Card c = null;
 			if (!sample || e.owner.active()) {
 				boolean vis = e.owner.guard(() -> e.visible.getAsBoolean(), false);

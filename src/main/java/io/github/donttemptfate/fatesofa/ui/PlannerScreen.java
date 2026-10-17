@@ -96,7 +96,7 @@ public final class PlannerScreen extends Screen {
 		g.text(font, "PLANNER", x, y, Ui.accent(), true);
 		int tx = x + 60;
 		for (Tab t : Tab.values()) {
-			int tw = font.width(t.label) + 10;
+			int tw = Ui.width(Ui.t(t.label, Ui.Role.BODY_BOLD, 0), Ui.Role.BODY_BOLD) + 12;
 			Rect r = new Rect(tx, y - 2, tw, 13);
 			Widgets.button(g, r.x(), r.y(), r.w(), r.h(), t.label, r.contains(mx, my), t == tab);
 			hits.add(r, () -> {
