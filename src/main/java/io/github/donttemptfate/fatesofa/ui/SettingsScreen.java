@@ -104,6 +104,21 @@ public final class SettingsScreen extends Screen {
 		addRenderableWidget(textEdit);
 	}
 
+	/** For the in-game test: the open page's name. */
+	public String pageLabel() {
+		return page.label();
+	}
+
+	/** For the in-game test: the centre of a sidebar entry, in GUI pixels (null if not listed). */
+	public double[] sidebarPoint(String label) {
+		int sy = cy;
+		for (Page p : pages) {
+			if (p.label().equals(label)) return new double[] {px + 8 + sideW / 2.0, sy + 7};
+			sy += 15;
+		}
+		return null;
+	}
+
 	String query() {
 		return search == null ? "" : search.getValue().trim();
 	}

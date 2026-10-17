@@ -48,6 +48,10 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.takeScreenshot("00_world");
 			o.state.setOnHypixel(true);
 
+			// real input: open settings by typing /ofa in chat, then click a sidebar entry with the mouse
+			realClick(ctx, false);
+			realClick(ctx, true);
+
 			// settings pages
 			ctx.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null)));
 			ctx.waitTicks(10);
@@ -299,6 +303,34 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 
 	static io.github.donttemptfate.fatesofa.storage.StoredItem stored(int slot, String item, String key, String name, int count) {
 		return new io.github.donttemptfate.fatesofa.storage.StoredItem(slot, item, key, name, List.of("§7A remembered item"), null, null, count);
+	}
+
+	/** Opens settings (by chat command, or directly) and clicks "General" with a real mouse press. */
+	static void realClick(ClientGameTestContext ctx, boolean viaChat) {
+		if (viaChat) {
+			ctx.runOnClient(mc -> mc.gui.setScreen(new net.minecraft.client.gui.screens.ChatScreen("", false)));
+			ctx.waitTicks(5);
+			ctx.getInput().typeChars("/ofa");
+			ctx.waitTicks(2);
+			ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RETURN);
+		} else {
+			ctx.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null)));
+		}
+		ctx.waitFor(mc -> mc.gui.screen() instanceof SettingsScreen, 100);
+		ctx.waitTicks(10);
+		double scale = ctx.computeOnClient(mc -> mc.getWindow().getGuiScale());
+		double[] at = ctx.computeOnClient(mc -> ((SettingsScreen) mc.gui.screen()).sidebarPoint("General"));
+		check(at != null, "no General entry");
+		ctx.getInput().setCursorPos(at[0] * scale, at[1] * scale);
+		ctx.waitTicks(3);
+		ctx.getInput().pressMouse(0);
+		ctx.waitTicks(5);
+		String page = ctx.computeOnClient(mc -> mc.gui.screen() instanceof SettingsScreen st ? st.pageLabel() : "(screen closed: " + mc.gui.screen() + ")");
+		ctx.takeScreenshot(viaChat ? "00c_real_click_after_chat" : "00b_real_click_direct");
+		FatesOfaClient.LOG.info("[gametest] real click ({}): page is now {}", viaChat ? "via /ofa" : "direct", page);
+		check("General".equals(page), "a real mouse click didn't reach the settings screen (" + (viaChat ? "opened with /ofa" : "opened directly") + "): page " + page);
+		ctx.runOnClient(mc -> mc.gui.setScreen(null));
+		ctx.waitTicks(5);
 	}
 
 	static void check(boolean ok, String msg) {
