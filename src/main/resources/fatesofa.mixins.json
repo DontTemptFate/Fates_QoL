@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "io.github.donttemptfate.fatesofa.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"AbstractContainerScreenAccessor",
+		"MultiPlayerGameModeMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

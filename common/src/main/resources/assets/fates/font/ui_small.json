@@ -1,0 +1,18 @@
+{
+  "providers": [
+    {
+      "type": "ttf",
+      "file": "fates:chakra/chakra_petch_regular.ttf",
+      "shift": [
+        0.0,
+        0.0
+      ],
+      "size": 7.5,
+      "oversample": 4.0
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:default"
+    }
+  ]
+}

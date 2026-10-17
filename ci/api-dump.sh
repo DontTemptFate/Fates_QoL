@@ -21,11 +21,9 @@ dump() { # $1 = class, $2 = file
 while read -r pkg; do
   [ -z "$pkg" ] && continue; case "$pkg" in \#*) continue;; esac
   f="$out/pkg-$pkg.txt"; : > "$f"
-  grep -E "^${pkg//./\\.}\.[A-Za-z0-9_\$]+$" "$out/classes.txt" "$out/fabric-classes.txt" -h | while read -r c; do dump "$c" "$f"; done
+  # one javap run per 300 classes (a JVM start per class takes far too long)
+  grep -E "^${pkg//./\\.}\.[A-Za-z0-9_\$]+$" "$out/classes.txt" "$out/fabric-classes.txt" -h | xargs -r -n 300 javap -p -cp "$cp" >> "$f" 2>&1 || true
 done < ci/api-packages.txt
 f="$out/classes-picked.txt"; : > "$f"
-while read -r c; do
-  [ -z "$c" ] && continue; case "$c" in \#*) continue;; esac
-  dump "$c" "$f"
-done < ci/api-classes.txt
+grep -v '^#' ci/api-classes.txt | grep -v '^$' | xargs -r javap -p -cp "$cp" >> "$f" 2>&1 || true
 ls -la "$out"
