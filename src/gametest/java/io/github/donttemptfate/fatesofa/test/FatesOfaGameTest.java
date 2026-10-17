@@ -199,7 +199,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				var tabs = q.testLayout(screen);
 				check(tabs != null && tabs.size() >= 3, "no quick buttons on the page");
 				int[] pets = tabs.get(1);
-				check(q.click(screen, pets[0] + 11, pets[1] + 10, 0), "click on the Pets tab wasn't taken");
+				check(q.click(screen, pets[0] + 11, pets[1] + 10, io.github.donttemptfate.fatesofa.ui.Mouse.LEFT), "click on the Pets tab wasn't taken");
 				check("pets".equals(io.github.donttemptfate.fatesofa.game.Game.lastCommand), "Pets tab didn't send /pets: " + io.github.donttemptfate.fatesofa.game.Game.lastCommand);
 				check(q.entries().size() == 6, "default quick commands missing");
 			});
@@ -323,7 +323,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		check(at != null, "no General entry");
 		ctx.getInput().setCursorPos(at[0] * scale, at[1] * scale);
 		ctx.waitTicks(3);
-		ctx.getInput().pressMouse(0);
+		ctx.getInput().pressMouse(com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT);
 		ctx.waitTicks(5);
 		String page = ctx.computeOnClient(mc -> mc.gui.screen() instanceof SettingsScreen st ? st.pageLabel() : "(screen closed: " + mc.gui.screen() + ")");
 		ctx.takeScreenshot(viaChat ? "00c_real_click_after_chat" : "00b_real_click_direct");

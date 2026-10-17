@@ -123,7 +123,7 @@ public final class StorageOverlay extends Feature {
 		ScreenMouseEvents.allowMouseClick(s).register((sc, e) -> guard(() -> !click(s, box, e.x(), e.y()), true));
 		ScreenKeyboardEvents.allowKeyPress(s).register((sc, e) -> guard(() -> {
 			if (!box.isFocused()) return true;
-			if (e.key() == 256) { // Esc leaves the box, keeps the window
+			if (e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_ESCAPE) { // Esc leaves the box, keeps the window
 				box.setFocused(false);
 				s.setFocused(null);
 				return false;

@@ -263,11 +263,11 @@ public final class RecipeScreen extends Screen {
 	public boolean mouseClicked(MouseButtonEvent e, boolean doubleClick) {
 		Widgets.Hit h = hits.at(e.x(), e.y());
 		if (h != null) {
-			Runnable r = e.button() == 1 ? h.right() : h.left();
+			Runnable r = Mouse.right(e.button()) ? h.right() : h.left();
 			if (r != null) r.run();
 			return true;
 		}
-		if (e.button() == 3) {
+		if (Mouse.back(e.button())) {
 			back();
 			return true;
 		}
@@ -282,7 +282,7 @@ public final class RecipeScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(KeyEvent e) {
-		if (e.key() == 259) { // Backspace
+		if (e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_BACKSPACE) {
 			back();
 			return true;
 		}

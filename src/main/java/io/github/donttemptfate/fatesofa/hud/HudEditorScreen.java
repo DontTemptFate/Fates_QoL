@@ -83,18 +83,17 @@ public final class HudEditorScreen extends Screen {
 	public boolean mouseClicked(MouseButtonEvent e, boolean doubleClick) {
 		Hud.Placed p = at(e.x(), e.y());
 		if (p == null) return super.mouseClicked(e, doubleClick);
-		switch (e.button()) {
-			case 0 -> {
-				dragging = p;
-				grabX = e.x() - p.rect().x();
-				grabY = e.y() - p.rect().y();
-				dragX = p.rect().x();
-				dragY = p.rect().y();
-			}
-			case 1 -> Hud.setHidden(p.element(), !Hud.hidden(p.element()));
-			case 2 -> Hud.setPos(p.element(), null);
-			default -> {
-			}
+		int b = e.button();
+		if (io.github.donttemptfate.fatesofa.ui.Mouse.left(b)) {
+			dragging = p;
+			grabX = e.x() - p.rect().x();
+			grabY = e.y() - p.rect().y();
+			dragX = p.rect().x();
+			dragY = p.rect().y();
+		} else if (io.github.donttemptfate.fatesofa.ui.Mouse.right(b)) {
+			Hud.setHidden(p.element(), !Hud.hidden(p.element()));
+		} else if (io.github.donttemptfate.fatesofa.ui.Mouse.middle(b)) {
+			Hud.setPos(p.element(), null);
 		}
 		return true;
 	}
@@ -131,7 +130,7 @@ public final class HudEditorScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(KeyEvent e) {
-		if (e.key() == 65) { // A
+		if (e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_A) {
 			showAll = !showAll;
 			return true;
 		}

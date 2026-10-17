@@ -178,7 +178,7 @@ public final class ItemListFeature extends Feature {
 		int i = page * p.perPage() + row * p.cols() + col;
 		if (i >= res.size()) return true;
 		RepoItem it = res.get(i);
-		Minecraft.getInstance().gui.setScreen(new RecipeScreen(s, it.key(), e.button() == 1));
+		Minecraft.getInstance().gui.setScreen(new RecipeScreen(s, it.key(), io.github.donttemptfate.fatesofa.ui.Mouse.right(e.button())));
 		return true;
 	}
 
@@ -193,7 +193,7 @@ public final class ItemListFeature extends Feature {
 	/** Keys: typing goes to the search box (so "E" doesn't close the window); the item list key toggles the panel. */
 	boolean key(AbstractContainerScreen<?> s, EditBox box, KeyEvent e) {
 		if (box.isFocused()) {
-			if (e.key() == 256) { // Esc: leave the box, keep the window
+			if (e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_ESCAPE) { // Esc: leave the box, keep the window
 				box.setFocused(false);
 				s.setFocused(null);
 				return false;
@@ -208,10 +208,10 @@ public final class ItemListFeature extends Feature {
 		// "R" / "U" over a slot: recipe / used in (like other item list mods); never while typing elsewhere
 		if (s.getFocused() instanceof EditBox) return true;
 		Slot hov = ((AbstractContainerScreenAccessor) s).fatesofa$hoveredSlot();
-		if (hov != null && hov.hasItem() && (e.key() == 82 || e.key() == 85)) {
+		if (hov != null && hov.hasItem() && (e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_R || e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_U)) {
 			String key = Items.key(hov.getItem());
 			if (key != null && Ofa.get().repo.items().get(key) != null) {
-				Minecraft.getInstance().gui.setScreen(new RecipeScreen(s, key, e.key() == 85));
+				Minecraft.getInstance().gui.setScreen(new RecipeScreen(s, key, e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_U));
 				return false;
 			}
 		}

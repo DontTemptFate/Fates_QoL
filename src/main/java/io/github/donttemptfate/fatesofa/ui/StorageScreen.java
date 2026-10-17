@@ -436,7 +436,7 @@ public final class StorageScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(net.minecraft.client.input.KeyEvent e) {
-		if (e.key() == 256 && !search.getValue().isEmpty()) { // Esc clears the search first
+		if (e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_ESCAPE && !search.getValue().isEmpty()) { // Esc clears the search first
 			search.setValue("");
 			return true;
 		}

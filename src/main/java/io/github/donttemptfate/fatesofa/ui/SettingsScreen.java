@@ -577,13 +577,13 @@ public final class SettingsScreen extends Screen {
 		if (super.mouseClicked(e, doubleClick)) return true;
 		Widgets.Hit h = hits.at(e.x(), e.y());
 		if (h == null) return false;
-		if (h.slider() != null && e.button() == 0) {
+		if (h.slider() != null && Mouse.left(e.button())) {
 			activeSlider = h.slider();
 			activeSliderRect = h.rect();
 			activeSlider.set((e.x() - h.rect().x()) / Math.max(1.0, h.rect().w()));
 			return true;
 		}
-		Runnable r = e.button() == 1 ? h.right() : e.button() == 0 ? h.left() : null;
+		Runnable r = Mouse.right(e.button()) ? h.right() : Mouse.left(e.button()) ? h.left() : null;
 		if (r != null) {
 			r.run();
 			playClick();
@@ -616,7 +616,7 @@ public final class SettingsScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(KeyEvent e) {
-		if (editing != null && (e.key() == 257 || e.key() == 335)) { // Enter
+		if (editing != null && (e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_RETURN || e.key() == com.mojang.blaze3d.platform.InputConstants.KEY_NUMPADENTER)) { // Enter
 			stopEditing();
 			return true;
 		}

@@ -229,10 +229,10 @@ public final class QuickCommandsFeature extends Feature {
 		if (tabs == null) return false;
 		for (int[] tb : tabs) {
 			if (mx < tb[0] - 2 || mx >= tb[0] + TAB_W || my < tb[1] - 2 || my >= tb[1] + TAB_H) continue;
-			if (tb[2] < 0 || button == 1) {
+			if (tb[2] < 0 || io.github.donttemptfate.fatesofa.ui.Mouse.right(button)) {
 				int focus = tb[2];
 				Minecraft.getInstance().gui.setScreen(new QuickCommandsScreen(s, focus));
-			} else if (button == 0) run(entries.get(tb[2]));
+			} else if (io.github.donttemptfate.fatesofa.ui.Mouse.left(button)) run(entries.get(tb[2]));
 			return true;
 		}
 		return false;
