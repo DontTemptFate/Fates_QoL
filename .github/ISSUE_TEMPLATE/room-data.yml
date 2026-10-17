@@ -1,0 +1,19 @@
+name: Room data
+description: Share the dungeon secrets and routes OFA learned, so they join everyone's room pack.
+title: "[rooms] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        1. In game: `/ofa rooms export`
+        2. Drag the file from `.minecraft/config/fatesofa/rooms/export/` into the box below.
+
+        The file only holds room ids, secret positions inside rooms and routes. No names, no account data.
+        A secret joins the shared pack once at least two different players have found it at the same spot.
+  - type: textarea
+    id: files
+    attributes:
+      label: Share file(s)
+      description: Drag your ofa-rooms-….json file(s) here (up to 5).
+    validations:
+      required: true

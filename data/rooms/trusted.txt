@@ -1,0 +1,5 @@
+# Accounts and contributors the room pack trusts more (see ci/rooms/rooms.py).
+# gh:<github name>   files this account attaches count by the contributor id inside them
+#                    (for forwarding files players sent on Discord)
+# cid:<id>           this contributor's finds count as confirmed on their own (/ofa rooms shows your id)
+gh:DontTemptFate

@@ -135,6 +135,54 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.runOnClient(mc -> mc.gui.setScreen(null));
 			ctx.waitTicks(5);
 
+			// play recorder: game text is written with names hidden; what players type is not
+			ctx.runOnClient(mc -> {
+				io.github.donttemptfate.fatesofa.record.PlayRecorder.start();
+				String me = mc.player.getName().getString();
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("Party > [MVP+] " + me + ": secret party talk"), false);
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("[287] ♲ [MVP+] Stranger: public chat"), false);
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal(me + " has obtained Wither Key!"), false);
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("§71/5 Secrets"), true);
+			});
+			ctx.waitTicks(30);
+			ctx.runOnClient(mc -> {
+				io.github.donttemptfate.fatesofa.record.PlayRecorder.stop(true);
+				try (var files = java.nio.file.Files.list(o.dir.resolve("recordings"))) {
+					var f = files.filter(x -> x.toString().endsWith(".jsonl")).findFirst().orElseThrow();
+					String text = java.nio.file.Files.readString(f);
+					FatesOfaClient.LOG.info("[gametest] recording: {} bytes", text.length());
+					check(text.contains("{me} has obtained Wither Key!"), "game chat missing from the recording");
+					check(!text.contains("secret party talk") && !text.contains("public chat"), "player chat was recorded");
+					check(!text.contains(mc.player.getName().getString()), "a player name was recorded");
+					check(text.contains("\"k\":\"sidebar\"") || text.contains("\"k\":\"tab\"") || text.contains("\"k\":\"location\""), "no state lines recorded");
+					check(text.contains("1/5 Secrets"), "action bar missing");
+				} catch (java.io.IOException e) {
+					throw new AssertionError(e);
+				}
+			});
+
+			// secret waypoints: the room under the player is recognised from its blocks; learned secrets and a route are drawn
+			ctx.runOnClient(mc -> {
+				var sr = io.github.donttemptfate.fatesofa.features.SecretRoutes.INSTANCE;
+				o.settings.set(sr.enabled, true);
+				var p = mc.player.blockPosition();
+				io.github.donttemptfate.fatesofa.rooms.RoomGrid.originX = p.getX() - 2 * 32 - 15;
+				io.github.donttemptfate.fatesofa.rooms.RoomGrid.originZ = p.getZ() - 2 * 32 - 15;
+				sr.worldChanged();
+				double x = p.getX() + 0.5, y = p.getY() + 0.5, z = p.getZ() + 0.5;
+				sr.testLearn(io.github.donttemptfate.fatesofa.rooms.RoomStore.Kind.CHEST, x + 4, y, z + 6);
+				sr.testLearn(io.github.donttemptfate.fatesofa.rooms.RoomStore.Kind.BAT, x - 3, y + 2, z + 8);
+				sr.testLearn(io.github.donttemptfate.fatesofa.rooms.RoomStore.Kind.ESSENCE, x + 1, y, z + 11);
+				sr.testRoute(List.of(new double[] {x, y - 0.5, z}, new double[] {x + 2, y - 0.5, z + 3}, new double[] {x + 4, y - 0.5, z + 6},
+						new double[] {x - 3, y - 0.5, z + 8}, new double[] {x + 1, y - 0.5, z + 11}));
+				check(sr.knownCells() >= 1, "no room recognised under the player");
+				mc.player.setYRot(0f);
+				mc.player.setXRot(30f);
+			});
+			ctx.waitTicks(20);
+			ctx.takeScreenshot("10_secret_waypoints");
+			ctx.runOnClient(mc -> io.github.donttemptfate.fatesofa.features.SecretRoutes.INSTANCE.status());
+
 			for (Feature f : Features.all()) {
 				check(!f.failed(), "feature switched itself off: " + f.id + " — " + f.errors().lastError());
 			}

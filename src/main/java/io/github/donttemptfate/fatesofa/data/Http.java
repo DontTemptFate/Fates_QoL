@@ -36,7 +36,7 @@ public final class Http {
 	}
 
 	/** Hosts OFA may contact. Anything else is refused. */
-	static final java.util.Set<String> HOSTS = java.util.Set.of("github.com", "codeload.github.com", "api.hypixel.net", "fatesflipper.com");
+	static final java.util.Set<String> HOSTS = java.util.Set.of("github.com", "codeload.github.com", "raw.githubusercontent.com", "api.hypixel.net", "fatesflipper.com");
 
 	static URI check(String url) throws IOException {
 		URI uri = URI.create(url);

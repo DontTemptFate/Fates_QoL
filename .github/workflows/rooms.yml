@@ -1,0 +1,52 @@
+name: Room data
+
+# A "[rooms]" issue with an attached OFA share file adds it to the shared dungeon room pack.
+# Nothing from the issue reaches a shell: the script reads the event file itself.
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: room-data
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    if: startsWith(github.event.issue.title, '[rooms]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read the attached share files
+        run: python3 -I ci/rooms/rooms.py ingest summary.md
+
+      - name: Rebuild the shared pack
+        run: python3 -I ci/rooms/rooms.py build
+
+      - name: Commit
+        env:
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/rooms
+          if git diff --cached --quiet; then
+            echo "nothing new"
+          else
+            git commit -m "Room data from issue #${ISSUE}"
+            for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+          fi
+
+      - name: Reply on the issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          [ -f summary.md ] || echo "Something went wrong reading the files; Fate will have a look." > summary.md
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file summary.md
+          if grep -q "^Accepted" summary.md; then gh issue close "$ISSUE" --repo "$GITHUB_REPOSITORY"; fi

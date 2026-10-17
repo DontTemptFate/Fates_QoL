@@ -42,6 +42,25 @@ public final class Commands {
 							return 1;
 						})))
 				.then(ClientCommands.literal("status").executes(c -> status()))
+				.then(ClientCommands.literal("record")
+						.executes(c -> {
+							if (io.github.donttemptfate.fatesofa.record.PlayRecorder.on()) io.github.donttemptfate.fatesofa.record.PlayRecorder.stop(true);
+							else io.github.donttemptfate.fatesofa.record.PlayRecorder.start();
+							return 1;
+						})
+						.then(ClientCommands.literal("on").executes(c -> {
+							io.github.donttemptfate.fatesofa.record.PlayRecorder.start();
+							return 1;
+						}))
+						.then(ClientCommands.literal("off").executes(c -> {
+							io.github.donttemptfate.fatesofa.record.PlayRecorder.stop(true);
+							return 1;
+						})))
+				.then(ClientCommands.literal("rooms")
+						.executes(c -> rooms(r -> r.status()))
+						.then(ClientCommands.literal("export").executes(c -> rooms(r -> r.export())))
+						.then(ClientCommands.literal("import").executes(c -> rooms(r -> r.importAll())))
+						.then(ClientCommands.literal("update").executes(c -> rooms(r -> r.updatePack()))))
 				.then(ClientCommands.literal("planner").executes(c -> {
 					Game.openNextTick(io.github.donttemptfate.fatesofa.ui.PlannerScreen::new);
 					return 1;
@@ -100,6 +119,13 @@ public final class Commands {
 				})));
 	}
 
+	static int rooms(java.util.function.Consumer<io.github.donttemptfate.fatesofa.features.SecretRoutes> action) {
+		var r = io.github.donttemptfate.fatesofa.features.SecretRoutes.INSTANCE;
+		if (r == null) return 0;
+		action.accept(r);
+		return 1;
+	}
+
 	static int recipe(String q) {
 		var f = io.github.donttemptfate.fatesofa.features.ItemListFeature.INSTANCE;
 		var idx = f == null ? null : f.index();
@@ -134,7 +160,7 @@ public final class Commands {
 
 	static int help() {
 		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa storage · /ofa find <text> · /ofa wp add|remove|clear · "
-				+ "/ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
+				+ "/ofa rooms [export|import|update] · /ofa record [on|off] · /ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
 		return 1;
 	}
 

@@ -35,6 +35,7 @@ public final class Hooks {
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((mc, level) -> {
 			o.state.worldChanged(System.currentTimeMillis());
 			io.github.donttemptfate.fatesofa.items.Stacks.resourcesChanged(); // Hypixel's pack may have (un)loaded
+			if (io.github.donttemptfate.fatesofa.features.SecretRoutes.INSTANCE != null) io.github.donttemptfate.fatesofa.features.SecretRoutes.INSTANCE.worldChanged();
 		});
 		ClientLifecycleEvents.CLIENT_STOPPING.register(mc -> {
 			save(o);

@@ -38,6 +38,12 @@ public final class StateReader {
 
 	/** The sidebar, top line first, or null when there is none. */
 	public static ScoreboardInfo sidebar(Minecraft mc) {
+		List<String> raw = sidebarRaw(mc);
+		return raw == null ? null : ScoreboardInfo.parse(raw.get(0), raw.subList(1, raw.size()));
+	}
+
+	/** The sidebar as § strings: its title first, then the lines top to bottom. Null when there is none. */
+	public static List<String> sidebarRaw(Minecraft mc) {
 		Scoreboard sb = mc.level.getScoreboard();
 		Objective obj = sb.getDisplayObjective(DisplaySlot.SIDEBAR);
 		if (obj == null) return null;
@@ -45,13 +51,14 @@ public final class StateReader {
 		entries.removeIf(PlayerScoreEntry::isHidden);
 		entries.sort(Comparator.comparingInt(PlayerScoreEntry::value).reversed().thenComparing(PlayerScoreEntry::owner, String.CASE_INSENSITIVE_ORDER));
 		List<String> lines = new ArrayList<>();
+		lines.add(Texts.legacy(obj.getDisplayName()));
 		for (PlayerScoreEntry e : entries) {
-			if (lines.size() >= 15) break;
+			if (lines.size() > 15) break;
 			PlayerTeam team = sb.getPlayersTeam(e.owner());
 			Component name = e.display() != null ? e.display() : PlayerTeam.formatNameForTeam(team, e.ownerName());
 			lines.add(Texts.legacy(name));
 		}
-		return ScoreboardInfo.parse(Texts.legacy(obj.getDisplayName()), lines);
+		return lines;
 	}
 
 	/** Tab list entries in display order, as § strings. */

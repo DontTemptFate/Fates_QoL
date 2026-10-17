@@ -38,6 +38,7 @@ public final class FatesOfaClient implements ClientModInitializer {
 		o.repo.onLoaded(() -> o.patterns.load(o.repo.skyhanni("regexesModern")));
 		Hud.init(o.settings);
 		Hooks.register(o);
+		io.github.donttemptfate.fatesofa.record.PlayRecorder.register();
 		Features.initAll();
 		o.repo.start();
 		LOG.info("Fates OFA {} loaded: {} features", version, Features.all().size());
@@ -61,6 +62,7 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new RiftFeature());
 		Features.add(new DungeonFeature());
 		Features.add(new DungeonHelpers());
+		Features.add(new SecretRoutes());
 		Features.add(new KuudraFeature());
 		Features.add(new DianaFeature());
 		Features.add(new HoppityFeature());
