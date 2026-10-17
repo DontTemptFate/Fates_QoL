@@ -86,4 +86,13 @@ public class ActivityTest {
 		assertEquals(45, o.copper(), 0);
 		assertEquals("Jacob's Ticket", o.rewards().get(0).name());
 	}
+
+	@Test
+	public void actionBar() {
+		var a = io.github.donttemptfate.fatesofa.activity.ActionBar.parse("1,234/1,500❤     820❈ Defense     300/450✎ Mana");
+		assertEquals(1234, a.health(), 0);
+		assertEquals(820, a.defense(), 0);
+		assertEquals(450, a.maxMana(), 0);
+		assertNull(io.github.donttemptfate.fatesofa.activity.ActionBar.parse("hello"));
+	}
 }
