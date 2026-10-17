@@ -110,7 +110,7 @@ public final class QuickCommandsScreen extends Screen {
 		hits.clear();
 		int x = px + 10, w = pw - 20;
 		Ui.draw(g, Ui.t("QUICK COMMANDS", Ui.Role.TITLE, Ui.accent()), Ui.Role.TITLE, x, py + 18);
-		Ui.draw(g, Ui.t("One click, key or alias = one command · rows 1–9 get the Quick command keys (Controls)",
+		Ui.draw(g, Ui.t("One click, key or alias = one command · keys: Controls → Quick command 1–9",
 				Ui.Role.SMALL, Ui.GRAY), Ui.Role.SMALL, x, py + 28);
 		for (int r = 0; r < visibleRows() && scroll + r < work.size(); r++) {
 			int i = scroll + r, y = py + HEADER_H + r * ROW_H;
@@ -149,7 +149,8 @@ public final class QuickCommandsScreen extends Screen {
 		}
 		if (work.size() > visibleRows()) {
 			String more = (scroll + 1) + "–" + Math.min(work.size(), scroll + visibleRows()) + " of " + work.size() + " · scroll for more";
-			g.text(font, more, px + pw / 2 - font.width(more) / 2 + 40, py + ph - FOOTER_H + 5, Ui.DARK, false);
+			int doneW = Ui.width(Ui.t("Done", Ui.Role.BODY_BOLD, 0), Ui.Role.BODY_BOLD) + 16;
+			g.text(font, more, px + pw - 10 - doneW - 8 - font.width(more), py + ph - FOOTER_H + 5, Ui.DARK, false);
 		}
 		// footer
 		int fy = py + ph - FOOTER_H + 2;
