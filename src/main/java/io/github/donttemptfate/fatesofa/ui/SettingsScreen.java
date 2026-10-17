@@ -418,13 +418,25 @@ public final class SettingsScreen extends Screen {
 	@SuppressWarnings("unchecked")
 	Row settingRow(Setting<?> s) {
 		return new Row() {
+			/** Sliders and text boxes go on a second line when the label leaves no room for them. */
+			boolean twoLines(int w) {
+				int control = switch (s.type) {
+					case INT, DOUBLE -> Math.min(110, w / 3) + 40;
+					case STRING -> Math.min(160, w / 2) + 6;
+					case ENUM -> 80;
+					default -> 26;
+				};
+				return font.width(s.label) + 16 + control > w;
+			}
+
 			public int height(int w) {
-				return 14;
+				return twoLines(w) ? 26 : 14;
 			}
 
 			public void draw(GuiGraphicsExtractor g, int x, int y, int w, int mx, int my) {
 				Settings st = ofa.settings;
-				Rect row = new Rect(x + 10, y, w - 10, 14);
+				Rect row = new Rect(x + 10, y, w - 10, height(w));
+				int cyo = twoLines(w) ? 12 : 0; // controls' vertical offset
 				boolean hover = row.contains(mx, my);
 				if (hover) g.fill(row.x() - 2, row.y(), row.right(), row.bottom(), 0x14FFFFFF);
 				g.text(font, s.label, x + 12, y + 3, st.isDefault(s) ? 0xFFCCCCCC : Ui.WHITE, true);
@@ -433,7 +445,7 @@ public final class SettingsScreen extends Screen {
 				switch (s.type) {
 					case BOOL -> {
 						Setting<Boolean> b = (Setting<Boolean>) s;
-						Rect t = new Rect(right - 22, y + 2, 20, 10);
+						Rect t = new Rect(right - 22, y + 2 + cyo, 20, 10);
 						Widgets.toggle(g, t.x(), t.y(), st.on(b), t.contains(mx, my));
 						hits.add(row, () -> st.set(b, !st.on(b)), () -> st.reset(b));
 					}
@@ -442,8 +454,8 @@ public final class SettingsScreen extends Screen {
 						double frac = (v - s.min) / Math.max(1e-9, s.max - s.min);
 						String shown = s.type == Setting.Type.INT ? Fmt.shortNum(v) : Fmt.trimmed(v);
 						int sw = Math.min(110, w / 3);
-						Rect sl = new Rect(right - sw, y + 2, sw, 10);
-						g.text(font, shown, sl.x() - 6 - font.width(shown), y + 3, Ui.GOLD, true);
+						Rect sl = new Rect(right - sw, y + 2 + cyo, sw, 10);
+						g.text(font, shown, sl.x() - 6 - font.width(shown), y + 3 + cyo, Ui.GOLD, true);
 						Widgets.slider(g, sl.x(), sl.y(), sl.w(), frac, sl.contains(mx, my));
 						Widgets.Slider set = f -> {
 							double nv = s.min + f * (s.max - s.min);
@@ -458,7 +470,7 @@ public final class SettingsScreen extends Screen {
 						String v = st.get(e);
 						String shown = prettyOption(v);
 						int bw = Math.max(60, font.width(shown) + 12);
-						Rect br = new Rect(right - bw, y + 1, bw, 12);
+						Rect br = new Rect(right - bw, y + 1 + cyo, bw, 12);
 						Widgets.button(g, br.x(), br.y(), br.w(), br.h(), shown, br.contains(mx, my), false);
 						hits.add(row, () -> cycle(e, 1), () -> cycle(e, -1));
 					}
@@ -466,7 +478,7 @@ public final class SettingsScreen extends Screen {
 						Setting<String> t = (Setting<String>) s;
 						String v = st.get(t);
 						int bw = Math.min(160, w / 2);
-						Rect br = new Rect(right - bw, y + 1, bw, 12);
+						Rect br = new Rect(right - bw, y + 1 + cyo, bw, 12);
 						if (editing == t) {
 							textEdit.setX(br.x());
 							textEdit.setY(br.y());
@@ -481,7 +493,7 @@ public final class SettingsScreen extends Screen {
 					case COLOR -> {
 						Setting<Integer> c = (Setting<Integer>) s;
 						int v = st.get(c);
-						Rect sw = new Rect(right - 22, y + 2, 20, 10);
+						Rect sw = new Rect(right - 22, y + 2 + cyo, 20, 10);
 						g.fill(sw.x(), sw.y(), sw.right(), sw.bottom(), v | 0xFF000000);
 						Ui.ring(g, sw.x(), sw.y(), sw.w(), sw.h(), 1, Ui.WHITE);
 						hits.add(row, () -> st.set(c, nextColor(v, 1)), () -> st.set(c, nextColor(v, -1)));

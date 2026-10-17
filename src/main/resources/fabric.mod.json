@@ -16,7 +16,7 @@
 	"entrypoints": {
 		"client": ["io.github.donttemptfate.fatesofa.FatesOfaClient"]
 	},
-	"mixins": ["fatesofa.mixins.json"],
+	"mixins": ["fatesofa.mixins.json", "fatesofa.version.mixins.json"],
 	"depends": {
 		"fabricloader": ">=0.19.3",
 		"minecraft": "${minecraft_dep}",

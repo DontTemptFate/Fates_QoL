@@ -32,6 +32,11 @@ public final class HudEditorScreen extends Screen {
 		Hud.editing(true);
 	}
 
+	/** No blur or dimming: the editor shows the game as it is. */
+	@Override
+	public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
+	}
+
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
 		super.extractRenderState(g, mouseX, mouseY, delta);
@@ -50,7 +55,7 @@ public final class HudEditorScreen extends Screen {
 				x = dragX;
 				y = dragY;
 			}
-			boolean hidden = Hud.hidden(p.element());
+			boolean hidden = Hud.hidden(p.element()) || !p.element().owner.active();
 			boolean hover = new Rect(x, y, r.w(), r.h()).contains(mouseX, mouseY);
 			try {
 				p.card().draw(g, x, y, p.scale());
@@ -59,7 +64,7 @@ public final class HudEditorScreen extends Screen {
 			}
 			if (hidden) g.fill(x, y, x + r.w(), y + r.h(), 0xA0000000);
 			Ui.ring(g, x - 1, y - 1, r.w() + 2, r.h() + 2, 1, hover || p == dragging ? Ui.accent() : 0x80FFFFFF);
-			String label = p.element().name + (hidden ? " (hidden)" : "") + (p.scale() != 1f ? " ×" + Math.round(p.scale() * 100) / 100f : "");
+			String label = p.element().name + (!p.element().owner.active() ? " (feature off)" : Hud.hidden(p.element()) ? " (hidden)" : "") + (p.scale() != 1f ? " ×" + Math.round(p.scale() * 100) / 100f : "");
 			g.text(this.font, label, x, Math.max(0, y - 10), hidden ? 0xFF888888 : 0xFFFFFFFF, true);
 		}
 		Card help = new Card(0.94f, 0, 300).add(Card.Line.of(Card.seg("HUD EDITOR", Ui.Role.LABEL, Ui.accent())))

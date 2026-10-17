@@ -20,6 +20,7 @@ sourceSets {
 		resources.srcDir "common/src/main/resources"
 		// Version-specific calls (window/input library) live in src/mc<version>/java.
 		java.srcDir "src/mc${mcTarget}/java"
+		resources.srcDir "src/mc${mcTarget}/resources"
 	}
 	test {
 		java.srcDir "common/src/test/java"

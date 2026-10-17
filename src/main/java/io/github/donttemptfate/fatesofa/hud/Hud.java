@@ -86,7 +86,13 @@ public final class Hud {
 				boolean vis = e.owner.guard(() -> e.visible.getAsBoolean(), false);
 				if (vis) c = e.owner.guard(e.content::get, null);
 			}
-			if (c == null && sample) c = e.owner.guard(e.sample::get, null);
+			if (c == null && sample) {
+				try {
+					c = e.sample.get();
+				} catch (RuntimeException ex) {
+					c = null;
+				}
+			}
 			if (c == null || c.isEmpty()) continue;
 			cards.put(e.id, c);
 			items.add(new Layout.Item(e.id, c.width(), c.height(), pos(e)));
