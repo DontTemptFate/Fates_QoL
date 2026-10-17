@@ -137,18 +137,35 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				var cache = io.github.donttemptfate.fatesofa.features.StorageFeature.INSTANCE.cache();
 				cache.profile("Test");
 				long now = System.currentTimeMillis();
+				o.prices.load(Map.of(
+								"ENCHANTED_DIAMOND", new PriceTables.Bz(180, 170, 1, 1, 1, 1),
+								"ENCHANTED_GOLD", new PriceTables.Bz(700, 640, 1, 1, 1, 1),
+								"ENCHANTED_EMERALD", new PriceTables.Bz(1500, 1400, 1, 1, 1, 1),
+								"ENCHANTED_DIAMOND_BLOCK", new PriceTables.Bz(30000, 28500, 1, 1, 1, 1)),
+						Map.of(),
+						Map.of("HYPERION", new PriceTables.Ah(1.1e9, 1.2e9, 4, 1), "TERMINATOR", new PriceTables.Ah(7.4e8, 7.6e8, 3, 1),
+								"NECRON_CHESTPLATE", new PriceTables.Ah(9.5e7, 9.8e7, 6, 1), "SUMMONING_RING", new PriceTables.Ah(2.1e6, 2.0e6, 9, 1),
+								"JUJU_SHORTBOW", new PriceTables.Ah(1.4e7, 1.5e7, 8, 1)), now);
 				cache.put("ender:1", "Ender Chest (1/9)", List.of(
 						stored(0, "minecraft:iron_sword", "HYPERION", "§6Hyperion", 1),
 						stored(1, "minecraft:diamond", "ENCHANTED_DIAMOND", "§aEnchanted Diamond", 64),
 						stored(2, "minecraft:diamond", "ENCHANTED_DIAMOND", "§aEnchanted Diamond", 32),
+						stored(3, "minecraft:diamond_block", "ENCHANTED_DIAMOND_BLOCK", "§9Enchanted Diamond Block", 40),
 						stored(9, "minecraft:gold_ingot", "ENCHANTED_GOLD", "§aEnchanted Gold", 64),
 						stored(10, "minecraft:bone", "SUMMONING_RING", "§9Summoning Ring", 1),
-						stored(20, "minecraft:diamond_chestplate", "NECRON_CHESTPLATE", "§6Necron's Chestplate", 1)), now - 3_600_000);
+						stored(18, "minecraft:emerald", "ENCHANTED_EMERALD", "§aEnchanted Emerald", 64),
+						stored(19, "minecraft:emerald", "ENCHANTED_EMERALD", "§aEnchanted Emerald", 64),
+						stored(20, "minecraft:diamond_chestplate", "NECRON_CHESTPLATE", "§6Necron's Chestplate", 1),
+						stored(31, "minecraft:gold_ingot", "ENCHANTED_GOLD", "§aEnchanted Gold", 20),
+						stored(44, "minecraft:bow", "JUJU_SHORTBOW", "§5Juju Shortbow", 1)), now - 3_600_000);
 				cache.put("ender:2", "Ender Chest (2/9)", List.of(
 						stored(4, "minecraft:emerald", "ENCHANTED_EMERALD", "§aEnchanted Emerald", 48)), now - 600_000);
+				cache.put("ender:3", "Ender Chest (3/9)", List.of(), now - 900_000);
 				cache.put("backpack:3", "Large Backpack (Slot #3)", List.of(
 						stored(0, "minecraft:diamond", "ENCHANTED_DIAMOND", "§aEnchanted Diamond", 12),
 						stored(7, "minecraft:bow", "TERMINATOR", "§6Terminator", 1)), now - 120_000);
+				cache.put("backpack:7", "Small Backpack (Slot #7)", List.of(
+						stored(2, "minecraft:diamond_block", "ENCHANTED_DIAMOND_BLOCK", "§9Enchanted Diamond Block", 5)), now - 30_000);
 				mc.gui.setScreen(new StorageScreen(null, ""));
 			});
 			ctx.waitTicks(10);
@@ -156,6 +173,13 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.runOnClient(mc -> mc.gui.setScreen(new StorageScreen(null, "diamond")));
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("09d_storage_search");
+			ctx.runOnClient(mc -> {
+				o.settings.set(io.github.donttemptfate.fatesofa.features.General.THEME, "midnight");
+				mc.gui.setScreen(new StorageScreen(null, ""));
+			});
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("09e_storage_midnight");
+			ctx.runOnClient(mc -> o.settings.set(io.github.donttemptfate.fatesofa.features.General.THEME, "fates"));
 			ctx.runOnClient(mc -> mc.gui.setScreen(null));
 			ctx.waitTicks(5);
 
