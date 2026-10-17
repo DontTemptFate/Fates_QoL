@@ -60,3 +60,7 @@ net.minecraft.client.renderer.gizmos
 net.minecraft.client.renderer.feature
 net.minecraft.client.renderer.debug
 net.minecraft.world.level.saveddata.maps
+net.fabricmc.fabric.api.client.gametest.v1
+net.fabricmc.fabric.api.client.gametest.v1.context
+net.fabricmc.fabric.api.client.gametest.v1.input
+net.fabricmc.fabric.api.client.gametest.v1.screenshot
