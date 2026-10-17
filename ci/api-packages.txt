@@ -52,3 +52,6 @@ net.fabricmc.fabric.api.client.rendering.v1.level
 net.minecraft.world.level.block
 net.minecraft.sounds
 net.minecraft.client.resources.sounds
+net.minecraft.core.registries
+net.minecraft.core
+net.minecraft.world.item.component

@@ -42,6 +42,19 @@ public final class Commands {
 							return 1;
 						})))
 				.then(ClientCommands.literal("status").executes(c -> status()))
+				.then(ClientCommands.literal("storage")
+						.executes(c -> {
+							Game.openNextTick(p -> new io.github.donttemptfate.fatesofa.ui.StorageScreen(p, ""));
+							return 1;
+						}))
+				.then(ClientCommands.literal("find")
+						.then(ClientCommands.argument("text", StringArgumentType.greedyString()).executes(c -> {
+							String q = StringArgumentType.getString(c, "text");
+							Game.openNextTick(p -> new io.github.donttemptfate.fatesofa.ui.StorageScreen(p, q));
+							return 1;
+						})))
+				.then(ClientCommands.literal("recipe")
+						.then(ClientCommands.argument("item", StringArgumentType.greedyString()).executes(c -> recipe(StringArgumentType.getString(c, "item")))))
 				.then(ClientCommands.literal("feature")
 						.then(ClientCommands.argument("id", StringArgumentType.word())
 								.then(ClientCommands.literal("on").executes(c -> setFeature(StringArgumentType.getString(c, "id"), true)))
@@ -59,9 +72,30 @@ public final class Commands {
 				})));
 	}
 
+	static int recipe(String q) {
+		var f = io.github.donttemptfate.fatesofa.features.ItemListFeature.INSTANCE;
+		var idx = f == null ? null : f.index();
+		if (idx == null) {
+			Game.warn("Item data isn't loaded yet.");
+			return 0;
+		}
+		String key = q.trim().toUpperCase(Locale.ROOT).replace(' ', '_');
+		if (Ofa.get().repo.items().get(key) == null) {
+			var hits = idx.search(q);
+			if (hits.isEmpty()) {
+				Game.error("No item matches \"" + q + "\".");
+				return 0;
+			}
+			key = hits.get(0).key();
+		}
+		String k = key;
+		Game.openNextTick(p -> new io.github.donttemptfate.fatesofa.ui.RecipeScreen(p, k, false));
+		return 1;
+	}
+
 	static int help() {
-		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa status · /ofa repo [update] · "
-				+ "/ofa feature <id> on|off · /ofa export / import (clipboard)");
+		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa storage · /ofa find <text> · "
+				+ "/ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
 		return 1;
 	}
 

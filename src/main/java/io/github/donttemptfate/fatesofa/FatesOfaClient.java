@@ -3,6 +3,12 @@ package io.github.donttemptfate.fatesofa;
 import io.github.donttemptfate.fatesofa.core.Features;
 import io.github.donttemptfate.fatesofa.data.Http;
 import io.github.donttemptfate.fatesofa.features.ChatFeature;
+import io.github.donttemptfate.fatesofa.features.ContainerValue;
+import io.github.donttemptfate.fatesofa.features.ItemListFeature;
+import io.github.donttemptfate.fatesofa.features.PetTooltip;
+import io.github.donttemptfate.fatesofa.features.RarityBackground;
+import io.github.donttemptfate.fatesofa.features.StorageFeature;
+import io.github.donttemptfate.fatesofa.features.ValueTooltip;
 import io.github.donttemptfate.fatesofa.features.General;
 import io.github.donttemptfate.fatesofa.features.LocationHud;
 import io.github.donttemptfate.fatesofa.features.ProtectionFeature;
@@ -47,6 +53,12 @@ public final class FatesOfaClient implements ClientModInitializer {
 
 	static void registerFeatures() {
 		Features.add(new ProtectionFeature());
+		Features.add(new ItemListFeature());
+		Features.add(new ValueTooltip());
+		Features.add(new PetTooltip());
+		Features.add(new RarityBackground());
+		Features.add(new ContainerValue());
+		Features.add(new StorageFeature());
 		Features.add(new ChatFeature());
 		Features.add(new LocationHud());
 	}

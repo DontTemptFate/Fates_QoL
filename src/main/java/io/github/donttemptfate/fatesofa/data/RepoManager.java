@@ -57,6 +57,24 @@ public final class RepoManager {
 		return message;
 	}
 
+	private final java.util.Map<String, com.google.gson.JsonObject> constants = new java.util.concurrent.ConcurrentHashMap<>();
+
+	/** A NEU repo constants file ({@code constants/<name>.json}), or null. Cached until the next load. */
+	public com.google.gson.JsonObject constant(String name) {
+		if (!name.matches("[a-z_]{1,40}")) return null;
+		com.google.gson.JsonObject c = constants.get(name);
+		if (c != null) return c;
+		try {
+			Path f = dir(NEU).resolve("constants").resolve(name + ".json");
+			if (!Files.isRegularFile(f) || Files.size(f) > 16L * 1024 * 1024) return null;
+			c = com.google.gson.JsonParser.parseString(Files.readString(f)).getAsJsonObject();
+			constants.put(name, c);
+			return c;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	public Path dir(GitRepo r) {
 		return root.resolve(r.name);
 	}
@@ -101,6 +119,7 @@ public final class RepoManager {
 			try {
 				long t = System.currentTimeMillis();
 				items = ItemRepo.load(neu);
+				constants.clear();
 				state = State.READY;
 				message = items.size() + " items (" + shortSha(items.commit()) + ")";
 				log.accept("item repo loaded: " + message + " in " + (System.currentTimeMillis() - t) + " ms");
