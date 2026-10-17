@@ -109,6 +109,14 @@ public final class SettingsScreen extends Screen {
 		return page.label();
 	}
 
+	/** For the in-game test: a point 80% along the first slider drawn last frame (GUI pixels), or null. */
+	public double[] firstSliderPoint() {
+		for (Widgets.Hit h : hits.list) {
+			if (h.slider() != null) return new double[] {h.rect().x() + h.rect().w() * 0.8, h.rect().y() + h.rect().h() / 2.0};
+		}
+		return null;
+	}
+
 	/** For the in-game test: the centre of a sidebar entry, in GUI pixels (null if not listed). */
 	public double[] sidebarPoint(String label) {
 		int sy = cy;
@@ -488,8 +496,9 @@ public final class SettingsScreen extends Screen {
 							if (s.type == Setting.Type.INT) st.set((Setting<Integer>) s, (int) Math.round(nv));
 							else st.set((Setting<Double>) s, Math.round(nv * 100) / 100.0);
 						};
-						hits.slider(sl, set);
+						// the row first: the last added wins, so the slider must come after its row
 						hits.add(row, null, () -> st.reset(s));
+						hits.slider(sl, set);
 					}
 					case ENUM -> {
 						Setting<String> e = (Setting<String>) s;

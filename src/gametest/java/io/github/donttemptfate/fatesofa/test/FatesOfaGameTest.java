@@ -51,6 +51,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			// real input: open settings by typing /ofa in chat, then click a sidebar entry with the mouse
 			realClick(ctx, false);
 			realClick(ctx, true);
+			realSlider(ctx);
 
 			// settings pages
 			ctx.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null)));
@@ -329,6 +330,25 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		ctx.takeScreenshot(viaChat ? "00c_real_click_after_chat" : "00b_real_click_direct");
 		FatesOfaClient.LOG.info("[gametest] real click ({}): page is now {}", viaChat ? "via /ofa" : "direct", page);
 		check("General".equals(page), "a real mouse click didn't reach the settings screen (" + (viaChat ? "opened with /ofa" : "opened directly") + "): page " + page);
+		ctx.runOnClient(mc -> mc.gui.setScreen(null));
+		ctx.waitTicks(5);
+	}
+
+	/** Clicks a slider on the Storage page with a real mouse press: its setting must change. */
+	static void realSlider(ClientGameTestContext ctx) {
+		ctx.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null, Category.STORAGE)));
+		ctx.waitTicks(10);
+		String before = ctx.computeOnClient(mc -> Ofa.get().settings.export());
+		double scale = ctx.computeOnClient(mc -> mc.getWindow().getGuiScale());
+		double[] at = ctx.computeOnClient(mc -> ((SettingsScreen) mc.gui.screen()).firstSliderPoint());
+		check(at != null, "no slider on the Storage page");
+		ctx.getInput().setCursorPos(at[0] * scale, at[1] * scale);
+		ctx.waitTicks(3);
+		ctx.getInput().pressMouse(com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT);
+		ctx.waitTicks(5);
+		String after = ctx.computeOnClient(mc -> Ofa.get().settings.export());
+		ctx.takeScreenshot("00d_real_slider");
+		check(!before.equals(after), "a real mouse click on a slider didn't change its setting");
 		ctx.runOnClient(mc -> mc.gui.setScreen(null));
 		ctx.waitTicks(5);
 	}
