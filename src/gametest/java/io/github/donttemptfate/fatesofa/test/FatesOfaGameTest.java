@@ -110,6 +110,17 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("  SLAYER QUEST COMPLETE!"), false);
 				check(slayer.tracker.kills().size() == 1, "slayer kill not counted");
 			});
+			// a waypoint a few blocks ahead, drawn in the world
+			ctx.runOnClient(mc -> {
+				mc.gui.setScreen(null);
+				var p = mc.player.blockPosition();
+				io.github.donttemptfate.fatesofa.features.WaypointFeature.INSTANCE.waypoints.add(new io.github.donttemptfate.fatesofa.waypoints.Waypoints.Waypoint(
+						"Test spot", p.getX() + 4, p.getY(), p.getZ() + 4, 0x55FFFF, "TEST", 0));
+				mc.player.setYRot(-45f);
+				mc.player.setXRot(20f);
+			});
+			ctx.waitTicks(20);
+			ctx.takeScreenshot("08b_waypoint");
 			ctx.runOnClient(mc -> mc.gui.setScreen(new io.github.donttemptfate.fatesofa.ui.PlannerScreen(null)));
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("09a_planner");

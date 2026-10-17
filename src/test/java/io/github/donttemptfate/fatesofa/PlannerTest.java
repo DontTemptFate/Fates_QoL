@@ -53,4 +53,20 @@ public class PlannerTest {
 		assertEquals(3, o.get(0).times());
 		assertEquals(1500 - 1280, o.get(0).gain(), 0.01);
 	}
+
+	@Test
+	public void waypoints() {
+		var w = io.github.donttemptfate.fatesofa.waypoints.Waypoints.fromChat("Party > [MVP+] Fate: x: 12, y: 70, z: -40", "HUB", 1000, 60_000);
+		assertEquals("Fate", w.name());
+		assertEquals(-40, w.z());
+		var all = new io.github.donttemptfate.fatesofa.waypoints.Waypoints();
+		all.add(w);
+		all.add(new io.github.donttemptfate.fatesofa.waypoints.Waypoints.Waypoint("Home", 1, 2, 3, 0xFFFFFF, "HUB", 0));
+		assertEquals(2, all.on("HUB", 2000).size());
+		assertEquals(1, all.on("HUB", 100_000).size());
+		var again = new io.github.donttemptfate.fatesofa.waypoints.Waypoints();
+		again.fromJson(all.toJson());
+		assertEquals(1, again.on("HUB", 0).size());
+		assertEquals(null, io.github.donttemptfate.fatesofa.waypoints.Waypoints.fromChat("hello there", "HUB", 0, 1));
+	}
 }

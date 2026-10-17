@@ -65,6 +65,7 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new HoppityFeature());
 		Features.add(new BingoFeature());
 		Features.add(new PlannerFeature());
+		Features.add(new WaypointFeature());
 		Features.add(new ChatFeature());
 		Features.add(new LocationHud());
 	}

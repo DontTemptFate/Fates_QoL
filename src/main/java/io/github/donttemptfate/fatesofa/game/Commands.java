@@ -52,6 +52,24 @@ public final class Commands {
 							Game.ok("Slayer tracker reset.");
 							return 1;
 						})))
+				.then(ClientCommands.literal("wp")
+						.then(ClientCommands.literal("add").executes(c -> wpAdd("Waypoint"))
+								.then(ClientCommands.argument("name", StringArgumentType.greedyString()).executes(c -> wpAdd(StringArgumentType.getString(c, "name")))))
+						.then(ClientCommands.literal("remove").then(ClientCommands.argument("name", StringArgumentType.greedyString()).executes(c -> {
+							var f = io.github.donttemptfate.fatesofa.features.WaypointFeature.INSTANCE;
+							boolean ok = f.waypoints.remove(StringArgumentType.getString(c, "name"), f.island());
+							f.save();
+							if (ok) Game.ok("Waypoint removed.");
+							else Game.warn("No waypoint with that name here.");
+							return 1;
+						})))
+						.then(ClientCommands.literal("clear").executes(c -> {
+							var f = io.github.donttemptfate.fatesofa.features.WaypointFeature.INSTANCE;
+							f.waypoints.clear(f.island());
+							f.save();
+							Game.ok("Waypoints on this island cleared.");
+							return 1;
+						})))
 				.then(ClientCommands.literal("storage")
 						.executes(c -> {
 							Game.openNextTick(p -> new io.github.donttemptfate.fatesofa.ui.StorageScreen(p, ""));
@@ -103,8 +121,19 @@ public final class Commands {
 		return 1;
 	}
 
+	static int wpAdd(String name) {
+		var f = io.github.donttemptfate.fatesofa.features.WaypointFeature.INSTANCE;
+		var p = Game.mc().player;
+		if (f == null || p == null) return 0;
+		var pos = p.blockPosition();
+		f.waypoints.add(new io.github.donttemptfate.fatesofa.waypoints.Waypoints.Waypoint(name, pos.getX(), pos.getY(), pos.getZ(), 0x55FFFF, f.island(), 0));
+		f.save();
+		Game.ok("Waypoint \"" + name + "\" added at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ".");
+		return 1;
+	}
+
 	static int help() {
-		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa storage · /ofa find <text> · "
+		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa storage · /ofa find <text> · /ofa wp add|remove|clear · "
 				+ "/ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
 		return 1;
 	}
