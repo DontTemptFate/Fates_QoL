@@ -27,7 +27,8 @@ public final class RoomFingerprint {
 	public record Result(String id, int rotation, boolean symmetric) {
 	}
 
-	static final int Y_MIN = 12, Y_MAX = 140;
+	/** Heights read for a room (dungeon rooms sit within these); only tests change them. */
+	public static volatile int yMin = 12, yMax = 140;
 	static final Set<String> CHANGES = Set.of("chest", "trapped_chest", "lever", "player_head", "player_wall_head", "skeleton_skull",
 			"skeleton_wall_skull", "wither_skeleton_skull", "wither_skeleton_wall_skull", "redstone_torch", "redstone_wall_torch",
 			"redstone_block", "tnt", "barrier", "cobweb", "fire", "air", "cave_air", "void_air", "light");
@@ -62,7 +63,7 @@ public final class RoomFingerprint {
 	/** Hash of one column; {@code solid[0]} counts non-air blocks. Null when unloaded. */
 	static Long column(Sampler s, int x, int z, int[] solid) {
 		long h = FNV;
-		for (int y = Y_MIN; y <= Y_MAX; y++) {
+		for (int y = yMin, top = yMax; y <= top; y++) {
 			String b = norm(s.block(x, y, z));
 			if (b == null) return null;
 			if (!b.equals("air") && solid != null) solid[0]++;

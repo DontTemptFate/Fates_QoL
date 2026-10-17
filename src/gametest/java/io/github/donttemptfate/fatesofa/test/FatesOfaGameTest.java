@@ -168,6 +168,9 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				var p = mc.player.blockPosition();
 				io.github.donttemptfate.fatesofa.rooms.RoomGrid.originX = p.getX() - 2 * 32 - 15;
 				io.github.donttemptfate.fatesofa.rooms.RoomGrid.originZ = p.getZ() - 2 * 32 - 15;
+				// the test world is flat: read the ground instead of dungeon heights
+				io.github.donttemptfate.fatesofa.rooms.RoomFingerprint.yMin = p.getY() - 6;
+				io.github.donttemptfate.fatesofa.rooms.RoomFingerprint.yMax = p.getY() + 4;
 				sr.worldChanged();
 				double x = p.getX() + 0.5, y = p.getY() + 0.5, z = p.getZ() + 0.5;
 				sr.testLearn(io.github.donttemptfate.fatesofa.rooms.RoomStore.Kind.CHEST, x + 4, y, z + 6);
