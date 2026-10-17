@@ -1,0 +1,93 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+// Load the numbers for the chosen Minecraft version (-Pmc=26.3; default from gradle.properties).
+def mcTarget = project.findProperty("mc") ?: "26.2"
+def versionFile = file("versions/${mcTarget}.properties")
+if (!versionFile.exists()) throw new GradleException("No versions/${mcTarget}.properties")
+def versionProps = new Properties()
+versionFile.withInputStream { versionProps.load(it) }
+versionProps.each { k, v -> project.ext.set(k as String, v as String) }
+
+version = "${project.version}+mc${project.minecraft_version}"
+group = project.group
+
+sourceSets {
+	main {
+		// The shared library (theme, cards, item reading) lives in common/ and is compiled into this jar.
+		java.srcDir "common/src/main/java"
+		resources.srcDir "common/src/main/resources"
+		// Version-specific calls (window/input library) live in src/mc<version>/java.
+		java.srcDir "src/mc${mcTarget}/java"
+	}
+	test {
+		java.srcDir "common/src/test/java"
+	}
+}
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	testImplementation "junit:junit:4.13.2"
+	testImplementation "com.google.code.gson:gson:2.11.0"
+}
+
+fabricApi {
+	// In-game smoke test (src/gametest), run in CI with ./gradlew runClientGametest
+	configureTests {
+		createSourceSet = true
+		modId = "fatesofa-test"
+		enableGameTests = false
+		eula = true
+	}
+}
+
+processResources {
+	def version = project.version
+	def minecraftDep = project.minecraft_dep
+	inputs.property "version", version
+	inputs.property "minecraftDep", minecraftDep
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version, "minecraft_dep": minecraftDep
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+	it.options.encoding = "UTF-8"
+	it.options.compilerArgs += ["-Xlint:deprecation"]
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+test {
+	useJUnit()
+	testLogging {
+		events "failed"
+		exceptionFormat "full"
+	}
+}
+
+jar {
+	def projectName = project.name
+	inputs.property "projectName", projectName
+
+	from("LICENSE") {
+		rename { "${it}_$projectName" }
+	}
+}

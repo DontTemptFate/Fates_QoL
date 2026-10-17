@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "fatesofa",
+	"version": "${version}",
+	"name": "Fates OFA",
+	"description": "One For All: a Hypixel SkyBlock quality-of-life mod — items, storage, activities, dungeons and a progression planner in one. Display only: it never plays for you. No account needed.",
+	"authors": ["Fate"],
+	"contact": {
+		"homepage": "https://fatesflipper.com",
+		"sources": "https://github.com/DontTemptFate/Fates_QoL",
+		"issues": "https://github.com/DontTemptFate/Fates_QoL/issues"
+	},
+	"license": "GPL-3.0-only",
+	"icon": "assets/fatesofa/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["io.github.donttemptfate.fatesofa.FatesOfaClient"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "${minecraft_dep}",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

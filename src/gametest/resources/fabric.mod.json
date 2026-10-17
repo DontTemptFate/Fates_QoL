@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"id": "fatesofa-test",
+	"version": "0.0.0",
+	"name": "Fates OFA Test",
+	"description": "In-game smoke test for Fates OFA (CI only).",
+	"license": "GPL-3.0-only",
+	"environment": "client",
+	"entrypoints": {
+		"fabric-client-gametest": ["io.github.donttemptfate.fatesofa.test.FatesOfaGameTest"]
+	},
+	"depends": {
+		"fatesofa": "*"
+	}
+}
