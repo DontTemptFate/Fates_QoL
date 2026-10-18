@@ -20,7 +20,7 @@ import java.util.Map;
 
 /** Rift collectibles: Enigma Souls (from the tab list, counted live) and Montezuma soul pieces found this visit. */
 public final class RiftChecklist extends Feature {
-	final Display display = new Display(this, "riftlist", 0xFFFF55FF, Display.lines("enigma", "Enigma Souls", "montezuma", "Montezuma pieces this visit"),
+	final Display display = new Display(this, "riftlist", Display.GROUP, 0xFFFF55FF, Display.lines("enigma", "Enigma Souls", "montezuma", "Montezuma pieces this visit"),
 			List.of("enigma", "montezuma"), false);
 	final Alert soul = new Alert(this, "riftlist.soulAlert", "Enigma Soul alert", true, "ENIGMA SOUL", "{found}/{total}", 0xFFFF55FF,
 			"minecraft:block.amethyst_block.chime", "found", "total");
