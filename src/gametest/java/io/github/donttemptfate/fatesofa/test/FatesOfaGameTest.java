@@ -251,6 +251,25 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			check(blazeN == 3, "blazes found: " + blazeN);
 			ctx.runOnClient(mc -> o.settings.set(Features.get("puzzle_helpers").enabled, false));
 
+			// Batch 8c: your auctions and bazaar orders
+			SimpleContainer auctions = new SimpleContainer(54);
+			auctions.setItem(10, lore(sb(Items.IRON_SWORD, "HYPERION", "§6Hyperion", "§6§lLEGENDARY", 1), "Buy it now: 1,000,000,000 coins", "Status: Sold!"));
+			auctions.setItem(11, lore(sb(Items.DIAMOND, "ENCHANTED_DIAMOND", "§aEnchanted Diamond", "§a§lUNCOMMON", 64), "Buy it now: 12,000 coins", "Ends in: 3h"));
+			ctx.runOnClient(mc -> mc.gui.setScreen(new ContainerScreen(ChestMenu.sixRows(0, mc.player.getInventory(), auctions), mc.player.getInventory(), Component.literal("Manage Auctions"))));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("08i_manage_auctions");
+			SimpleContainer orders = new SimpleContainer(54);
+			ItemStack buy = lore(new ItemStack(Items.DIAMOND), "Order amount: 1,280x", "Filled: 0/1,280 0%", "Price per unit: 100 coins");
+			buy.set(DataComponents.CUSTOM_NAME, Component.literal("BUY Enchanted Diamond"));
+			ItemStack done = lore(new ItemStack(Items.DIAMOND), "Order amount: 64x", "Filled: 64/64 100%", "Price per unit: 170 coins");
+			done.set(DataComponents.CUSTOM_NAME, Component.literal("BUY Enchanted Diamond"));
+			orders.setItem(10, buy);
+			orders.setItem(11, done);
+			ctx.runOnClient(mc -> mc.gui.setScreen(new ContainerScreen(ChestMenu.sixRows(0, mc.player.getInventory(), orders), mc.player.getInventory(), Component.literal("Your Bazaar Orders"))));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("08j_bazaar_orders");
+			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+
 			// a waypoint a few blocks ahead, drawn in the world
 			ctx.runOnClient(mc -> {
 				mc.gui.setScreen(null);
