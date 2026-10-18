@@ -10,6 +10,6 @@ public final class Dev {
 
 	/** True only while the automated in-game test runs (development environment + the test property). */
 	public static boolean test() {
-		return DEV && io.github.donttemptfate.fatesofa.game.Dev.test();
+		return DEV && Boolean.getBoolean("fatesofa.test");
 	}
 }
