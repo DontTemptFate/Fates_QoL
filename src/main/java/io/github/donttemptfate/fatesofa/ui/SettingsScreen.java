@@ -1,9 +1,9 @@
 package io.github.donttemptfate.fatesofa.ui;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Theme;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Theme;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Presets;
 import io.github.donttemptfate.fatesofa.config.Setting;
@@ -66,6 +66,8 @@ public final class SettingsScreen extends Screen {
 		super(Component.literal("Fates OFA settings"));
 		this.parent = parent;
 		this.ofa = Ofa.get();
+		// font and theme are shared with Fates Flipper: show what they are now
+		io.github.donttemptfate.fatesofa.features.General.pullSharedLook(ofa);
 		pages.add(new Page("Start", null, START));
 		for (Category c : Category.values()) {
 			boolean any = Features.all().stream().anyMatch(f -> f.category == c);

@@ -184,8 +184,8 @@ public final class Commands {
 		}
 		Game.info("Your dungeon runs (fastest · best score · average · runs):");
 		for (var s : df.runs.stats())
-			Game.info("  " + s.floor() + ": " + (s.fastestMs() > 0 ? io.github.donttemptfate.fates.common.text.Fmt.clock(s.fastestMs()) : "?") + " · " + s.bestScore()
-					+ " · " + (s.averageMs() > 0 ? io.github.donttemptfate.fates.common.text.Fmt.clock(s.averageMs()) : "?") + " · " + s.runs());
+			Game.info("  " + s.floor() + ": " + (s.fastestMs() > 0 ? io.github.donttemptfate.fatescommon.text.Fmt.clock(s.fastestMs()) : "?") + " · " + s.bestScore()
+					+ " · " + (s.averageMs() > 0 ? io.github.donttemptfate.fatescommon.text.Fmt.clock(s.averageMs()) : "?") + " · " + s.runs());
 		return 1;
 	}
 

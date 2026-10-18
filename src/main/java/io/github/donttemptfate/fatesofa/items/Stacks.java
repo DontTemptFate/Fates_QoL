@@ -3,7 +3,7 @@ package io.github.donttemptfate.fatesofa.items;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
-import io.github.donttemptfate.fates.common.text.Texts;
+import io.github.donttemptfate.fatescommon.text.Texts;
 import io.github.donttemptfate.fatesofa.data.RepoItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -101,9 +101,9 @@ public final class Stacks {
 			if (profile != null && profile.length() > 4000) profile = null;
 		}
 		return new io.github.donttemptfate.fatesofa.storage.StoredItem(slot, BuiltInRegistries.ITEM.getKey(st.getItem()).toString(),
-				io.github.donttemptfate.fates.common.item.Items.key(st), Texts.legacy(io.github.donttemptfate.fates.common.item.Items.name(st)),
-				io.github.donttemptfate.fates.common.item.Items.loreLegacy(st), model, profile, st.getCount(),
-				ItemValue.trim(io.github.donttemptfate.fates.common.item.Items.data(st)));
+				io.github.donttemptfate.fatescommon.skyblock.Items.key(st), Texts.legacy(io.github.donttemptfate.fatescommon.skyblock.Items.name(st)),
+				io.github.donttemptfate.fatescommon.skyblock.Items.loreLegacy(st), model, profile, st.getCount(),
+				ItemValue.trim(io.github.donttemptfate.fatescommon.skyblock.Items.data(st)));
 	}
 
 	private static final Map<String, Boolean> MODELS = new ConcurrentHashMap<>();

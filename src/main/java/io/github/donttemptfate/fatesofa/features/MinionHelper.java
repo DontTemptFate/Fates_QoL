@@ -1,10 +1,10 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.activity.MenuReaders;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -45,7 +45,7 @@ public final class MinionHelper extends Feature {
 	public void init() {
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {
 			if (!(screen instanceof AbstractContainerScreen<?> acs)) return;
-			if (MenuReaders.minion(Strip.clean(acs.getTitle().getString())) == null) return;
+			if (MenuReaders.minion(LegacyText.clean(acs.getTitle().getString())) == null) return;
 			ScreenEvents.afterExtract(screen).register((s, g, mx, my, d) -> guard(() -> draw(acs, g)));
 		});
 	}
@@ -65,7 +65,7 @@ public final class MinionHelper extends Feature {
 	}
 
 	Card build(AbstractContainerScreen<?> s) {
-		String[] m = MenuReaders.minion(Strip.clean(s.getTitle().getString()));
+		String[] m = MenuReaders.minion(LegacyText.clean(s.getTitle().getString()));
 		if (m == null) return null;
 		double value = 0;
 		int stored = 0, storageSlots = 0;

@@ -1,10 +1,10 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -74,7 +74,7 @@ public final class ContainerValue extends Feature {
 	Card build(AbstractContainerScreen<?> s) {
 		Ofa o = Ofa.get();
 		if (!o.state.onSkyBlock() && !io.github.donttemptfate.fatesofa.game.Dev.test()) return null;
-		String title = Strip.clean(s.getTitle().getString());
+		String title = LegacyText.clean(s.getTitle().getString());
 		if (s.getMenu().slots.stream().allMatch(sl -> sl.container instanceof Inventory)) return null; // player inventory
 		if (StorageOverlay.INSTANCE != null && StorageOverlay.INSTANCE.covers(s)) return null; // the storage panel shows values there
 		if (get(where).equals("storage") && !STORAGE.matcher(title).matches()) return null;
@@ -84,10 +84,10 @@ public final class ContainerValue extends Feature {
 			if (sl.container instanceof Inventory) continue;
 			ItemStack st = sl.getItem();
 			if (st.isEmpty()) continue;
-			var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(st);
+			var facts = io.github.donttemptfate.fatescommon.skyblock.ItemFacts.of(st);
 			Valuer.Valued v;
 			if (on(upgrades) && facts.key() != null) {
-				double t = o.valuation.total(io.github.donttemptfate.fates.common.item.Items.data(st), facts.key(), st.getCount(), now);
+				double t = o.valuation.total(io.github.donttemptfate.fatescommon.skyblock.Items.data(st), facts.key(), st.getCount(), now);
 				v = Double.isNaN(t) ? null : new Valuer.Valued(facts.key(), facts.name(), st.getCount(), t / Math.max(1, st.getCount()),
 						io.github.donttemptfate.fatesofa.data.Price.Kind.AH_PLAIN);
 			} else {

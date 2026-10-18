@@ -1,7 +1,7 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.item.Rarity;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.skyblock.Rarity;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
 import io.github.donttemptfate.fatesofa.core.Feature;
@@ -30,7 +30,7 @@ public final class RarityBackground extends Feature {
 		f.guard(() -> {
 			ItemStack st = slot.getItem();
 			if (st.isEmpty()) return;
-			var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(st);
+			var facts = io.github.donttemptfate.fatescommon.skyblock.ItemFacts.of(st);
 			if (!facts.skyblock()) return;
 			Rarity r = facts.rarity();
 			if (r == null || r.ordinal() < Rarity.valueOf(f.get(f.from)).ordinal()) return;

@@ -1,8 +1,8 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -243,7 +243,7 @@ public final class ItemListFeature extends Feature {
 	}
 
 	static boolean matches(ItemStack st, String[] words) {
-		String t = io.github.donttemptfate.fates.common.item.ItemFacts.of(st).searchText();
+		String t = io.github.donttemptfate.fatescommon.skyblock.ItemFacts.of(st).searchText();
 		for (String w : words) if (!t.contains(w)) return false;
 		return true;
 	}

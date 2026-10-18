@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.game;
 
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 import io.github.donttemptfate.fatesofa.mixin.ChatComponentAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -20,13 +20,13 @@ public final class ChatFold {
 	public static void fold(Component message, int count) {
 		Minecraft mc = Minecraft.getInstance();
 		var chat = mc.gui.hud.getChat();
-		String plain = Strip.clean(message.getString());
+		String plain = LegacyText.clean(message.getString());
 		ChatComponentAccessor a = (ChatComponentAccessor) chat;
 		List<GuiMessage> all = a.fatesofa$allMessages();
 		int seen = 0;
 		for (Iterator<GuiMessage> it = all.iterator(); it.hasNext() && seen < LOOK_BACK; seen++) {
 			GuiMessage m = it.next();
-			String old = Strip.clean(m.content().getString()).replaceFirst(" \\(×\\d+\\)$", "");
+			String old = LegacyText.clean(m.content().getString()).replaceFirst(" \\(×\\d+\\)$", "");
 			if (old.equals(plain)) {
 				it.remove();
 				a.fatesofa$refreshTrimmedMessages();

@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.ui;
 
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.hud.Rect;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 

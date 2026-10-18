@@ -1,9 +1,9 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.activity.VisitorOffer;
 import io.github.donttemptfate.fatesofa.core.Category;

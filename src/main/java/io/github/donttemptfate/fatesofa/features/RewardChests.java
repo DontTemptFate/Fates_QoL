@@ -1,9 +1,9 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -46,7 +46,7 @@ public final class RewardChests extends Feature {
 	public void init() {
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {
 			if (!(screen instanceof AbstractContainerScreen<?> acs)) return;
-			if (!RewardChest.TITLE.matcher(Strip.clean(acs.getTitle().getString())).matches()) return;
+			if (!RewardChest.TITLE.matcher(LegacyText.clean(acs.getTitle().getString())).matches()) return;
 			ScreenEvents.afterExtract(screen).register((s, g, mx, my, d) -> guard(() -> draw(acs, g)));
 		});
 	}
@@ -113,7 +113,7 @@ public final class RewardChests extends Feature {
 			}
 		}
 		double profit = contents - costCoins;
-		Card c = Trackers.card(display, Strip.clean(s.getTitle().getString()).toUpperCase(), null);
+		Card c = Trackers.card(display, LegacyText.clean(s.getTitle().getString()).toUpperCase(), null);
 		Card.KeyValues kv = Trackers.rows();
 		double fContents = contents;
 		RewardChest.Cost fCost = cost;

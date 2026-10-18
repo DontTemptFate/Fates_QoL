@@ -1,10 +1,10 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.config.Values;
@@ -50,7 +50,7 @@ public final class AuctionHelper extends Feature {
 	public void init() {
 		ItemTooltipCallback.EVENT.register((st, ctx, flag, out) -> guard(() -> {
 			Minecraft mc = Minecraft.getInstance();
-			if (!(mc.gui.screen() instanceof AbstractContainerScreen<?> s) || !auctionMenu(Strip.clean(s.getTitle().getString()))) return;
+			if (!(mc.gui.screen() instanceof AbstractContainerScreen<?> s) || !auctionMenu(LegacyText.clean(s.getTitle().getString()))) return;
 			MarketMenus.Listing l = MarketMenus.listing(Items.lorePlain(st));
 			if (l == null) return;
 			String key = Items.key(st);
@@ -85,7 +85,7 @@ public final class AuctionHelper extends Feature {
 		}));
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {
 			if (!(screen instanceof AbstractContainerScreen<?> acs)) return;
-			String t = Strip.clean(acs.getTitle().getString());
+			String t = LegacyText.clean(acs.getTitle().getString());
 			if (!(t.equals("Manage Auctions") || t.equals("Your Auctions") || t.startsWith("Manage Auctions"))) return;
 			ScreenEvents.afterExtract(screen).register((s, g, mx, my, d) -> guard(() -> drawManage(acs, g)));
 		});

@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.state;
 
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 
 import java.util.Locale;
 
@@ -55,11 +55,11 @@ public enum Island {
 	/** From the tab list ("Area: Dwarven Mines", "Dungeon: Catacombs") or any island name. */
 	public static Island fromName(String name) {
 		if (name == null || name.isBlank()) return null;
-		String k = Strip.key(name);
+		String k = LegacyText.key(name);
 		for (Island i : values()) {
 			if (i == OTHER) continue;
-			if (Strip.key(i.display).equals(k)) return i;
-			for (String a : i.aliases) if (Strip.key(a).equals(k)) return i;
+			if (LegacyText.key(i.display).equals(k)) return i;
+			for (String a : i.aliases) if (LegacyText.key(a).equals(k)) return i;
 		}
 		return OTHER;
 	}

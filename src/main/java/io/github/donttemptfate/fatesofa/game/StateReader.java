@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.game;
 
-import io.github.donttemptfate.fates.common.text.Texts;
+import io.github.donttemptfate.fatescommon.text.Texts;
 import io.github.donttemptfate.fatesofa.state.ScoreboardInfo;
 import io.github.donttemptfate.fatesofa.state.SkyBlockState;
 import io.github.donttemptfate.fatesofa.state.TabInfo;

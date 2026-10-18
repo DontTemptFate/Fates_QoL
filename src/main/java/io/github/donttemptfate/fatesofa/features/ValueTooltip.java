@@ -1,7 +1,7 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -57,7 +57,7 @@ public final class ValueTooltip extends Feature {
 		if (st == lastStack && now - lastAt < 1000) return lastWorth;
 		lastStack = st;
 		lastAt = now;
-		lastWorth = Ofa.get().valuation.of(io.github.donttemptfate.fates.common.item.Items.data(st), key, count, now);
+		lastWorth = Ofa.get().valuation.of(io.github.donttemptfate.fatescommon.skyblock.Items.data(st), key, count, now);
 		return lastWorth;
 	}
 
@@ -78,7 +78,7 @@ public final class ValueTooltip extends Feature {
 		ItemTooltipCallback.EVENT.register((st, ctx, flag, out) -> guard(() -> {
 			if (on(shift) && !net.minecraft.client.Minecraft.getInstance().hasShiftDown()) return;
 			Ofa o = Ofa.get();
-			String key = io.github.donttemptfate.fates.common.item.ItemFacts.of(st).key(); // cached per stack: no NBT copy per frame
+			String key = io.github.donttemptfate.fatescommon.skyblock.ItemFacts.of(st).key(); // cached per stack: no NBT copy per frame
 			if (key == null) return;
 			long now = System.currentTimeMillis();
 			PriceTables.Bz bz = o.prices.bazaarQuote(key, now);

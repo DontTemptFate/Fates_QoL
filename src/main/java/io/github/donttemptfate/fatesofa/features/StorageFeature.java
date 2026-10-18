@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.core.Category;
 import io.github.donttemptfate.fatesofa.core.Feature;
@@ -57,7 +57,7 @@ public final class StorageFeature extends Feature {
 		if (profile != null) cache.profile(profile);
 		Screen s = mc.gui.screen();
 		if (s instanceof AbstractContainerScreen<?> acs) {
-			String title = Strip.clean(acs.getTitle().getString());
+			String title = LegacyText.clean(acs.getTitle().getString());
 			String id = StorageCache.pageId(title);
 			if (id != null) snapshot(acs, id, title);
 		}
@@ -82,7 +82,7 @@ public final class StorageFeature extends Feature {
 			int index = i++;
 			ItemStack st = sl.getItem();
 			if (st.isEmpty()) continue;
-			String name = Strip.clean(st.getHoverName().getString());
+			String name = LegacyText.clean(st.getHoverName().getString());
 			// Hypixel's page frame: blank glass panes and navigation buttons aren't storage contents
 			if (name.isBlank() || NAV.contains(name)) continue;
 			items.add(Stacks.remember(index, st));

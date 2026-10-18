@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.game;
 
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -44,19 +44,19 @@ public final class Game {
 	}
 
 	public static void info(String text) {
-		send(prefix().append(Component.literal(Strip.codes(text)).withStyle(ChatFormatting.GRAY)));
+		send(prefix().append(Component.literal(LegacyText.codes(text)).withStyle(ChatFormatting.GRAY)));
 	}
 
 	public static void ok(String text) {
-		send(prefix().append(Component.literal(Strip.codes(text)).withStyle(ChatFormatting.GREEN)));
+		send(prefix().append(Component.literal(LegacyText.codes(text)).withStyle(ChatFormatting.GREEN)));
 	}
 
 	public static void warn(String text) {
-		send(prefix().append(Component.literal(Strip.codes(text)).withStyle(ChatFormatting.YELLOW)));
+		send(prefix().append(Component.literal(LegacyText.codes(text)).withStyle(ChatFormatting.YELLOW)));
 	}
 
 	public static void error(String text) {
-		send(prefix().append(Component.literal(Strip.codes(text)).withStyle(ChatFormatting.RED)));
+		send(prefix().append(Component.literal(LegacyText.codes(text)).withStyle(ChatFormatting.RED)));
 	}
 
 	/** Minimum time between two commands OFA sends for the player, so a double click or key repeat stays one command. */

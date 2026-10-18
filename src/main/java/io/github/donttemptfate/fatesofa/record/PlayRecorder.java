@@ -2,9 +2,9 @@ package io.github.donttemptfate.fatesofa.record;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.text.Texts;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.text.Texts;
 import io.github.donttemptfate.fatesofa.FatesOfaClient;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.game.ChatBus;
@@ -210,7 +210,7 @@ public final class PlayRecorder {
 		Set<String> names = new LinkedHashSet<>();
 		if (mc.level != null) for (Player p : mc.level.players()) names.add(p.getName().getString());
 		for (String l : StateReader.tabLines(mc)) {
-			Matcher m = TAB_NAME.matcher(Strip.clean(l));
+			Matcher m = TAB_NAME.matcher(LegacyText.clean(l));
 			while (m.find()) names.add(m.group(1));
 		}
 		String me = mc.player == null ? "" : mc.player.getName().getString();
@@ -284,7 +284,7 @@ public final class PlayRecorder {
 			p[1] = age;
 			if (age < 10 || age % 20 != 10) continue;
 			AbstractContainerScreen<?> s = (AbstractContainerScreen<?>) p[0];
-			String plainTitle = Strip.clean(s.getTitle().getString()).trim();
+			String plainTitle = LegacyText.clean(s.getTitle().getString()).trim();
 			if (SOCIAL_MENU.matcher(plainTitle).matches()) {
 				if ("".equals(p[2])) {
 					p[2] = "skipped";

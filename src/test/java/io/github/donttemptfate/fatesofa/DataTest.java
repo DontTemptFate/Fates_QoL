@@ -162,6 +162,20 @@ public class DataTest {
 		assertTrue(q.itemLocked("u1", null));
 		assertTrue(q.slotLocked(7));
 		assertFalse(q.slotLocked(8));
+		// a lock saved before Fates Common 0.3 (Minecraft's dashed uuid) still stops the same item,
+		// whichever form the uuid arrives in now
+		com.google.gson.JsonObject old = new com.google.gson.JsonObject();
+		com.google.gson.JsonArray us = new com.google.gson.JsonArray();
+		us.add("361DE2DF-1769-4052-9795-FB21A1D0F344");
+		old.add("uuids", us);
+		Protection r = new Protection();
+		r.fromJson(old);
+		assertTrue(r.itemLocked("361de2df17694052979 5fb21a1d0f344".replace(" ", ""), null));
+		assertTrue(r.itemLocked("361de2df-1769-4052-9795-fb21a1d0f344", null));
+		Protection.Facts term = new Protection.Facts("361de2df17694052979" + "5fb21a1d0f344", "TERMINATOR", "Terminator", 1e9, 2);
+		assertEquals(Protection.Verdict.BLOCK, r.decide(Protection.Action.DROP, term, 0).verdict());
+		assertFalse(r.toggleItem("361de2df-1769-4052-9795-fb21a1d0f344", "TERMINATOR")); // same lock: unlocks
+		assertEquals(0, r.lockedItemCount());
 	}
 
 	@Test

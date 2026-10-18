@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.ui;
 
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.features.QuickCommandsFeature;
 import io.github.donttemptfate.fatesofa.game.Game;
 import io.github.donttemptfate.fatesofa.game.Keys;

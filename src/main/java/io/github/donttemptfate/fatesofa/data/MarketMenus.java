@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.data;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.Fmt;
 
 import java.util.List;
 import java.util.Locale;

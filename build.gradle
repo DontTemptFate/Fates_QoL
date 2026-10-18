@@ -15,15 +15,9 @@ group = project.group
 
 sourceSets {
 	main {
-		// The shared library (theme, cards, item reading) lives in common/ and is compiled into this jar.
-		java.srcDir "common/src/main/java"
-		resources.srcDir "common/src/main/resources"
 		// Version-specific calls (window/input library) live in src/mc<version>/java.
 		java.srcDir "src/mc${mcTarget}/java"
 		resources.srcDir "src/mc${mcTarget}/resources"
-	}
-	test {
-		java.srcDir "common/src/test/java"
 	}
 }
 // Mod Menu's two API interfaces, only to compile against: left out of the jar (the real ones come with Mod Menu)
@@ -38,12 +32,17 @@ base {
 
 repositories {
 	mavenCentral()
+	// Fates Common, the library shared with Fates Flipper (look, fonts, text, item reading, shared settings)
+	maven { url "https://raw.githubusercontent.com/DontTemptFate/Fates_Common/maven" }
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	// bundled inside OFA's jar; with Fates Flipper installed too, Fabric Loader keeps the newest copy
+	implementation "io.github.donttemptfate:fatescommon:${project.fates_common_version}+mc${project.minecraft_version}"
+	include "io.github.donttemptfate:fatescommon:${project.fates_common_version}+mc${project.minecraft_version}"
 
 	testImplementation "junit:junit:4.13.2"
 	testImplementation "com.google.code.gson:gson:2.11.0"
@@ -71,12 +70,14 @@ processResources {
 	def minecraftDep = project.minecraft_dep
 	// the Fabric API we build and test with is the oldest we accept
 	def fabricApiDep = ">=" + project.fabric_api_version
+	def commonDep = ">=" + project.fates_common_version
 	inputs.property "version", version
+	inputs.property "commonDep", commonDep
 	inputs.property "minecraftDep", minecraftDep
 	inputs.property "fabricApiDep", fabricApiDep
 
 	filesMatching("fabric.mod.json") {
-		expand "version": version, "minecraft_dep": minecraftDep, "fabric_api_dep": fabricApiDep
+		expand "version": version, "minecraft_dep": minecraftDep, "fabric_api_dep": fabricApiDep, "common_dep": commonDep
 	}
 }
 

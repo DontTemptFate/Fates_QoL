@@ -3,7 +3,7 @@ package io.github.donttemptfate.fatesofa.storage;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ public record StoredItem(int slot, String itemId, String key, String name, List<
 	}
 
 	public String searchText() {
-		StringBuilder b = new StringBuilder(Strip.clean(name));
-		for (String l : lore) b.append(' ').append(Strip.clean(l));
+		StringBuilder b = new StringBuilder(LegacyText.clean(name));
+		for (String l : lore) b.append(' ').append(LegacyText.clean(l));
 		if (key != null) b.append(' ').append(key.replace('_', ' '));
 		return b.toString().toLowerCase(Locale.ROOT);
 	}

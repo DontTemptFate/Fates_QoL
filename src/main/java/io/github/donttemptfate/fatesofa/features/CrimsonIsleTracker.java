@@ -1,9 +1,9 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.activity.IslandTrackers;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -42,7 +42,7 @@ public final class CrimsonIsleTracker extends Feature {
 		Ofa o = Ofa.get();
 		ClientTickEvents.END_CLIENT_TICK.register(mc -> guard(() -> {
 			if (++tick % 20 != 0 || !(mc.gui.screen() instanceof AbstractContainerScreen<?> s)) return;
-			if (!Strip.clean(s.getTitle().getString()).contains("Trophy Fish")) return;
+			if (!LegacyText.clean(s.getTitle().getString()).contains("Trophy Fish")) return;
 			int tiers = 0, fish = 0;
 			for (Slot sl : s.getMenu().slots) {
 				if (sl.container instanceof Inventory || sl.getItem().isEmpty()) continue;

@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.game;
 
-import io.github.donttemptfate.fates.common.compat.Compat;
+import io.github.donttemptfate.fatescommon.compat.Compat;
 import io.github.donttemptfate.fatesofa.FatesOfaClient;
 import io.github.donttemptfate.fatesofa.hud.HudEditorScreen;
 import io.github.donttemptfate.fatesofa.ui.SettingsScreen;

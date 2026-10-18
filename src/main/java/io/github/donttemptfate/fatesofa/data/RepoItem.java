@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.data;
 
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 
 import java.util.List;
 import java.util.Locale;
@@ -19,13 +19,13 @@ public record RepoItem(
 
 	/** Name without colour codes, for search and sorting. */
 	public String plainName() {
-		return Strip.clean(displayName);
+		return LegacyText.clean(displayName);
 	}
 
 	/** Lower-case text searched by the item list: name, key and lore. */
 	public String searchText() {
 		StringBuilder b = new StringBuilder(plainName()).append(' ').append(key.replace('_', ' '));
-		for (String l : lore) b.append(' ').append(Strip.clean(l));
+		for (String l : lore) b.append(' ').append(LegacyText.clean(l));
 		return b.toString().toLowerCase(Locale.ROOT);
 	}
 

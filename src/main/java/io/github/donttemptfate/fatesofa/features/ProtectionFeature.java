@@ -1,9 +1,9 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -151,7 +151,7 @@ public final class ProtectionFeature extends Feature {
 		for (Slot s : screen.getMenu().slots) {
 			boolean slotLock = s.container instanceof Inventory && o.protection.slotLocked(s.getContainerSlot());
 			ItemStack st = s.getItem();
-			var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(st);
+			var facts = io.github.donttemptfate.fatescommon.skyblock.ItemFacts.of(st);
 			boolean itemLock = !st.isEmpty() && o.protection.itemLocked(facts.uuid(), facts.uuid() == null ? facts.key() : null);
 			if (!slotLock && !itemLock) continue;
 			int x = lx + s.x, y = ty + s.y;
@@ -225,7 +225,7 @@ public final class ProtectionFeature extends Feature {
 			if (a == Protection.Action.BAZAAR && Items.plainName(st).startsWith("Sell Inventory")) {
 				for (Slot sl : menu.slots) {
 					if (!(sl.container instanceof Inventory) || sl.getItem().isEmpty()) continue;
-					var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(sl.getItem());
+					var facts = io.github.donttemptfate.fatescommon.skyblock.ItemFacts.of(sl.getItem());
 					if (o.protection.itemLocked(facts.uuid(), facts.uuid() == null ? facts.key() : null))
 						return note(Items.plainName(sl.getItem()) + " is locked — move it out of your inventory before selling the inventory");
 				}
@@ -239,7 +239,7 @@ public final class ProtectionFeature extends Feature {
 	/** What putting your own item into the open menu does (by its title and its fixed buttons). */
 	static Protection.Action menuAction(AbstractContainerMenu menu) {
 		Screen screen = Minecraft.getInstance().gui.screen();
-		String title = screen == null ? "" : Strip.clean(screen.getTitle().getString());
+		String title = screen == null ? "" : LegacyText.clean(screen.getTitle().getString());
 		java.util.List<String> buttons = new java.util.ArrayList<>();
 		for (Slot s : menu.slots) if (!(s.container instanceof Inventory) && !s.getItem().isEmpty()) buttons.add(Items.plainName(s.getItem()));
 		return Protection.actionFor(title, buttons);
@@ -284,11 +284,11 @@ public final class ProtectionFeature extends Feature {
 
 	private Object tradeFor;
 	private long tradeAt;
-	private io.github.donttemptfate.fates.common.ui.Card tradeCard;
+	private io.github.donttemptfate.fatescommon.ui.Card tradeCard;
 
 	/** Hypixel's trade window: your offer in the left four columns, theirs in the right four. */
 	void drawTrade(AbstractContainerScreen<?> s, GuiGraphicsExtractor g) {
-		if (Protection.actionFor(Strip.clean(s.getTitle().getString()), java.util.List.of()) != Protection.Action.TRADE) return;
+		if (Protection.actionFor(LegacyText.clean(s.getTitle().getString()), java.util.List.of()) != Protection.Action.TRADE) return;
 		long now = System.currentTimeMillis();
 		if (s != tradeFor || now - tradeAt > 500) {
 			tradeFor = s;
@@ -306,16 +306,16 @@ public final class ProtectionFeature extends Feature {
 			}
 			tradeCard = null;
 			if (mine > 0 || theirs > 0) {
-				var c = new io.github.donttemptfate.fates.common.ui.Card(0.9f, 100, 170);
-				c.add(io.github.donttemptfate.fates.common.ui.Card.Line.of(io.github.donttemptfate.fates.common.ui.Card.seg("TRADE", Ui.Role.LABEL, Ui.accent())));
-				var kv = new io.github.donttemptfate.fates.common.ui.Card.KeyValues(1);
-				kv.row(io.github.donttemptfate.fates.common.ui.Card.seg("You give", Ui.Role.SMALL, Ui.GRAY), io.github.donttemptfate.fates.common.ui.Card.seg(Fmt.shortNum(mine), Ui.Role.SMALL, Ui.GOLD));
-				kv.row(io.github.donttemptfate.fates.common.ui.Card.seg("You get", Ui.Role.SMALL, Ui.GRAY), io.github.donttemptfate.fates.common.ui.Card.seg(Fmt.shortNum(theirs), Ui.Role.SMALL, Ui.GOLD));
+				var c = new io.github.donttemptfate.fatescommon.ui.Card(0.9f, 100, 170);
+				c.add(io.github.donttemptfate.fatescommon.ui.Card.Line.of(io.github.donttemptfate.fatescommon.ui.Card.seg("TRADE", Ui.Role.LABEL, Ui.accent())));
+				var kv = new io.github.donttemptfate.fatescommon.ui.Card.KeyValues(1);
+				kv.row(io.github.donttemptfate.fatescommon.ui.Card.seg("You give", Ui.Role.SMALL, Ui.GRAY), io.github.donttemptfate.fatescommon.ui.Card.seg(Fmt.shortNum(mine), Ui.Role.SMALL, Ui.GOLD));
+				kv.row(io.github.donttemptfate.fatescommon.ui.Card.seg("You get", Ui.Role.SMALL, Ui.GRAY), io.github.donttemptfate.fatescommon.ui.Card.seg(Fmt.shortNum(theirs), Ui.Role.SMALL, Ui.GOLD));
 				c.add(kv);
 				if (mine > 0 && theirs < mine * get(tradeWarn) / 100.0)
-					c.add(io.github.donttemptfate.fates.common.ui.Card.Line.of(io.github.donttemptfate.fates.common.ui.Card.seg("You get only " + Math.round(theirs / mine * 100) + "% of what you give",
+					c.add(io.github.donttemptfate.fatescommon.ui.Card.Line.of(io.github.donttemptfate.fatescommon.ui.Card.seg("You get only " + Math.round(theirs / mine * 100) + "% of what you give",
 							Ui.Role.SMALL, Ui.RED)));
-				c.add(io.github.donttemptfate.fates.common.ui.Card.Line.of(io.github.donttemptfate.fates.common.ui.Card.seg("Values from public prices; check before accepting.", Ui.Role.SMALL, Ui.DARK)));
+				c.add(io.github.donttemptfate.fatescommon.ui.Card.Line.of(io.github.donttemptfate.fatescommon.ui.Card.seg("Values from public prices; check before accepting.", Ui.Role.SMALL, Ui.DARK)));
 				tradeCard = c;
 			}
 		}

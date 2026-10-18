@@ -2,7 +2,7 @@ package io.github.donttemptfate.fatesofa.planner;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.donttemptfate.fates.common.item.Rarity;
+import io.github.donttemptfate.fatescommon.skyblock.Rarity;
 import io.github.donttemptfate.fatesofa.data.ItemRepo;
 import io.github.donttemptfate.fatesofa.data.RepoItem;
 

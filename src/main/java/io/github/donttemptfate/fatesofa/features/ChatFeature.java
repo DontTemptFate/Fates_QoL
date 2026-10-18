@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.chat.ChatFilter;
 import io.github.donttemptfate.fatesofa.config.Setting;
@@ -49,7 +49,7 @@ public final class ChatFeature extends Feature {
 			if (overlay) return true;
 			return guard(() -> {
 				if (!o.state.onHypixel()) return true;
-				String plain = Strip.clean(message.getString());
+				String plain = LegacyText.clean(message.getString());
 				var rule = custom.match(get(ownRules), plain);
 				if (rule != null) {
 					switch (rule.action()) {

@@ -1,8 +1,8 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -112,7 +112,7 @@ public final class StorageOverlay extends Feature {
 
 	void attach(Minecraft mc, AbstractContainerScreen<?> s) {
 		boolean onSb = Ofa.get().state.onSkyBlock() || io.github.donttemptfate.fatesofa.game.Dev.test();
-		String title = Strip.clean(s.getTitle().getString());
+		String title = LegacyText.clean(s.getTitle().getString());
 		if (!onSb || !isStorageWindow(title) || !room(s)) return;
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
 		int x = edge(s) - W - 6, y = a.fatesofa$topPos();
@@ -156,7 +156,7 @@ public final class StorageOverlay extends Feature {
 		StorageCache c = cache();
 		List<StorageCache.Page> pages = c == null ? List.of() : c.pages();
 		String[] words = words(box);
-		String here = StorageCache.pageId(Strip.clean(s.getTitle().getString()));
+		String here = StorageCache.pageId(LegacyText.clean(s.getTitle().getString()));
 
 		int listTop = y + 42, rowH = 11;
 		int bottom = Math.min(s.height - 6, listTop + Math.max(1, pages.size()) * rowH + 6);
@@ -243,7 +243,7 @@ public final class StorageOverlay extends Feature {
 		int i = (int) Math.floor((my - listTop) / rowH);
 		if (my >= listTop && i >= 0 && i < pages.size() && mx >= x + 4 && mx < x + W - 4) {
 			StorageCache.Page p = pages.get(i);
-			String here = StorageCache.pageId(Strip.clean(s.getTitle().getString()));
+			String here = StorageCache.pageId(LegacyText.clean(s.getTitle().getString()));
 			if (!p.id().equals(here)) open(p.id(), box.getValue());
 			return true;
 		}

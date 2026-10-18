@@ -1,9 +1,9 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.activity.FishingTracker;
 import io.github.donttemptfate.fatesofa.config.Setting;
@@ -130,7 +130,7 @@ public final class FishingFeature extends Feature {
 		for (Entity e : mc.level.entitiesForRendering()) {
 			if (!(e instanceof ArmorStand) || !e.hasCustomName()) continue;
 			if (e.distanceToSqr(hook) > 4) continue;
-			String n = Strip.clean(e.getCustomName().getString());
+			String n = LegacyText.clean(e.getCustomName().getString());
 			if (n.equals("!!!")) {
 				lastBiteAt = now;
 				bite.fire(Map.of(), Ofa.get().state.island(), now);

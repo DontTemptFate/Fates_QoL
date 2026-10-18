@@ -1,7 +1,6 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.ui.Theme;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.ui.Theme;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.data.PriceService;
@@ -13,10 +12,10 @@ public final class General {
 	private General() {}
 
 	public static final Setting<Boolean> ONBOARDED = Setting.bool("general.onboarded", "Setup done", false).build();
-	public static final Setting<String> THEME = Setting.choice("general.theme", "Theme", "fates", Theme.ids())
-			.help("Colours of every OFA card, panel and screen.").keywords("look colour color style purple").build();
-	public static final Setting<Boolean> CHAKRA = Setting.bool("general.chakra", "Chakra Petch font", true)
-			.help("Big numbers and names in the Chakra Petch font; off = Minecraft's font everywhere.").keywords("font text").build();
+	public static final Setting<String> THEME = Setting.choice("general.theme", "Theme (shared with Fates Flipper)", "fates", Theme.ids())
+			.help("Colours of every OFA card, panel and screen. Shared with Fates Flipper: changing it here changes it there too (config/fatescommon.json).").keywords("look colour color style purple").build();
+	public static final Setting<Boolean> CHAKRA = Setting.bool("general.chakra", "Chakra Petch font (shared with Fates Flipper)", true)
+			.help("Big numbers and names in the Chakra Petch font; off = Minecraft's font everywhere. Shared with Fates Flipper, like the theme.").keywords("font text").build();
 	public static final Setting<Boolean> NETWORK = Setting.bool("general.network", "Online data", true)
 			.help("Download item data (GitHub) and prices (Hypixel, fatesflipper.com). Off = no internet use at all.")
 			.keywords("internet offline download").build();
@@ -55,15 +54,51 @@ public final class General {
 		o.settings.declare(ONBOARDED);
 		o.settings.declare(ADVANCED);
 		for (Setting<?> s : globals()) o.settings.declare(s);
+		sharedLookAtStart(o);
 		apply(o);
 		o.settings.onChange(k -> {
 			if (k.startsWith("general.")) apply(o);
 		});
 	}
 
+	/**
+	 * Font and theme live in Fates Common's shared file (config/fatescommon.json), so OFA and Fates Flipper
+	 * always agree. First start with the shared file: OFA's own earlier choice is carried over once. After
+	 * that, the shared file is the truth and OFA's two options only show and change it.
+	 */
+	static void sharedLookAtStart(Ofa o) {
+		if (!io.github.donttemptfate.fatescommon.Settings.saved()) {
+			io.github.donttemptfate.fatescommon.Settings.setTheme(Theme.byId(o.settings.get(THEME)));
+			io.github.donttemptfate.fatescommon.Settings.setChakra(o.settings.on(CHAKRA));
+		} else {
+			pullSharedLook(o);
+		}
+	}
+
+	private static boolean pulling;
+
+	/** Shows the shared font and theme in OFA's options (Fates Flipper may have changed them). */
+	public static void pullSharedLook(Ofa o) {
+		pulling = true;
+		try {
+			String id = io.github.donttemptfate.fatescommon.Settings.theme().id();
+			if (!id.equals(o.settings.get(THEME))) o.settings.set(THEME, id);
+			boolean chakra = io.github.donttemptfate.fatescommon.Settings.chakra();
+			if (chakra != o.settings.on(CHAKRA)) o.settings.set(CHAKRA, chakra);
+		} finally {
+			pulling = false;
+		}
+	}
+
 	public static void apply(Ofa o) {
-		Ui.theme(Theme.byId(o.settings.get(THEME)));
-		Ui.useChakra(o.settings.on(CHAKRA));
+		// the player's choice goes to the shared settings, which apply it to the look at once and save it;
+		// never Ui.theme / Ui.useChakra directly, or the two mods would disagree until a restart
+		if (!pulling) {
+			Theme t = Theme.byId(o.settings.get(THEME));
+			if (!t.id().equals(io.github.donttemptfate.fatescommon.Settings.theme().id())) io.github.donttemptfate.fatescommon.Settings.setTheme(t);
+			boolean chakra = o.settings.on(CHAKRA);
+			if (chakra != io.github.donttemptfate.fatescommon.Settings.chakra()) io.github.donttemptfate.fatescommon.Settings.setChakra(chakra);
+		}
 		boolean net = o.settings.on(NETWORK);
 		o.prices.enabled = net;
 		o.prices.ahEnabled = net && o.settings.on(AH_PRICES);

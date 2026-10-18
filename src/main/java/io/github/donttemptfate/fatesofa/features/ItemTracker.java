@@ -1,9 +1,9 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.ui.Card;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.activity.ItemFlow;
 import io.github.donttemptfate.fatesofa.config.Setting;
@@ -103,7 +103,7 @@ public final class ItemTracker extends Feature {
 			if (!(part.getStyle().getHoverEvent() instanceof HoverEvent.ShowText st)) continue;
 			// clean line by line: the item list is one line per item
 			StringBuilder b = new StringBuilder();
-			for (String line : st.value().getString().split("\n")) b.append(io.github.donttemptfate.fates.common.text.Strip.clean(line)).append('\n');
+			for (String line : st.value().getString().split("\n")) b.append(io.github.donttemptfate.fatescommon.text.LegacyText.clean(line)).append('\n');
 			out.add(b.toString());
 		}
 		return out;

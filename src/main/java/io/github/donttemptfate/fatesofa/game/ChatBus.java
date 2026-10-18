@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.game;
 
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 import io.github.donttemptfate.fatesofa.FatesOfaClient;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.network.chat.Component;
@@ -39,7 +39,7 @@ public final class ChatBus {
 	static void register() {
 		ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
 			try {
-				String plain = Strip.clean(message.getString());
+				String plain = LegacyText.clean(message.getString());
 				// patterns only ever need the start of a line; very long lines are cut so no pattern runs away
 				if (plain.length() > 600) plain = plain.substring(0, 600);
 				Msg m = new Msg(plain, message, System.currentTimeMillis());
@@ -66,7 +66,7 @@ public final class ChatBus {
 
 	/** For tests: feed a message as if the server sent it. */
 	public static void inject(Component message, boolean overlay) {
-		Msg m = new Msg(Strip.clean(message.getString()), message, System.currentTimeMillis());
+		Msg m = new Msg(LegacyText.clean(message.getString()), message, System.currentTimeMillis());
 		for (Consumer<Msg> l : overlay ? ACTION_BAR : CHAT) l.accept(m);
 	}
 }

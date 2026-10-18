@@ -1,7 +1,7 @@
 package io.github.donttemptfate.fatesofa.state;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +44,10 @@ public record ScoreboardInfo(
 	 * @param raw   the sidebar lines top to bottom, formatting included
 	 */
 	public static ScoreboardInfo parse(String title, List<String> raw) {
-		String t = Strip.clean(title).toUpperCase(Locale.ROOT);
+		String t = LegacyText.clean(title).toUpperCase(Locale.ROOT);
 		boolean sb = t.contains("SKYBLOCK") || t.contains("SKIBLOCK");
 		List<String> lines = new ArrayList<>();
-		for (String r : raw) lines.add(Strip.clean(r));
+		for (String r : raw) lines.add(LegacyText.clean(r));
 		String server = null, area = null, date = null, time = null, floor = null, boss = null, progress = null;
 		Double purse = null, bits = null, motes = null, copper = null;
 		Integer cleared = null;

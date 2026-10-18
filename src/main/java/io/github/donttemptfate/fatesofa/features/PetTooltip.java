@@ -1,9 +1,9 @@
 package io.github.donttemptfate.fatesofa.features;
 
 import com.google.gson.JsonObject;
-import io.github.donttemptfate.fates.common.item.ItemKey;
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
+import io.github.donttemptfate.fatescommon.skyblock.ItemKey;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.core.Category;
 import io.github.donttemptfate.fatesofa.core.Feature;
@@ -33,7 +33,7 @@ public final class PetTooltip extends Feature {
 	@Override
 	public void init() {
 		ItemTooltipCallback.EVENT.register((st, ctx, flag, lines) -> guard(() -> {
-			if (!"PET".equals(io.github.donttemptfate.fates.common.item.ItemFacts.of(st).id())) return; // cheap check before reading NBT
+			if (!"PET".equals(io.github.donttemptfate.fatescommon.skyblock.ItemFacts.of(st).id())) return; // cheap check before reading NBT
 			if (on(shift) && !net.minecraft.client.Minecraft.getInstance().hasShiftDown()) return;
 			JsonObject data = Items.data(st);
 			if (data == null || !"PET".equals(ItemKey.str(data, "id"))) return;
@@ -44,7 +44,7 @@ public final class PetTooltip extends Feature {
 			double exp = pet.has("exp") ? pet.get("exp").getAsDouble() : 0;
 			PetLevels.Level l = pl.level(ItemKey.str(pet, "type"), ItemKey.str(pet, "tier"), exp);
 			if (on(value)) {
-				var pv = Ofa.get().prices.petValue(io.github.donttemptfate.fates.common.item.ItemFacts.of(st).key(), l.level(), System.currentTimeMillis());
+				var pv = Ofa.get().prices.petValue(io.github.donttemptfate.fatescommon.skyblock.ItemFacts.of(st).key(), l.level(), System.currentTimeMillis());
 				if (pv != null) lines.add(Component.literal("Worth at level " + l.level() + ": ").withStyle(ChatFormatting.GRAY)
 						.append(Component.literal(Fmt.shortNum(pv.value())).withStyle(ChatFormatting.GOLD)));
 			}

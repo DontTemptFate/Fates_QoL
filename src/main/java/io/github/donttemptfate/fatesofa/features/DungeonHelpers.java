@@ -1,8 +1,8 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Strip;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -78,7 +78,7 @@ public final class DungeonHelpers extends Feature {
 			slots.add(new TerminalHelper.SlotInfo(sl.index, Items.plainName(st), BuiltInRegistries.ITEM.getKey(st.getItem()).toString(),
 					st.getCount(), st.hasFoil()));
 		}
-		List<Integer> hint = TerminalHelper.hint(Strip.clean(s.getTitle().getString()), slots);
+		List<Integer> hint = TerminalHelper.hint(LegacyText.clean(s.getTitle().getString()), slots);
 		if (hint.isEmpty()) return;
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
 		long now = System.currentTimeMillis();

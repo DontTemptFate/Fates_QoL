@@ -1,7 +1,7 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.config.Setting;
 import io.github.donttemptfate.fatesofa.core.Category;
@@ -137,7 +137,7 @@ public final class PuzzleHelpers extends Feature {
 		List<Double> hp = new ArrayList<>();
 		for (Entity e : mc.level.entitiesForRendering()) {
 			if (!(e instanceof ArmorStand) || !e.hasCustomName() || e.distanceToSqr(mc.player) > 40 * 40) continue;
-			Matcher m = BLAZE.matcher(Strip.clean(e.getCustomName().getString()));
+			Matcher m = BLAZE.matcher(LegacyText.clean(e.getCustomName().getString()));
 			if (!m.find()) continue;
 			tags.add(e);
 			hp.add(Fmt.parse(m.group("hp")));

@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.state;
 
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -22,7 +22,7 @@ public record TabInfo(Map<String, String> values, List<String> lines, List<Strin
 		List<String> lines = new java.util.ArrayList<>();
 		List<String> blanks = new java.util.ArrayList<>();
 		for (String r : raw) {
-			String l = Strip.clean(r);
+			String l = LegacyText.clean(r);
 			blanks.add(l);
 			if (l.isEmpty()) continue;
 			lines.add(l);

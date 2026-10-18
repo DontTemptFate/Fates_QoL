@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.hud;
 
-import io.github.donttemptfate.fates.common.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Card;
 import io.github.donttemptfate.fatesofa.core.Feature;
 
 import java.util.function.BooleanSupplier;

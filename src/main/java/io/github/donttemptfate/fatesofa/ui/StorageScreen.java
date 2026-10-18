@@ -1,7 +1,7 @@
 package io.github.donttemptfate.fatesofa.ui;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.ui.Ui;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.ui.Ui;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.features.StorageFeature;
 import io.github.donttemptfate.fatesofa.hud.Rect;

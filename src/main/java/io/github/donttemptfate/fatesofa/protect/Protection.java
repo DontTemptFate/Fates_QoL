@@ -72,14 +72,25 @@ public final class Protection {
 	private String pendingConfirm;
 	private long pendingAt;
 
+	/**
+	 * One form for item uuids: lower case, no dashes (as Fates Common 0.3 gives them). Locks saved before
+	 * OFA moved onto the library kept Minecraft's dashed form; both match the same item.
+	 */
+	public static String norm(String uuid) {
+		if (uuid == null) return null;
+		String u = uuid.replace("-", "").trim().toLowerCase(java.util.Locale.ROOT);
+		return u.isEmpty() ? null : u;
+	}
+
 	public synchronized Decision decide(Action action, Facts f, long now) {
 		if (!enabled || f == null) return Decision.ALLOW;
-		boolean locked = (f.uuid() != null && lockedUuids.contains(f.uuid())) || (f.uuid() == null && f.key() != null && lockedKeys.contains(f.key()));
+		String uuid = norm(f.uuid());
+		boolean locked = (uuid != null && lockedUuids.contains(uuid)) || (uuid == null && f.key() != null && lockedKeys.contains(f.key()));
 		if (locked && lockStops.contains(action)) {
 			if (action != Action.TRADE) return new Decision(Verdict.BLOCK, label(f) + " is locked — unlock it to " + action.verb + " it");
 			return new Decision(Verdict.BLOCK, label(f) + " is locked");
 		}
-		String token = action + "|" + (f.uuid() != null ? f.uuid() : f.key()) + "|" + f.slot();
+		String token = action + "|" + (uuid != null ? uuid : f.key()) + "|" + f.slot();
 		boolean valuable = confirmValue > 0 && f.value() >= confirmValue;
 		if (valuable && confirmFor.contains(action)) return confirm(token, label(f) + " is valuable", action.verb + " it", now);
 		if (action == Action.DROP && dropConfirmValue > 0 && f.value() >= dropConfirmValue) return confirm(token, label(f) + " is worth keeping", "drop it", now);
@@ -96,7 +107,8 @@ public final class Protection {
 	 */
 	public synchronized Decision decideAuction(Facts f, double price, double lowestBin, long now) {
 		if (!enabled || f == null || !(price > 0) || !(lowestBin > 0)) return Decision.ALLOW;
-		String token = "AUCTION_PRICE|" + (f.uuid() != null ? f.uuid() : f.key()) + "|" + Math.round(price);
+		String uuid = norm(f.uuid());
+		String token = "AUCTION_PRICE|" + (uuid != null ? uuid : f.key()) + "|" + Math.round(price);
 		if (auctionLowShare > 0 && price < lowestBin * auctionLowShare)
 			return confirm(token, "That price is only " + Math.round(price / lowestBin * 100) + "% of the lowest BIN", "list it anyway", now);
 		if (auctionHighTimes > 0 && price > lowestBin * auctionHighTimes)
@@ -139,7 +151,8 @@ public final class Protection {
 	// ---- locks --------------------------------------------------------------------------------------
 
 	/** Locks or unlocks an item; returns true when it is now locked. Needs a uuid or a key. */
-	public synchronized boolean toggleItem(String uuid, String key) {
+	public synchronized boolean toggleItem(String rawUuid, String key) {
+		String uuid = norm(rawUuid);
 		if (uuid != null) {
 			if (!lockedUuids.remove(uuid)) {
 				lockedUuids.add(uuid);
@@ -163,7 +176,8 @@ public final class Protection {
 		return false;
 	}
 
-	public synchronized boolean itemLocked(String uuid, String key) {
+	public synchronized boolean itemLocked(String rawUuid, String key) {
+		String uuid = norm(rawUuid);
 		return uuid != null ? lockedUuids.contains(uuid) : key != null && lockedKeys.contains(key);
 	}
 
@@ -200,7 +214,10 @@ public final class Protection {
 		if (e == null || !e.isJsonObject()) return;
 		JsonObject o = e.getAsJsonObject();
 		try {
-			if (o.has("uuids")) for (JsonElement x : o.getAsJsonArray("uuids")) lockedUuids.add(x.getAsString());
+			if (o.has("uuids")) for (JsonElement x : o.getAsJsonArray("uuids")) {
+				String u = norm(x.getAsString()); // older files: dashed form
+				if (u != null) lockedUuids.add(u);
+			}
 			if (o.has("keys")) for (JsonElement x : o.getAsJsonArray("keys")) lockedKeys.add(x.getAsString());
 			if (o.has("slots")) for (JsonElement x : o.getAsJsonArray("slots")) {
 				int v = x.getAsInt();

@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.activity;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.Fmt;
 import io.github.donttemptfate.fatesofa.state.TabInfo;
 
 import java.util.LinkedHashMap;

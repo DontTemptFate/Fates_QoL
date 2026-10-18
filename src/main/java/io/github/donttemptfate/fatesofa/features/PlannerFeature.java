@@ -1,8 +1,8 @@
 package io.github.donttemptfate.fatesofa.features;
 
-import io.github.donttemptfate.fates.common.item.Items;
-import io.github.donttemptfate.fates.common.text.Fmt;
-import io.github.donttemptfate.fates.common.text.Strip;
+import io.github.donttemptfate.fatescommon.skyblock.Items;
+import io.github.donttemptfate.fatescommon.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.LegacyText;
 import io.github.donttemptfate.fatesofa.Ofa;
 import io.github.donttemptfate.fatesofa.core.Category;
 import io.github.donttemptfate.fatesofa.core.Feature;
@@ -74,7 +74,7 @@ public final class PlannerFeature extends Feature {
 						v = pr == null ? Double.NaN : pr.value() * it.count();
 					}
 					entries.add(new io.github.donttemptfate.fatesofa.planner.Networth.Entry("Storage", it.key(),
-							io.github.donttemptfate.fates.common.text.Strip.clean(it.name()), it.count(), v));
+							io.github.donttemptfate.fatescommon.text.LegacyText.clean(it.name()), it.count(), v));
 				}
 			}
 		}
@@ -95,26 +95,26 @@ public final class PlannerFeature extends Feature {
 		java.time.LocalDate today = java.time.LocalDate.now();
 		double before = history.record(today, sum.total());
 		java.time.LocalDate prevDay = history.previousDay(today);
-		String change = Double.isNaN(before) ? "" : "  (" + io.github.donttemptfate.fates.common.text.Fmt.signedShort(sum.total() - before) + " since " + prevDay + ")";
+		String change = Double.isNaN(before) ? "" : "  (" + io.github.donttemptfate.fatescommon.text.Fmt.signedShort(sum.total() - before) + " since " + prevDay + ")";
 		io.github.donttemptfate.fatesofa.game.Game.send(net.minecraft.network.chat.Component.literal("Networth (what OFA has seen): ").withStyle(net.minecraft.ChatFormatting.GRAY)
-				.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fates.common.text.Fmt.shortNum(sum.total())).withStyle(net.minecraft.ChatFormatting.GOLD))
+				.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fatescommon.text.Fmt.shortNum(sum.total())).withStyle(net.minecraft.ChatFormatting.GOLD))
 				.append(net.minecraft.network.chat.Component.literal(change).withStyle(net.minecraft.ChatFormatting.DARK_GRAY)));
 		for (var e : sum.byCategory().entrySet())
 			io.github.donttemptfate.fatesofa.game.Game.send(net.minecraft.network.chat.Component.literal("  " + e.getKey() + " ").withStyle(net.minecraft.ChatFormatting.GRAY)
-					.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fates.common.text.Fmt.shortNum(e.getValue())).withStyle(net.minecraft.ChatFormatting.GOLD)));
+					.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fatescommon.text.Fmt.shortNum(e.getValue())).withStyle(net.minecraft.ChatFormatting.GOLD)));
 		for (var e : sum.top())
 			io.github.donttemptfate.fatesofa.game.Game.send(net.minecraft.network.chat.Component.literal("  · " + (e.count() > 1 ? e.count() + "× " : "") + e.name() + " ").withStyle(net.minecraft.ChatFormatting.DARK_GRAY)
-					.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fates.common.text.Fmt.shortNum(e.value())).withStyle(net.minecraft.ChatFormatting.YELLOW)));
+					.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fatescommon.text.Fmt.shortNum(e.value())).withStyle(net.minecraft.ChatFormatting.YELLOW)));
 		io.github.donttemptfate.fatesofa.game.Game.send(net.minecraft.network.chat.Component.literal("  Seen: " + pages + " storage pages, " + acc
 				+ " accessories. Not counted: bank, sacks, pets menu, wardrobe, museum.").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
 	}
 
 	void add(java.util.List<io.github.donttemptfate.fatesofa.planner.Networth.Entry> out, String cat, net.minecraft.world.item.ItemStack st, long now) {
 		if (st == null || st.isEmpty()) return;
-		String key = io.github.donttemptfate.fates.common.item.Items.key(st);
+		String key = io.github.donttemptfate.fatescommon.skyblock.Items.key(st);
 		if (key == null) return;
-		double v = Ofa.get().valuation.total(io.github.donttemptfate.fates.common.item.Items.data(st), key, st.getCount(), now);
-		out.add(new io.github.donttemptfate.fatesofa.planner.Networth.Entry(cat, key, io.github.donttemptfate.fates.common.item.Items.plainName(st), st.getCount(), v));
+		double v = Ofa.get().valuation.total(io.github.donttemptfate.fatescommon.skyblock.Items.data(st), key, st.getCount(), now);
+		out.add(new io.github.donttemptfate.fatesofa.planner.Networth.Entry(cat, key, io.github.donttemptfate.fatescommon.skyblock.Items.plainName(st), st.getCount(), v));
 	}
 
 	public ProfileData data() {
@@ -136,7 +136,7 @@ public final class PlannerFeature extends Feature {
 			if (tick % 1200 == 0) data.save();
 			return;
 		}
-		String title = Strip.clean(s.getTitle().getString());
+		String title = LegacyText.clean(s.getTitle().getString());
 		Matcher bag = BAG.matcher(title);
 		long now = System.currentTimeMillis();
 		if (bag.matches()) {

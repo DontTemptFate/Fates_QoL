@@ -119,7 +119,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				t.putInt("hot_potato_count", 10);
 				t.putInt("rarity_upgrades", 1);
 				hype.set(DataComponents.CUSTOM_DATA, CustomData.of(t));
-				var b = o.valuation.of(io.github.donttemptfate.fates.common.item.Items.data(hype), "HYPERION", 1, System.currentTimeMillis());
+				var b = o.valuation.of(io.github.donttemptfate.fatescommon.skyblock.Items.data(hype), "HYPERION", 1, System.currentTimeMillis());
 				check(b != null && b.parts().size() == 2, "upgrades not found: " + b);
 				double want = b.base() + 10 * 80_000 + 5.9e6;
 				check(Math.abs(b.total() - want) < 1, "worth with upgrades " + b.total() + " ≠ " + want);
@@ -390,6 +390,15 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 
 			ctx.runOnClient(mc -> {
 				o.settings.set(io.github.donttemptfate.fatesofa.features.General.THEME, "midnight");
+				// the theme is Fates Common's shared setting: applied at once and saved for Fates Flipper too
+				check("midnight".equals(io.github.donttemptfate.fatescommon.Settings.theme().id()), "OFA's theme didn't reach the shared settings");
+				check("midnight".equals(io.github.donttemptfate.fatescommon.ui.Ui.theme().id()), "the shared theme wasn't applied to the look");
+				try {
+					String saved = java.nio.file.Files.readString(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("fatescommon.json"));
+					check(saved.contains("midnight"), "config/fatescommon.json doesn't hold the theme: " + saved);
+				} catch (java.io.IOException e) {
+					throw new AssertionError("config/fatescommon.json wasn't written: " + e);
+				}
 				mc.gui.setScreen(new StorageScreen(null, ""));
 			});
 			ctx.waitTicks(10);
@@ -482,8 +491,8 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		tag.putString("id", id);
 		if (count == 1) tag.putString("uuid", id.toLowerCase());
 		st.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
-		st.set(DataComponents.CUSTOM_NAME, io.github.donttemptfate.fates.common.text.Texts.fromLegacy(name));
-		st.set(DataComponents.LORE, new ItemLore(List.of(Component.literal("A test item"), io.github.donttemptfate.fates.common.text.Texts.fromLegacy(rarityLine))));
+		st.set(DataComponents.CUSTOM_NAME, io.github.donttemptfate.fatescommon.text.Texts.fromLegacy(name));
+		st.set(DataComponents.LORE, new ItemLore(List.of(Component.literal("A test item"), io.github.donttemptfate.fatescommon.text.Texts.fromLegacy(rarityLine))));
 		return st;
 	}
 
@@ -685,6 +694,8 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		String common = loader.getModContainer("fatescommon").map(m -> m.getMetadata().getVersion().getFriendlyString()).orElse("missing");
 		FatesOfaClient.LOG.info("[gametest] together: Fates Flipper {}, Fates Common {}", ff, common);
 		check(!"missing".equals(common), "Fates Flipper loaded without its Fates Common library");
+		// one copy of the library for both mods (the newest bundled one), so one shared font / theme
+		check(loader.getAllMods().stream().filter(m -> m.getMetadata().getId().equals("fatescommon")).count() == 1, "two copies of Fates Common loaded");
 
 		// upgrades, so OFA has a "Worth … with upgrades" line to hand over (the Batch 6 prices are loaded)
 		ItemStack hype = sb(Items.IRON_SWORD, "HYPERION", "§6Hyperion", "§6§lLEGENDARY DUNGEON SWORD", 1);

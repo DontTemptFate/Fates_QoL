@@ -1,6 +1,6 @@
 package io.github.donttemptfate.fatesofa.activity;
 
-import io.github.donttemptfate.fates.common.text.Fmt;
+import io.github.donttemptfate.fatescommon.text.Fmt;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

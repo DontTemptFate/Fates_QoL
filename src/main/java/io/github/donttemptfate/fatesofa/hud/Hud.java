@@ -2,7 +2,7 @@ package io.github.donttemptfate.fatesofa.hud;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.donttemptfate.fates.common.ui.Card;
+import io.github.donttemptfate.fatescommon.ui.Card;
 import io.github.donttemptfate.fatesofa.FatesOfaClient;
 import io.github.donttemptfate.fatesofa.config.Settings;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
