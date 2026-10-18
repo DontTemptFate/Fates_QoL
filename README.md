@@ -32,10 +32,12 @@ Status: **alpha** — expect rough edges, and please report them (see below).
 | Storage | Every ender chest page and backpack remembered: `/ofa storage`, `/ofa find`, and a panel beside Hypixel's storage menus with page values and one search across all of them |
 | Protection | Lock items or slots so they can't be dropped, sold, salvaged, traded or listed. A second click is needed for valuable sells and drops, for NPC sales far below value, and for auction prices that look like a typo. The trade window shows totals for both sides |
 | Activities | Garden, mining, fishing, slayer, Diana, Hoppity, Rift, Kuudra, Bingo and event timers, each a HUD card with per-hour rates and alerts |
-| Dungeons | Clean map, score estimate (S / S+), splits, key / crypt / puzzle alerts. Helpers (off by default): terminal highlights, Three Weirdos, and secret waypoints learned while you play |
+| Trackers | Skill XP per hour and time to level, pickups and sacks log, a tracker for any items you list, collections progress, minion and chocolate factory helpers; Crystal Hollows & Mineshaft, Crimson Isle, foraging and Rift collectibles |
+| Markets | Auction listings with the lowest BIN and worth with upgrades, your auctions' sold coins to collect, outbid / filled bazaar orders |
+| Dungeons | Clean map with secret counts and teammates, score estimate (S / S+), splits, run history with personal bests, reward chest profit, key / crypt / puzzle alerts. Helpers (off by default): terminal highlights, Three Weirdos, puzzle hints (Creeper Beams, Ice Fill, Higher or Lower), and secret waypoints learned while you play |
 | Planner | Cheapest Magical Power you're missing, crafts from what you own, `/ofa networth` with daily change |
 | Quality of life | Quick buttons above menus, hotkeys and aliases, chat cleanup with your own rules, waypoints, health / mana bars |
-| Settings | Nearly 600 options, all searchable, in collapsible groups, with Advanced and Changed views. Colour picker, sound picker, island picker, line lists, key binds, presets, and settings export / import |
+| Settings | Over 800 options, all searchable, in collapsible groups, with Advanced and Changed views. Colour picker, sound picker, island picker, line lists, key binds, presets, and settings export / import |
 
 ### HELPER features
 
