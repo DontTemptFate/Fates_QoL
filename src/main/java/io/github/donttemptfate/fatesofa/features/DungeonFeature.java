@@ -42,7 +42,7 @@ public final class DungeonFeature extends Feature {
 	private DungeonRun run = new DungeonRun();
 	private volatile DungeonMap.Layout layout;
 	private int tick;
-	private boolean said270, said300;
+	private boolean said270, said300, mapWarned;
 
 	public DungeonFeature() {
 		super("dungeons", "Dungeons", "Clean dungeon map, score estimate (S / S+), run splits and key alerts — from what the game shows you.",
@@ -55,7 +55,7 @@ public final class DungeonFeature extends Feature {
 		o.state.onIslandChange(i -> {
 			if (i == Island.DUNGEON) {
 				run = new DungeonRun();
-				said270 = said300 = false;
+				said270 = said300 = mapWarned = false;
 			}
 		});
 		ClientTickEvents.END_CLIENT_TICK.register(mc -> guard(() -> {
@@ -88,8 +88,10 @@ public final class DungeonFeature extends Feature {
 				() -> (on(score) || on(splits)) && o.state.in(Island.DUNGEON)));
 	}
 
+	/** Paul's EZPZ perk (+10 score) when he is mayor or minister, from Hypixel's election data. */
 	boolean paulEzpz() {
-		return false; // shown separately when the mayor data says so (provisional score otherwise)
+		var m = Ofa.get().election.mayor(System.currentTimeMillis());
+		return m != null && m.hasPerk("EZPZ");
 	}
 
 	DungeonMap.Layout readMap(Minecraft mc) {
@@ -98,7 +100,14 @@ public final class DungeonFeature extends Feature {
 		MapId id = st.get(DataComponents.MAP_ID);
 		if (id == null) return null;
 		MapItemSavedData data = mc.level.getMapData(id);
-		return data == null ? null : DungeonMap.parse(data.colors);
+		if (data == null) return null;
+		DungeonMap.Layout l = DungeonMap.parse(data.colors);
+		if (l == null && !mapWarned) {
+			// Hypixel may have changed the map's colours: say so once per run instead of silently showing nothing
+			mapWarned = true;
+			io.github.donttemptfate.fatesofa.FatesOfaClient.LOG.warn("Dungeon map item present but no rooms recognised (map colours changed?)");
+		}
+		return l;
 	}
 
 	static int colour(DungeonMap.RoomType t) {

@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"AbstractContainerScreenAccessor",
+		"ChatComponentAccessor",
 		"HudTitleMixin",
 		"MultiPlayerGameModeMixin",
 		"SlotDrawMixin"

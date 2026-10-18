@@ -95,4 +95,15 @@ public class ActivityTest {
 		assertEquals(450, a.maxMana(), 0);
 		assertNull(io.github.donttemptfate.fatesofa.activity.ActionBar.parse("hello"));
 	}
+
+	@org.junit.Test
+	public void electionPerksIncludeTheMinister() throws Exception {
+		var parse = io.github.donttemptfate.fatesofa.activity.Election.class.getDeclaredMethod("parse", String.class);
+		parse.setAccessible(true);
+		var m = (io.github.donttemptfate.fatesofa.activity.Election.Mayor) parse.invoke(null,
+				"{\"mayor\":{\"name\":\"Diaz\",\"perks\":[{\"name\":\"Long Term Investment\"}],\"minister\":{\"name\":\"Paul\",\"perk\":{\"name\":\"EZPZ\"}}}}");
+		org.junit.Assert.assertTrue(m.hasPerk("EZPZ"));
+		org.junit.Assert.assertTrue(m.hasPerk("long term investment"));
+		org.junit.Assert.assertFalse(m.hasPerk("Marauder"));
+	}
 }

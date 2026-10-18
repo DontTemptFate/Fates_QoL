@@ -28,7 +28,7 @@ public final class EventTimers extends Feature {
 
 	@Override
 	public void init() {
-		election = new Election(Ofa.get().io);
+		election = Ofa.get().election;
 		Hud.register(new HudElement("events", "Event timers", this, HudPos.at(Anchor.LEFT, 4, 0), 5, this::card, this::card,
 				() -> Ofa.get().state.onSkyBlock()));
 	}

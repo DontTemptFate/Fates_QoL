@@ -27,6 +27,8 @@ public final class Ofa {
 	public final ChatFilter chat = new ChatFilter();
 	public final io.github.donttemptfate.fatesofa.data.Patterns patterns = new io.github.donttemptfate.fatesofa.data.Patterns();
 	public final String version;
+	/** The current mayor and minister (Hypixel's public election data), shared by every feature. */
+	public final io.github.donttemptfate.fatesofa.activity.Election election;
 
 	public Ofa(Path dir, String version, Consumer<String> log) {
 		this.dir = dir;
@@ -41,6 +43,7 @@ public final class Ofa {
 		this.settings = new Settings(dir.resolve("settings.json"));
 		this.prices = new PriceService(io, log);
 		this.repo = new RepoManager(dir.resolve("repo"), io, log);
+		this.election = new io.github.donttemptfate.fatesofa.activity.Election(io);
 	}
 
 	public static Ofa get() {

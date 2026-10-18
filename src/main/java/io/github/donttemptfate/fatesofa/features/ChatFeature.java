@@ -45,6 +45,8 @@ public final class ChatFeature extends Feature {
 				ChatFilter.Decision d = o.chat.decide(Strip.clean(message.getString()), System.currentTimeMillis());
 				if (d.result() == ChatFilter.Result.SHOW) return true;
 				hiddenCount++;
+				// a repeat: shown once more as the latest line, with how many times it came ("×3")
+				if (d.result() == ChatFilter.Result.COMPACT) io.github.donttemptfate.fatesofa.game.ChatFold.fold(message, d.count());
 				return false;
 			}, true);
 		});

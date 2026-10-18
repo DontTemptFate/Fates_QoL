@@ -259,6 +259,18 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				}
 			});
 
+			// chat cleanup: a repeat replaces its earlier copy with one line that counts
+			ctx.runOnClient(mc -> {
+				var chat = mc.gui.hud.getChat();
+				Component sack = Component.literal("[Sacks] +12 items.");
+				chat.addServerSystemMessage(sack);
+				io.github.donttemptfate.fatesofa.game.ChatFold.fold(sack, 3);
+				var all = ((io.github.donttemptfate.fatesofa.mixin.ChatComponentAccessor) chat).fatesofa$allMessages();
+				long copies = all.stream().filter(m -> m.content().getString().startsWith("[Sacks] +12 items.")).count();
+				check(copies == 1, "folded chat left " + copies + " copies");
+				check(all.get(0).content().getString().endsWith("(×3)"), "folded line has no count: " + all.get(0).content().getString());
+			});
+
 			// secret waypoints: the room under the player is recognised from its blocks; learned secrets and a route are drawn
 			ctx.runOnClient(mc -> {
 				var sr = io.github.donttemptfate.fatesofa.features.SecretRoutes.INSTANCE;

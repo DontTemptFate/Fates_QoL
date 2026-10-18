@@ -13,7 +13,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class Election {
 	static final String URL = "https://api.hypixel.net/v2/resources/skyblock/election";
 
-	public record Mayor(String name, List<String> perks, String minister) {
+	public record Mayor(String name, List<String> perks, String minister, String ministerPerk) {
+		public Mayor(String name, List<String> perks, String minister) {
+			this(name, perks, minister, null);
+		}
+
+		/** True when the mayor or the minister brings this perk (e.g. Paul's "EZPZ"). */
+		public boolean hasPerk(String perk) {
+			for (String p : perks) if (p.equalsIgnoreCase(perk)) return true;
+			return ministerPerk != null && ministerPerk.equalsIgnoreCase(perk);
+		}
 	}
 
 	private final Executor io;
@@ -21,12 +30,15 @@ public final class Election {
 	private volatile Mayor mayor;
 	private volatile long at, tried;
 
+	/** Off with General → Online data. */
+	public volatile boolean enabled = true;
+
 	public Election(Executor io) {
 		this.io = io;
 	}
 
 	public Mayor mayor(long now) {
-		if (now - at > 30 * 60_000L && now - tried > 5 * 60_000L && busy.compareAndSet(false, true)) {
+		if (enabled && now - at > 30 * 60_000L && now - tried > 5 * 60_000L && busy.compareAndSet(false, true)) {
 			tried = now;
 			io.execute(() -> {
 				try {
@@ -49,7 +61,13 @@ public final class Election {
 		JsonObject m = JsonParser.parseString(json).getAsJsonObject().getAsJsonObject("mayor");
 		List<String> perks = new ArrayList<>();
 		if (m.has("perks")) m.getAsJsonArray("perks").forEach(p -> perks.add(p.getAsJsonObject().get("name").getAsString()));
-		String minister = m.has("minister") ? m.getAsJsonObject("minister").get("name").getAsString() : null;
-		return new Mayor(m.get("name").getAsString(), List.copyOf(perks), minister);
+		String minister = null, ministerPerk = null;
+		if (m.has("minister") && m.get("minister").isJsonObject()) {
+			JsonObject mi = m.getAsJsonObject("minister");
+			minister = mi.has("name") ? mi.get("name").getAsString() : null;
+			if (mi.has("perk") && mi.get("perk").isJsonObject() && mi.getAsJsonObject("perk").has("name"))
+				ministerPerk = mi.getAsJsonObject("perk").get("name").getAsString();
+		}
+		return new Mayor(m.get("name").getAsString(), List.copyOf(perks), minister, ministerPerk);
 	}
 }

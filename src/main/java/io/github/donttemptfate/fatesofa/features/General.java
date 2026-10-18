@@ -62,6 +62,7 @@ public final class General {
 		o.prices.bazaarMode = "sell_offer".equals(o.settings.get(BAZAAR_MODE)) ? PriceService.BazaarMode.SELL_OFFER : PriceService.BazaarMode.INSTANT_SELL;
 		String am = o.settings.get(AH_MODE);
 		o.prices.ahMode = "median".equals(am) ? PriceService.AhMode.MEDIAN : "lowest_bin".equals(am) ? PriceService.AhMode.LOWEST_BIN : PriceService.AhMode.PLAIN;
+		o.election.enabled = net;
 		String every = o.settings.get(REPO_EVERY);
 		o.repo.autoUpdate = net && o.settings.on(REPO_AUTO) && !"manual".equals(every);
 		o.repo.checkEvery = "weekly".equals(every) ? 7 * 86_400_000L : 86_400_000L;
