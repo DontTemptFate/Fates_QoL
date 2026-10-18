@@ -28,7 +28,7 @@ public final class Hooks {
 			}
 		});
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, mc) -> {
-			o.state.setOnHypixel(Game.isHypixel(mc) || Boolean.getBoolean("fatesofa.test"));
+			o.state.setOnHypixel(Game.isHypixel(mc) || io.github.donttemptfate.fatesofa.game.Dev.test());
 			o.state.worldChanged(System.currentTimeMillis());
 		});
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, mc) -> o.state.setOnHypixel(false));

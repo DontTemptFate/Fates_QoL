@@ -27,7 +27,6 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Locale;
 
 /**
  * Item and slot locks, plus a second click for selling, salvaging or dropping valuable items.
@@ -46,7 +45,7 @@ public final class ProtectionFeature extends Feature {
 	private String lastNote;
 
 	public ProtectionFeature() {
-		super("protection", "Item protection", "Lock items and slots so they can't be dropped, sold or salvaged by mistake; valuable items need a second click.",
+		super("protection", "Item protection", "Lock items and slots so they can't be dropped, sold, salvaged, traded or listed by mistake (moving them around is fine); valuable items need a second click.",
 				Category.PROTECTION, true, Risk.SAFE);
 		INSTANCE = this;
 	}
@@ -134,7 +133,7 @@ public final class ProtectionFeature extends Feature {
 
 	boolean checkClick(int containerId, int slotId, int button, ContainerInput input, Player player) {
 		Ofa o = Ofa.get();
-		if (!o.state.onSkyBlock() && !Boolean.getBoolean("fatesofa.test")) return false;
+		if (!o.state.onSkyBlock() && !io.github.donttemptfate.fatesofa.game.Dev.test()) return false;
 		// the window the click belongs to (normally the player's open menu)
 		AbstractContainerMenu menu = player.containerMenu;
 		if (Minecraft.getInstance().gui.screen() instanceof AbstractContainerScreen<?> open && open.getMenu().containerId == containerId) menu = open.getMenu();
@@ -161,24 +160,33 @@ public final class ProtectionFeature extends Feature {
 			}
 		}
 		if (input == ContainerInput.THROW) return decide(Protection.Action.DROP, st, slotId);
-		if (!own || st.isEmpty()) return false;
 		Protection.Action a = menuAction(menu);
+		if (!own) {
+			// putting the item on your cursor into the window (an auction slot, a trade offer…)
+			ItemStack carried = menu.getCarried();
+			if (a != null && !carried.isEmpty() && decide(a, carried, -1)) return true;
+			// Bazaar "Sell Inventory Now" sells every matching stack you carry
+			if (a == Protection.Action.BAZAAR && Items.plainName(st).startsWith("Sell Inventory")) {
+				for (Slot sl : menu.slots) {
+					if (!(sl.container instanceof Inventory) || sl.getItem().isEmpty()) continue;
+					var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(sl.getItem());
+					if (o.protection.itemLocked(facts.uuid(), facts.uuid() == null ? facts.key() : null))
+						return note(Items.plainName(sl.getItem()) + " is locked — move it out of your inventory before selling the inventory");
+				}
+			}
+			return false;
+		}
+		if (st.isEmpty()) return false;
 		return a != null && decide(a, st, slotId);
 	}
 
-	/** What clicking your own item does in the open menu (by its title and its fixed buttons). */
+	/** What putting your own item into the open menu does (by its title and its fixed buttons). */
 	static Protection.Action menuAction(AbstractContainerMenu menu) {
 		Screen screen = Minecraft.getInstance().gui.screen();
 		String title = screen == null ? "" : Strip.clean(screen.getTitle().getString());
-		String t = title.toLowerCase(Locale.ROOT);
-		if (t.contains("salvage")) return Protection.Action.SALVAGE;
-		if (title.startsWith("You ") && title.trim().contains(" ")) return Protection.Action.TRADE;
-		for (Slot s : menu.slots) {
-			if (s.container instanceof Inventory) continue;
-			String n = Items.plainName(s.getItem());
-			if (n.equals("Sell Item") || n.startsWith("Buyback")) return Protection.Action.NPC_SELL;
-		}
-		return null;
+		java.util.List<String> buttons = new java.util.ArrayList<>();
+		for (Slot s : menu.slots) if (!(s.container instanceof Inventory) && !s.getItem().isEmpty()) buttons.add(Items.plainName(s.getItem()));
+		return Protection.actionFor(title, buttons);
 	}
 
 	boolean decide(Protection.Action action, ItemStack st, int slot) {

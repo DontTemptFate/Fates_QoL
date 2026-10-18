@@ -30,6 +30,9 @@ public class QuickTest {
 		assertNotNull(QuickCommands.aliasProblem("ofa", list, -1));
 		assertNotNull(QuickCommands.aliasProblem("bad alias", list, -1));
 		assertNotNull(QuickCommands.aliasProblem("1x", list, -1));
+		assertTrue(QuickCommands.shadowsHypixel("ec"));
+		assertTrue(QuickCommands.shadowsHypixel("P"));
+		assertTrue(!QuickCommands.shadowsHypixel("ch"));
 
 		var back = QuickCommands.fromJson(JsonParser.parseString(QuickCommands.toJson(list).toString()));
 		assertEquals(list, back);

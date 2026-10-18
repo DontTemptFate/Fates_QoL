@@ -57,18 +57,35 @@ public final class Http {
 				.header("Accept-Encoding", "gzip")
 				.GET();
 		if (ifNoneMatch != null) b.header("If-None-Match", ifNoneMatch);
-		HttpResponse<byte[]> r;
+		long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(90);
+		HttpResponse<InputStream> r;
 		try {
-			r = CLIENT.sendAsync(b.build(), HttpResponse.BodyHandlers.ofByteArray()).get(90, java.util.concurrent.TimeUnit.SECONDS);
+			r = CLIENT.sendAsync(b.build(), HttpResponse.BodyHandlers.ofInputStream()).get(90, java.util.concurrent.TimeUnit.SECONDS);
 		} catch (java.util.concurrent.ExecutionException e) {
 			throw new IOException(e.getCause() == null ? e.toString() : e.getCause().toString());
 		} catch (java.util.concurrent.TimeoutException e) {
 			throw new IOException("timed out: " + uri.getHost());
 		}
-		byte[] raw = r.body();
-		if (raw.length > maxBytes) throw new IOException("response larger than " + maxBytes + " bytes");
 		boolean gz = r.headers().firstValue("Content-Encoding").map(v -> v.equalsIgnoreCase("gzip")).orElse(false);
-		byte[] body = gz ? readCapped(new GZIPInputStream(new java.io.ByteArrayInputStream(raw)), maxBytes) : raw;
+		// the size cap is enforced while reading: a response never grows past maxBytes in memory
+		InputStream raw = r.body();
+		java.util.concurrent.CompletableFuture<byte[]> reading = java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+			try (InputStream in = gz ? new GZIPInputStream(raw) : raw) {
+				return readCapped(in, maxBytes);
+			} catch (IOException e) {
+				throw new java.io.UncheckedIOException(e);
+			}
+		});
+		byte[] body;
+		try {
+			body = reading.get(Math.max(1, deadline - System.nanoTime()), java.util.concurrent.TimeUnit.NANOSECONDS);
+		} catch (java.util.concurrent.ExecutionException e) {
+			Throwable c = e.getCause() instanceof java.io.UncheckedIOException u ? u.getCause() : e.getCause();
+			throw c instanceof IOException io ? io : new IOException(String.valueOf(c));
+		} catch (java.util.concurrent.TimeoutException e) {
+			raw.close();
+			throw new IOException("timed out reading: " + uri.getHost());
+		}
 		long retry = r.headers().firstValue("Retry-After").map(v -> {
 			try {
 				return Long.parseLong(v.trim());

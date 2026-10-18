@@ -1,44 +1,75 @@
 name: Room data
 
-# A "[rooms]" issue with an attached OFA share file adds it to the shared dungeon room pack.
-# Nothing from the issue reaches a shell: the script reads the event file itself.
+# "[rooms]" issues carry OFA share files. Nothing is read in until Fate adds the `approved` label.
+# The pack lives on the `data` branch (main is never written by the bot). Nothing from the issue reaches a
+# shell: the script reads the event file itself.
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, labeled]
 
-permissions:
-  contents: write
-  issues: write
+permissions: {}
 
 concurrency:
   group: room-data
   cancel-in-progress: false
 
 jobs:
-  ingest:
-    if: startsWith(github.event.issue.title, '[rooms]')
+  waiting:
+    if: github.event.action == 'opened' && startsWith(github.event.issue.title, '[rooms]')
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Reply and make sure the label exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          gh label create approved --repo "$GITHUB_REPOSITORY" --color 5000ff --description "Room data checked by Fate" 2>/dev/null || true
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body "Thanks! Fate checks room data before it goes into the shared pack; this issue updates once it's approved."
+
+  ingest:
+    if: github.event.action == 'labeled' && github.event.label.name == 'approved' && startsWith(github.event.issue.title, '[rooms]')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Check out the data branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin data >/dev/null; then
+            git clone --quiet --branch data --depth 1 "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" databranch
+          else
+            mkdir databranch && cd databranch && git init -q -b data && git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Read the attached share files
+        env:
+          ROOMS_DATA_DIR: ${{ github.workspace }}/databranch/data/rooms
         run: python3 -I ci/rooms/rooms.py ingest summary.md
 
       - name: Rebuild the shared pack
+        env:
+          ROOMS_DATA_DIR: ${{ github.workspace }}/databranch/data/rooms
         run: python3 -I ci/rooms/rooms.py build
 
-      - name: Commit
+      - name: Commit to the data branch
         env:
           ISSUE: ${{ github.event.issue.number }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/rooms
+          cd databranch
+          git add -A data
           if git diff --cached --quiet; then
             echo "nothing new"
           else
-            git commit -m "Room data from issue #${ISSUE}"
-            for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+            git commit -q -m "Room data from issue #${ISSUE}"
+            for i in 1 2 3; do git push -q origin HEAD:data && break; git pull -q --rebase origin data; sleep 5; done
           fi
 
       - name: Reply on the issue

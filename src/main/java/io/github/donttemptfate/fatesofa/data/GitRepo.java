@@ -65,6 +65,11 @@ public final class GitRepo {
 		Files.createDirectories(target.getParent());
 		Path zip = target.resolveSibling(target.getFileName() + ".zip.part");
 		Path tmp = target.resolveSibling(target.getFileName() + ".part");
+		Path old = target.resolveSibling(target.getFileName() + ".old");
+		// leftovers from an interrupted run (game closed mid-download)
+		Files.deleteIfExists(zip);
+		deleteTree(tmp);
+		if (!Files.exists(target) && Files.isDirectory(old)) Files.move(old, target); // a swap that never finished
 		try {
 			int status = Http.download("https://codeload.github.com/" + owner + "/" + name + "/zip/" + commit, zip, MAX_ZIP);
 			if (status != 200) throw new IOException(label() + ": download answered " + status);
@@ -78,11 +83,21 @@ public final class GitRepo {
 		}
 		Files.writeString(tmp.resolve(".commit"), commit, StandardCharsets.UTF_8);
 		// swap: old copy aside, new one in, then remove the old one (never a half-deleted copy with a commit id)
-		Path old = target.resolveSibling(target.getFileName() + ".old");
 		deleteTree(old);
 		if (Files.exists(target)) Files.move(target, old);
-		Files.move(tmp, target);
-		deleteTree(old);
+		try {
+			Files.move(tmp, target);
+		} catch (IOException e) {
+			// e.g. Windows still has a file of the new copy open: put the old copy back so nothing is lost
+			if (!Files.exists(target) && Files.isDirectory(old)) Files.move(old, target);
+			deleteTree(tmp);
+			throw e;
+		}
+		try {
+			deleteTree(old);
+		} catch (IOException ignored) {
+			// removed on the next update
+		}
 	}
 
 	/** Unpacks a GitHub zip (one top folder) keeping paths {@code keep} accepts; refuses paths leaving {@code dir}. */

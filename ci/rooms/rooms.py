@@ -14,6 +14,7 @@ on their own.
 
 Standard library only; nothing from the issue is ever run or passed to a shell.
 """
+import datetime
 import json
 import math
 import os
@@ -23,16 +24,18 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-DATA = ROOT / "data" / "rooms"
+# the workflow points this at a checkout of the `data` branch, so main never holds player files
+DATA = Path(os.environ["ROOMS_DATA_DIR"]) if os.environ.get("ROOMS_DATA_DIR") else ROOT / "data" / "rooms"
 CONTRIB = DATA / "contrib"
 PACK = DATA / "pack.json"
-TRUSTED = DATA / "trusted.txt"
+TRUSTED = ROOT / "data" / "rooms" / "trusted.txt"  # stays on main: only Fate edits who is trusted
 
 TYPE = "ofa-rooms"
 MIN_SEEN = 2
 SAME = 1.6
 GUESS = 2.6
 MAX_ROOMS, MAX_SECRETS, MAX_POINTS, MAX_FILE = 4000, 60, 600, 5 * 1024 * 1024
+MAX_FILES_PER_DAY = 3  # per GitHub account
 KINDS = {"CHEST", "ITEM", "BAT", "ESSENCE", "LEVER", "OTHER"}
 ROOM_ID = re.compile(r"^[0-9a-f]{16}$")
 CID = re.compile(r"^[a-f0-9]{12}$")
@@ -127,7 +130,19 @@ def ingest(summary_path):
                      "`config/fatesofa/rooms/export/` into the issue (edit the issue to add it).")
     accepted = 0
     CONTRIB.mkdir(parents=True, exist_ok=True)
+    today = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
+    used_today = 0
+    for f in CONTRIB.glob("*.json"):
+        try:
+            meta = json.loads(f.read_text(encoding="utf-8"))
+            if str(meta.get("submitted_by", "")).lower() == author.lower() and meta.get("day") == today and int(meta.get("issue", -1)) != number:
+                used_today += 1
+        except Exception:  # noqa: BLE001
+            continue
     for i, url in enumerate(urls):
+        if used_today + accepted >= MAX_FILES_PER_DAY:
+            lines.append(f"- `{url.rsplit('/', 1)[-1]}`: not used (at most {MAX_FILES_PER_DAY} files per account per day — try again tomorrow)")
+            continue
         name = url.rsplit("/", 1)[-1]
         try:
             store = parse_store(json.loads(fetch(url).decode("utf-8")))
@@ -136,7 +151,7 @@ def ingest(summary_path):
             if not store["rooms"]:
                 raise ValueError("the file has no rooms in it")
             out = {"type": TYPE, "v": 1, "contributor": store["contributor"], "submitted_by": author, "issue": number,
-                   "rooms": store["rooms"]}
+                   "day": today, "rooms": store["rooms"]}
             (CONTRIB / f"{author}-{number}-{i}.json").write_text(json.dumps(out, sort_keys=True, separators=(",", ":")), encoding="utf-8")
             accepted += 1
             lines.append(f"- `{name}`: {len(store['rooms'])} rooms, {n_secrets} secrets, {n_routes} routes")
@@ -177,10 +192,21 @@ def median(vals):
     return v[n // 2] if n % 2 else (v[n // 2 - 1] + v[n // 2]) / 2
 
 
+def best_route(candidates, trusted_cid):
+    """The fastest route, but only once two different people sent routes for the room, or a trusted contributor did
+    (one file alone can't set everyone's route)."""
+    keys = {k for _, k in candidates}
+    trusted = [(r, k) for r, k in candidates if k.startswith("cid:") and k[4:] in trusted_cid]
+    pool = candidates if len(keys) >= 2 else trusted
+    if not pool:
+        return None
+    return min(pool, key=lambda rk: rk[0]["ms"])[0]
+
+
 def build():
     trusted_gh, trusted_cid = trusted()
     finds = {}   # room -> [(x, y, z, kind, key)]
-    routes = {}  # room -> best route
+    routes = {}  # room -> [(route, key)]
     people = set()
     for f in sorted(CONTRIB.glob("*.json")) if CONTRIB.exists() else []:
         try:
@@ -197,8 +223,8 @@ def build():
             for s in r["s"]:
                 finds.setdefault(rid, []).append((s[0], s[1], s[2], s[3], key))
             rt = r["r"]
-            if rt and (rid not in routes or rt["ms"] < routes[rid]["ms"]):
-                routes[rid] = rt
+            if rt:
+                routes.setdefault(rid, []).append((rt, key))
 
     def weight(keys):
         return sum(MIN_SEEN if k[4:] in trusted_cid and k.startswith("cid:") else 1 for k in keys)
@@ -229,8 +255,9 @@ def build():
         if out:
             out.sort()
             room = {"s": out[:MAX_SECRETS]}
-            if rid in routes:
-                room["r"] = routes[rid]
+            best = best_route(routes.get(rid, []), trusted_cid)
+            if best:
+                room["r"] = best
             rooms[rid] = room
     pack = {"type": TYPE, "v": 1, "contributors": len(people), "rooms": rooms}
     DATA.mkdir(parents=True, exist_ok=True)

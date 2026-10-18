@@ -146,6 +146,8 @@ public final class QuickCommandsScreen extends Screen {
 			}
 			String problem = QuickCommands.aliasProblem(e.alias(), work, i);
 			if (problem != null) g.text(font, "alias: " + problem, x + 22, y + 32, Ui.RED, false);
+			else if (QuickCommands.shadowsHypixel(e.alias()))
+				g.text(font, "(shadows Hypixel's /" + e.alias() + " while OFA runs)", x + 22, y + 32, Ui.YELLOW, false);
 		}
 		if (work.size() > visibleRows()) {
 			String more = (scroll + 1) + "–" + Math.min(work.size(), scroll + visibleRows()) + " of " + work.size() + " · scroll for more";

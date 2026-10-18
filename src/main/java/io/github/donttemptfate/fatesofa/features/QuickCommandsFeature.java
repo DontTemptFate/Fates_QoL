@@ -86,7 +86,7 @@ public final class QuickCommandsFeature extends Feature {
 	}
 
 	boolean usable() {
-		return Ofa.get().state.onHypixel() || Boolean.getBoolean("fatesofa.test");
+		return Ofa.get().state.onHypixel() || io.github.donttemptfate.fatesofa.game.Dev.test();
 	}
 
 	/** Sends entry {@code i} (a hotkey or tab press). */

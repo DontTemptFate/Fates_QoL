@@ -34,7 +34,7 @@ public final class VisitorHelper extends Feature {
 	}
 
 	void draw(AbstractContainerScreen<?> s, GuiGraphicsExtractor g) {
-		if (!Ofa.get().state.in(Island.GARDEN) && !Boolean.getBoolean("fatesofa.test")) return;
+		if (!Ofa.get().state.in(Island.GARDEN) && !io.github.donttemptfate.fatesofa.game.Dev.test()) return;
 		VisitorOffer offer = null;
 		for (Slot sl : s.getMenu().slots) {
 			if (sl.container instanceof Inventory) continue;

@@ -46,6 +46,20 @@ public final class QuickCommands {
 		return icon != null && !icon.equals(icon.toLowerCase(Locale.ROOT));
 	}
 
+	/** Hypixel / SkyBlock commands an alias would hide (client aliases win over server commands). */
+	static final java.util.Set<String> HYPIXEL = java.util.Set.of("p", "party", "pc", "ac", "gc", "oc", "pchat", "visit", "ec", "enderchest", "bp",
+			"backpack", "sbmenu", "warp", "hub", "is", "island", "home", "pv", "viewprofile", "ah", "auctionhouse", "bz", "bazaar", "sacks", "wardrobe",
+			"pets", "storage", "trade", "tip", "l", "lobby", "play", "friend", "f", "g", "guild", "chat", "ignore", "report", "coopadd", "coopkick",
+			"craft", "recipe", "recipes", "collection", "collections", "skills", "accessories", "acc", "equipment", "stats", "potions", "quests",
+			"calendar", "profiles", "hotm", "hotf", "dh", "dungeon_hub", "garden", "deposit", "withdraw", "bank", "trades", "museum", "bestiary",
+			"anvil", "et", "reforge", "salvage", "rejoin", "ping", "boop", "fl", "pw", "pl", "ptp", "pk", "pd", "warpforge", "forge", "chest",
+			"pickupstash", "viewstash", "harp", "joininstance", "joindungeon", "rift", "kuudra", "crimson", "jerry");
+
+	/** True when an alias has the same name as a Hypixel command (the alias would replace it while OFA runs). */
+	public static boolean shadowsHypixel(String alias) {
+		return alias != null && HYPIXEL.contains(alias.toLowerCase(Locale.ROOT));
+	}
+
 	public static List<Entry> defaults() {
 		return List.of(
 				new Entry("Storage", "storage", "ender_chest", true, ""),

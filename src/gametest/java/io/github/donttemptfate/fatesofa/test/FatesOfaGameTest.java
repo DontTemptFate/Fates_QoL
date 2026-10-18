@@ -42,6 +42,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 	public void runTest(ClientGameTestContext ctx) {
 		System.setProperty("fatesofa.test", "true"); // the test world isn't SkyBlock
 		check(Ofa.get() != null, "OFA didn't initialise");
+		check(io.github.donttemptfate.fatesofa.game.ModApi.active(), "the Hypixel location channel wasn't registered at game start");
 		Ofa o = Ofa.get();
 		try (TestSingleplayerContext sp = ctx.worldBuilder().create()) {
 			ctx.waitTicks(40);

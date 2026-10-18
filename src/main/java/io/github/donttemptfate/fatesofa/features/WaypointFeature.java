@@ -48,7 +48,7 @@ public final class WaypointFeature extends Feature {
 
 	public String island() {
 		Island i = Ofa.get().state.island();
-		return i == null ? (Boolean.getBoolean("fatesofa.test") ? "TEST" : "NONE") : i.name();
+		return i == null ? (io.github.donttemptfate.fatesofa.game.Dev.test() ? "TEST" : "NONE") : i.name();
 	}
 
 	public void save() {

@@ -73,7 +73,7 @@ public final class SecretRoutes extends Feature {
 			.keywords("online community"));
 	final Setting<Boolean> note = setting(Setting.bool("secrets.note", "Tell me when a new secret is learned", false));
 
-	public static final String PACK_URL = "https://raw.githubusercontent.com/DontTemptFate/Fates_QoL/main/data/rooms/pack.json";
+	public static final String PACK_URL = "https://raw.githubusercontent.com/DontTemptFate/Fates_QoL/data/data/rooms/pack.json";
 	static final Pattern COUNT = Pattern.compile("(?<found>\\d+)/(?<total>\\d+) Secrets");
 	static final long PACK_EVERY_MS = 60 * 60_000L;
 
@@ -152,7 +152,7 @@ public final class SecretRoutes extends Feature {
 	}
 
 	boolean inDungeon() {
-		return Ofa.get().state.in(Island.DUNGEON) || Boolean.getBoolean("fatesofa.test");
+		return Ofa.get().state.in(Island.DUNGEON) || io.github.donttemptfate.fatesofa.game.Dev.test();
 	}
 
 	void newRun() {

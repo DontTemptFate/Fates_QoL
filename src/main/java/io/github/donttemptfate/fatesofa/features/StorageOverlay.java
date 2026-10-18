@@ -102,11 +102,11 @@ public final class StorageOverlay extends Feature {
 		if (cmd == null) return;
 		carryQuery = query == null || query.isBlank() ? null : query;
 		carryUntil = System.currentTimeMillis() + 20_000;
-		if (!Game.runCommand(cmd) && Boolean.getBoolean("fatesofa.test")) Game.info("(test) would run /" + cmd);
+		if (!Game.runCommand(cmd) && io.github.donttemptfate.fatesofa.game.Dev.test()) Game.info("(test) would run /" + cmd);
 	}
 
 	void attach(Minecraft mc, AbstractContainerScreen<?> s) {
-		boolean onSb = Ofa.get().state.onSkyBlock() || Boolean.getBoolean("fatesofa.test");
+		boolean onSb = Ofa.get().state.onSkyBlock() || io.github.donttemptfate.fatesofa.game.Dev.test();
 		String title = Strip.clean(s.getTitle().getString());
 		if (!onSb || !isStorageWindow(title) || !room(s)) return;
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;

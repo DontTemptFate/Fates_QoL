@@ -115,6 +115,7 @@ public class DataTest {
 		Protection p = new Protection();
 		Protection.Facts hype = new Protection.Facts("u1", "HYPERION", "Hyperion", 1e9, 3);
 		assertEquals(Protection.Verdict.CONFIRM, p.decide(Protection.Action.NPC_SELL, hype, 0).verdict());
+		assertEquals(Protection.Verdict.CONFIRM, p.decide(Protection.Action.NPC_SELL, hype, 120).verdict()); // a double-click isn't a confirmation
 		assertEquals(Protection.Verdict.ALLOW, p.decide(Protection.Action.NPC_SELL, hype, 1000).verdict());
 		assertEquals(Protection.Verdict.CONFIRM, p.decide(Protection.Action.NPC_SELL, hype, 10_000).verdict()); // window passed
 		assertTrue(p.toggleItem("u1", "HYPERION"));
@@ -122,8 +123,20 @@ public class DataTest {
 		assertEquals(Protection.Verdict.BLOCK, p.decide(Protection.Action.NPC_SELL, hype, 20_000).verdict());
 		Protection.Facts dirt = new Protection.Facts(null, "DIRT", "Dirt", 1, 7);
 		assertEquals(Protection.Verdict.ALLOW, p.decide(Protection.Action.DROP, dirt, 0).verdict());
+		assertEquals(Protection.Verdict.BLOCK, p.decide(Protection.Action.AUCTION, hype, 30_000).verdict());
+		assertEquals(Protection.Verdict.BLOCK, p.decide(Protection.Action.BAZAAR, hype, 30_000).verdict());
+		assertEquals(Protection.Verdict.BLOCK, p.decide(Protection.Action.TRADE, hype, 30_000).verdict());
 		p.toggleSlot(7);
-		assertEquals(Protection.Verdict.BLOCK, p.decide(Protection.Action.MOVE_OUT_OF_LOCKED_SLOT, dirt, 0).verdict());
+		// which windows count as selling / listing / trading; storage and the like are fine
+		assertEquals(Protection.Action.AUCTION, Protection.actionFor("Create BIN Auction", java.util.List.of()));
+		assertEquals(Protection.Action.AUCTION, Protection.actionFor("Co-op Auction House", java.util.List.of()));
+		assertEquals(Protection.Action.BAZAAR, Protection.actionFor("Bazaar ➜ Farming", java.util.List.of()));
+		assertEquals(Protection.Action.TRADE, Protection.actionFor("You            Steve", java.util.List.of()));
+		assertEquals(Protection.Action.NPC_SELL, Protection.actionFor("Farm Merchant", java.util.List.of("Sell Item", "Wheat")));
+		assertEquals(Protection.Action.SALVAGE, Protection.actionFor("Salvage Items", java.util.List.of()));
+		assertNull(Protection.actionFor("Ender Chest (1/9)", java.util.List.of()));
+		assertNull(Protection.actionFor("Wardrobe (1/2)", java.util.List.of()));
+		assertNull(Protection.actionFor("Large Chest", java.util.List.of()));
 		Protection q = new Protection();
 		q.fromJson(p.toJson());
 		assertTrue(q.itemLocked("u1", null));

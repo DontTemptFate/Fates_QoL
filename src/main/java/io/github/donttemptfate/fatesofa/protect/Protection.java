@@ -19,7 +19,8 @@ public final class Protection {
 		NPC_SELL("sell to an NPC"),
 		SALVAGE("salvage"),
 		TRADE("put in a trade"),
-		MOVE_OUT_OF_LOCKED_SLOT("move out of a locked slot");
+		AUCTION("list on the auction house"),
+		BAZAAR("sell on the bazaar");
 
 		public final String verb;
 
@@ -46,6 +47,8 @@ public final class Protection {
 	/** Items worth at least this much ask for a second click before being sold or salvaged (0 = off). */
 	public volatile double confirmValue = 5_000_000;
 	public volatile long confirmWindowMs = 2_500;
+	/** A second click sooner than this is an accidental double-click, not a confirmation. */
+	public volatile long confirmMinGapMs = 300;
 
 	private String pendingConfirm;
 	private long pendingAt;
@@ -53,9 +56,6 @@ public final class Protection {
 	public synchronized Decision decide(Action action, Facts f, long now) {
 		if (!enabled || f == null) return Decision.ALLOW;
 		boolean locked = (f.uuid() != null && lockedUuids.contains(f.uuid())) || (f.uuid() == null && f.key() != null && lockedKeys.contains(f.key()));
-		if (action == Action.MOVE_OUT_OF_LOCKED_SLOT) {
-			return lockedSlots.contains(f.slot()) ? new Decision(Verdict.BLOCK, "slot " + f.slot() + " is locked") : Decision.ALLOW;
-		}
 		if (locked && action != Action.TRADE) {
 			return new Decision(Verdict.BLOCK, label(f) + " is locked — unlock it to " + action.verb + " it");
 		}
@@ -64,6 +64,7 @@ public final class Protection {
 		if (valuable && (action == Action.NPC_SELL || action == Action.SALVAGE || action == Action.DROP)) {
 			String token = action + "|" + (f.uuid() != null ? f.uuid() : f.key()) + "|" + f.slot();
 			if (token.equals(pendingConfirm) && now - pendingAt <= confirmWindowMs) {
+				if (now - pendingAt < confirmMinGapMs) return new Decision(Verdict.CONFIRM, label(f) + " is valuable — click again (a moment apart) to " + action.verb + " it");
 				pendingConfirm = null;
 				return Decision.ALLOW;
 			}
@@ -72,6 +73,22 @@ public final class Protection {
 			return new Decision(Verdict.CONFIRM, label(f) + " is valuable — do it again within " + (confirmWindowMs / 1000.0) + "s to " + action.verb + " it");
 		}
 		return Decision.ALLOW;
+	}
+
+	/**
+	 * What putting one of your own items into this window does, from its title and its fixed buttons. Null when the
+	 * window is somewhere locked items may go (chests, storage, wardrobe, pets…). Locks stop selling, dropping, trading
+	 * and listing; moving is fine.
+	 */
+	public static Action actionFor(String title, java.util.Collection<String> buttons) {
+		String t = title == null ? "" : title.trim();
+		String low = t.toLowerCase(java.util.Locale.ROOT);
+		if (low.contains("salvage")) return Action.SALVAGE;
+		for (String b : buttons) if (b.equals("Sell Item") || b.startsWith("Buyback")) return Action.NPC_SELL;
+		if (low.contains("auction")) return Action.AUCTION;
+		if (low.contains("bazaar")) return Action.BAZAAR;
+		if ((t.startsWith("You ") && t.length() > 4 && t.substring(4).trim().length() > 0) || low.contains("trade")) return Action.TRADE;
+		return null;
 	}
 
 	static String label(Facts f) {

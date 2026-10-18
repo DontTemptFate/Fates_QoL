@@ -57,12 +57,20 @@ public final class PlayRecorder {
 
 	static final long MAX_BYTES = 40L * 1024 * 1024;
 	static final Pattern TAB_NAME = Pattern.compile("\\[\\d{1,3}] (?:\\S{1,2} )?([A-Za-z0-9_]{3,16})");
+	/** Menus about other players (friends, guild, parties, trades, co-ops, profiles): never written. */
+	static final Pattern SOCIAL_MENU = Pattern.compile("(?i)^(?:friends?(?: list)?|guild\\b.*|party(?: finder)?\\b.*|co-?op(?! auction| bazaar)\\b.*|recent players|players|visit\\b.*|social\\b.*|.*'s? profile|.*profile viewer|you\\s{2,}.*)$");
+	/** Keys in an item's data that identify the item or when/where it was made: left out of recordings. */
+	static final java.util.Set<String> PRIVATE_KEYS = java.util.Set.of("uuid", "timestamp", "originTag", "donated_museum", "bossId", "spawnedFor",
+			"champion_combat_xp", "farmed_cultivating_owner", "player", "owner", "rarity_upgrade_by", "party_finder");
+	/** A name after a rank tag in menu text ("[MVP+] Name"). */
+	static final Pattern RANK_NAME = Pattern.compile("\\[(?:VIP|MVP)\\+{0,2}] ([A-Za-z0-9_]{3,16})");
 
 	private static BufferedWriter out;
 	private static Path file;
 	private static long bytes, lines, startedAt;
 	private static int tick;
 	private static RecordSanitizer clean = new RecordSanitizer("", List.of());
+	private static Set<String> knownNames = Set.of();
 	private static List<String> lastSidebar = List.of(), lastTab = List.of();
 	private static String lastBar = "", lastLocation = "", lastHeld = "", lastNear = "", lastMap = "";
 	private static final List<Object[]> pendingMenus = new ArrayList<>();
@@ -206,12 +214,13 @@ public final class PlayRecorder {
 			while (m.find()) names.add(m.group(1));
 		}
 		String me = mc.player == null ? "" : mc.player.getName().getString();
+		knownNames = names;
 		clean = new RecordSanitizer(me, names);
 	}
 
 	static void held(Minecraft mc) {
 		ItemStack st = mc.player.getMainHandItem();
-		String data = st.isEmpty() ? "" : String.valueOf(Items.data(st));
+		String data = st.isEmpty() ? "" : String.valueOf(withoutPrivateKeys(Items.data(st)));
 		if (data.length() > 4000) data = data.substring(0, 4000);
 		if (data.equals(lastHeld)) return;
 		lastHeld = data;
@@ -219,6 +228,25 @@ public final class PlayRecorder {
 		o.addProperty("name", st.isEmpty() ? "" : clean.clean(Texts.legacy(Items.name(st))));
 		o.addProperty("data", clean.clean(data));
 		write(o);
+	}
+
+	/** A copy of item data without the keys that identify the item or its owner. */
+	static com.google.gson.JsonElement withoutPrivateKeys(com.google.gson.JsonElement e) {
+		if (e == null) return null;
+		if (e.isJsonObject()) {
+			JsonObject out = new JsonObject();
+			for (var en : e.getAsJsonObject().entrySet()) {
+				if (PRIVATE_KEYS.contains(en.getKey())) continue;
+				out.add(en.getKey(), withoutPrivateKeys(en.getValue()));
+			}
+			return out;
+		}
+		if (e.isJsonArray()) {
+			JsonArray out = new JsonArray();
+			for (var x : e.getAsJsonArray()) out.add(withoutPrivateKeys(x));
+			return out;
+		}
+		return e;
 	}
 
 	static void nearby(Minecraft mc) {
@@ -256,6 +284,31 @@ public final class PlayRecorder {
 			p[1] = age;
 			if (age < 10 || age % 20 != 10) continue;
 			AbstractContainerScreen<?> s = (AbstractContainerScreen<?>) p[0];
+			String plainTitle = Strip.clean(s.getTitle().getString()).trim();
+			if (SOCIAL_MENU.matcher(plainTitle).matches()) {
+				if ("".equals(p[2])) {
+					p[2] = "skipped";
+					JsonObject o = line("menu");
+					o.addProperty("title", "(a menu about other players — not recorded)");
+					write(o);
+				}
+				continue;
+			}
+			// names that only appear in this menu's text ("Seller: [MVP+] Name") join the name list first
+			Set<String> found = new LinkedHashSet<>();
+			for (Slot sl : s.getMenu().slots) {
+				if (sl.container instanceof Inventory || !sl.hasItem()) continue;
+				for (String l : Items.lorePlain(sl.getItem())) {
+					Matcher m = RANK_NAME.matcher(l);
+					while (m.find()) found.add(m.group(1));
+					m = TAB_NAME.matcher(l);
+					while (m.find()) found.add(m.group(1));
+				}
+			}
+			if (!found.isEmpty()) {
+				found.addAll(knownNames);
+				clean = new RecordSanitizer(Minecraft.getInstance().player == null ? "" : Minecraft.getInstance().player.getName().getString(), found);
+			}
 			JsonArray slots = new JsonArray();
 			for (Slot sl : s.getMenu().slots) {
 				if (sl.container instanceof Inventory || !sl.hasItem()) continue;

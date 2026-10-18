@@ -49,11 +49,22 @@ public final class ModApi {
 		return active;
 	}
 
+	/**
+	 * Claims the channels once every mod has started, so a mod that implements the same protocol (or bundles the
+	 * official one) always gets them first and nothing crashes; OFA then falls back to the scoreboard and tab list.
+	 */
 	static void register(SkyBlockState state) {
+		net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents.CLIENT_STARTED.register(mc -> claim(state));
+	}
+
+	static void claim(SkyBlockState state) {
 		FabricLoader fl = FabricLoader.getInstance();
-		if (fl.isModLoaded("hypixel-mod-api") || fl.isModLoaded("hypixel_mod_api") || fl.isModLoaded("hypixelmodapi")) {
-			FatesOfaClient.LOG.info("Hypixel Mod API mod present: OFA reads location from the scoreboard and tab list");
-			return;
+		for (var mod : fl.getAllMods()) {
+			String id = mod.getMetadata().getId().toLowerCase(java.util.Locale.ROOT);
+			if (id.contains("hypixel") && (id.contains("api") || id.contains("mod-api"))) {
+				FatesOfaClient.LOG.info("{} present: OFA reads location from the scoreboard and tab list", id);
+				return;
+			}
 		}
 		try {
 			PayloadTypeRegistry.clientboundPlay().register(HELLO, codec(HELLO));
@@ -77,7 +88,8 @@ public final class ModApi {
 			});
 			active = true;
 		} catch (RuntimeException e) {
-			FatesOfaClient.LOG.warn("Hypixel location channel unavailable ({}); using the scoreboard and tab list", e.toString());
+			// another mod already speaks this protocol: let it, read the scoreboard instead
+			FatesOfaClient.LOG.info("Hypixel location channel taken by another mod ({}); using the scoreboard and tab list", e.toString());
 		}
 	}
 }

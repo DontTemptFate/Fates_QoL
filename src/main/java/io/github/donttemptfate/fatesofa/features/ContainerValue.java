@@ -67,7 +67,7 @@ public final class ContainerValue extends Feature {
 
 	Card build(AbstractContainerScreen<?> s) {
 		Ofa o = Ofa.get();
-		if (!o.state.onSkyBlock() && !Boolean.getBoolean("fatesofa.test")) return null;
+		if (!o.state.onSkyBlock() && !io.github.donttemptfate.fatesofa.game.Dev.test()) return null;
 		String title = Strip.clean(s.getTitle().getString());
 		if (s.getMenu().slots.stream().allMatch(sl -> sl.container instanceof Inventory)) return null; // player inventory
 		if (StorageOverlay.INSTANCE != null && StorageOverlay.INSTANCE.covers(s)) return null; // the storage panel shows values there

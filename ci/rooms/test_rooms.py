@@ -49,8 +49,12 @@ def run():
         assert chest[4] == 2 and abs(chest[0] - 3.2) < 0.01, chest
         bat = [x for x in s if x[3] == "BAT"][0]
         assert bat[0] == -7 and bat[4] == 2, bat  # the precise find decides the spot
-        assert pack["rooms"][A]["r"]["ms"] == 20000
+        assert "r" not in pack["rooms"][A], "one person's route must not be published"
         assert pack["contributors"] == 3
+        # a second person's route: now the fastest of the two is published
+        put("dave-8-0.json", "dave", share("abababababab", [], {"ms": 25000, "p": [[0, 70, -15], [3, 70, -4]]}))
+        rooms.build()
+        assert json.loads(rooms.PACK.read_text())["rooms"][A]["r"]["ms"] == 20000
 
         # files forwarded by a trusted account count by contributor id; a confirmed contributor counts alone
         rooms.TRUSTED.write_text("gh:fate  # forwards Discord files\ncid:ffffffffffff\n")

@@ -9,7 +9,8 @@ body:
         2. Drag the file from `.minecraft/config/fatesofa/rooms/export/` into the box below.
 
         The file only holds room ids, secret positions inside rooms and routes. No names, no account data.
-        A secret joins the shared pack once at least two different players have found it at the same spot.
+        Fate checks each file first. After that, a secret joins the shared pack once at least two different players
+        have found it at the same spot (a room route once two players have sent one). At most 3 files per day.
   - type: textarea
     id: files
     attributes:
