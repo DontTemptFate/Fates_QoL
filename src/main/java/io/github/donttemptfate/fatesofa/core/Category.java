@@ -3,6 +3,7 @@ package io.github.donttemptfate.fatesofa.core;
 /** Settings are grouped by what the player is doing, not by feature name. */
 public enum Category {
 	GENERAL("General"),
+	TRACKERS("Trackers & Progress"),
 	HUD("HUD & Look"),
 	ITEMS("Items & Tooltips"),
 	STORAGE("Storage"),

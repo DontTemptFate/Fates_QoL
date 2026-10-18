@@ -62,6 +62,15 @@ final class Trackers {
 		return p == null ? Double.NaN : p.value() * amount;
 	}
 
+	/** Draws a card left of a menu window (after the quick-button column), shrunk to fit. */
+	static void beside(net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<?> s, net.minecraft.client.gui.GuiGraphicsExtractor g, Card c) {
+		var a = (io.github.donttemptfate.fatesofa.mixin.AbstractContainerScreenAccessor) s;
+		int reserve = QuickCommandsFeature.INSTANCE == null ? 0 : QuickCommandsFeature.INSTANCE.leftReserve(s);
+		int edge = a.fatesofa$leftPos() - reserve;
+		float scale = Math.min(1f, Math.max(0.5f, (edge - 8) / (float) c.width()));
+		c.draw(g, Math.max(2, edge - Math.round(c.width() * scale) - 6), a.fatesofa$topPos(), scale);
+	}
+
 	static Card.KeyValues rows() {
 		return new Card.KeyValues(1);
 	}

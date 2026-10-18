@@ -73,5 +73,10 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new QuickCommandsFeature());
 		Features.add(new ChatFeature());
 		Features.add(new LocationHud());
+		Features.add(new SkillTracker());
+		Features.add(new ItemTracker());
+		Features.add(new CollectionsFeature());
+		Features.add(new MinionHelper());
+		Features.add(new ChocolateFactoryHelper());
 	}
 }

@@ -16,7 +16,7 @@ public final class Presets {
 	private Presets() {}
 
 	/** Always part of every preset. */
-	public static final Set<Category> BASE = EnumSet.of(Category.GENERAL, Category.HUD, Category.ITEMS, Category.STORAGE,
+	public static final Set<Category> BASE = EnumSet.of(Category.GENERAL, Category.TRACKERS, Category.HUD, Category.ITEMS, Category.STORAGE,
 			Category.PROTECTION, Category.CHAT, Category.PLANNER, Category.PERFORMANCE);
 
 	public static final Map<String, Set<Category>> PRESETS = new LinkedHashMap<>();

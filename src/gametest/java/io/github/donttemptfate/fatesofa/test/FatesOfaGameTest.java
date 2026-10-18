@@ -160,6 +160,51 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("  SLAYER QUEST COMPLETE!"), false);
 				check(slayer.tracker.kills().size() == 1, "slayer kill not counted");
 			});
+			// Batch 8a: skill XP from the action bar, sacks hover, inventory pickups, collections, minion and chocolate menus
+			ctx.runOnClient(mc -> {
+				var sk = io.github.donttemptfate.fatesofa.features.SkillTracker.class;
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("+12.5 Farming (1,234,567/2,000,000)"), true);
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("+12.5 Farming (1,234,580/2,000,000)"), true);
+				check(io.github.donttemptfate.fatesofa.features.ItemTracker.INSTANCE != null, "item tracker missing");
+				var hover = new net.minecraft.network.chat.HoverEvent.ShowText(Component.literal("Added items:\n +1,280 Enchanted Carrot (Agronomy Sack)\n +5 Wheat (Agronomy Sack)"));
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("[Sacks] +1,285 items.").withStyle(st -> st.withHoverEvent(hover)), false);
+				var flow = io.github.donttemptfate.fatesofa.features.ItemTracker.INSTANCE.flow;
+				check(flow.total("Enchanted Carrot") != null && flow.total("Enchanted Carrot").amount == 1280, "sacks hover not counted");
+				o.settings.set((io.github.donttemptfate.fatesofa.config.Setting<String>) o.settings.find("itemtracker.items"), "Enchanted Carrot\nWheat");
+				check(sk != null, "");
+			});
+			ctx.waitTicks(25);
+			ctx.runOnClient(mc -> mc.player.getInventory().setItem(7, sb(Items.DIAMOND, "ENCHANTED_DIAMOND", "§aEnchanted Diamond", "§a§lUNCOMMON", 32)));
+			ctx.waitTicks(25);
+			ctx.runOnClient(mc -> {
+				var t = io.github.donttemptfate.fatesofa.features.ItemTracker.INSTANCE.flow.total("Enchanted Diamond");
+				FatesOfaClient.LOG.info("[gametest] pickup counted: {}", t == null ? "none" : t.amount);
+				mc.player.getInventory().setItem(7, ItemStack.EMPTY);
+			});
+			ctx.takeScreenshot("08d_trackers_hud");
+			SimpleContainer coll = new SimpleContainer(27);
+			coll.setItem(4, lore(sb(Items.WHEAT, "WHEAT", "§aWheat", "§f§lCOMMON", 1), "View all your Wheat Collection", "", "Progress to Wheat IX: 45.3%", "12,345/25,000"));
+			ctx.runOnClient(mc -> mc.gui.setScreen(new ContainerScreen(ChestMenu.threeRows(0, mc.player.getInventory(), coll), mc.player.getInventory(), Component.literal("Farming Collections"))));
+			ctx.waitTicks(25);
+			SimpleContainer minion = new SimpleContainer(54);
+			minion.setItem(21, sb(Items.SNOWBALL, "SNOW_BALL", "§fSnowball", "§f§lCOMMON", 64));
+			minion.setItem(22, sb(Items.SNOW_BLOCK, "ENCHANTED_SNOW_BLOCK", "§aEnchanted Snow Block", "§a§lUNCOMMON", 12));
+			minion.setItem(19, lore(sb(Items.LAVA_BUCKET, "ENCHANTED_LAVA_BUCKET", "§5Enchanted Lava Bucket", "§5§lEPIC", 1), "Increases the speed of your minion by 25%.", "Time Remaining: 1d 4h"));
+			ctx.runOnClient(mc -> mc.gui.setScreen(new ContainerScreen(ChestMenu.sixRows(0, mc.player.getInventory(), minion), mc.player.getInventory(), Component.literal("Snow Minion XI"))));
+			ctx.waitTicks(15);
+			ctx.takeScreenshot("08e_minion_helper");
+			SimpleContainer choco = new SimpleContainer(54);
+			choco.setItem(13, lore(new ItemStack(Items.COOKIE), "Chocolate Production", "Per Second: 1,234"));
+			choco.setItem(28, lore(new ItemStack(Items.PLAYER_HEAD), "Rabbit Bro", "Produces +2 Chocolate per second", "", "Cost", "12,500 Chocolate"));
+			choco.setItem(29, lore(new ItemStack(Items.PLAYER_HEAD), "Rabbit Cousin", "Produces +6 Chocolate per second", "", "Cost", "30,000 Chocolate"));
+			ctx.runOnClient(mc -> mc.gui.setScreen(new ContainerScreen(ChestMenu.sixRows(0, mc.player.getInventory(), choco), mc.player.getInventory(), Component.literal("Chocolate Factory"))));
+			ctx.waitTicks(15);
+			ctx.takeScreenshot("08f_chocolate_factory");
+			ctx.runOnClient(mc -> {
+				mc.gui.setScreen(null);
+				check(o.settings.raw("x") == null, "");
+			});
+
 			// a waypoint a few blocks ahead, drawn in the world
 			ctx.runOnClient(mc -> {
 				mc.gui.setScreen(null);
@@ -348,6 +393,13 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 	}
 
 	/** A stack that looks like a SkyBlock item: id (+uuid for unstackables), name, rarity line. */
+	static ItemStack lore(ItemStack st, String... lines) {
+		List<Component> l = new java.util.ArrayList<>();
+		for (String x : lines) l.add(Component.literal(x));
+		st.set(DataComponents.LORE, new ItemLore(l));
+		return st;
+	}
+
 	static ItemStack sb(Item item, String id, String name, String rarityLine, int count) {
 		ItemStack st = new ItemStack(item, count);
 		CompoundTag tag = new CompoundTag();
