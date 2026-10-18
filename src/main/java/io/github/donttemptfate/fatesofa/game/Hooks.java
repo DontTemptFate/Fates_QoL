@@ -17,6 +17,7 @@ public final class Hooks {
 
 	public static void register(Ofa o) {
 		Keys.register();
+		Alerts.registerSink();
 		ChatBus.register(); // before any feature's chat hook, so filters never hide a message from trackers
 		ModApi.register(o.state);
 		ClientCommandRegistrationCallback.EVENT.register((d, ctx) -> Commands.register(d));
@@ -55,6 +56,7 @@ public final class Hooks {
 		Keys.tick(mc);
 		StateReader.tick(mc, o.state);
 		long now = System.currentTimeMillis();
+		io.github.donttemptfate.fatesofa.core.Diagnostics.tick(now);
 		o.repo.tick(now);
 		if (o.state.onSkyBlock()) o.prices.refresh(now);
 		if (now - lastSave > 30_000 && o.settings.dirty()) {

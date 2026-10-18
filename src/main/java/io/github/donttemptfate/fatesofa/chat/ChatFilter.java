@@ -105,6 +105,12 @@ public final class ChatFilter {
 		return Decision.SHOW;
 	}
 
+	/** A player rule said "fold": repeats of this line within a minute become one line. */
+	public synchronized Decision decideFold(String plain, long now) {
+		if (plain == null || plain.isBlank()) return Decision.SHOW;
+		return compact(plain, now, "own_rule");
+	}
+
 	Decision compact(String plain, long now, String group) {
 		if (plain.equals(lastText) && now - lastAt <= COMPACT_WINDOW_MS) {
 			lastCount++;

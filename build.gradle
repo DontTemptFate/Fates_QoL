@@ -25,6 +25,11 @@ sourceSets {
 	test {
 		java.srcDir "common/src/test/java"
 	}
+	// Mod Menu's two API interfaces, only to compile against (never packaged; the real ones come with Mod Menu)
+	modmenuStub {
+		java.srcDir "stubs/modmenu"
+		compileClasspath += main.compileClasspath
+	}
 }
 
 base {
@@ -40,6 +45,7 @@ dependencies {
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+	compileOnly sourceSets.modmenuStub.output
 	testImplementation "junit:junit:4.13.2"
 	testImplementation "com.google.code.gson:gson:2.11.0"
 }
@@ -57,11 +63,14 @@ fabricApi {
 processResources {
 	def version = project.version
 	def minecraftDep = project.minecraft_dep
+	// the Fabric API we build and test with is the oldest we accept
+	def fabricApiDep = ">=" + project.fabric_api_version
 	inputs.property "version", version
 	inputs.property "minecraftDep", minecraftDep
+	inputs.property "fabricApiDep", fabricApiDep
 
 	filesMatching("fabric.mod.json") {
-		expand "version": version, "minecraft_dep": minecraftDep
+		expand "version": version, "minecraft_dep": minecraftDep, "fabric_api_dep": fabricApiDep
 	}
 }
 

@@ -24,13 +24,21 @@ final class Widgets {
 
 	static final class Hits {
 		final List<Hit> list = new ArrayList<>();
+		/** Named spots (for the in-game test to click). */
+		final java.util.Map<String, Rect> named = new java.util.HashMap<>();
 
 		void clear() {
 			list.clear();
+			named.clear();
 		}
 
 		void add(Rect r, Runnable left, Runnable right) {
 			list.add(new Hit(r, left, right, null));
+		}
+
+		void add(Rect r, Runnable left, Runnable right, String name) {
+			list.add(new Hit(r, left, right, null));
+			if (name != null) named.put(name, r);
 		}
 
 		void slider(Rect r, Slider s) {
@@ -59,6 +67,20 @@ final class Widgets {
 		var t = Ui.t(label, Ui.Role.BODY_BOLD, active ? Ui.WHITE : 0xFFDDDDDD);
 		int tw = Ui.width(t, Ui.Role.BODY_BOLD);
 		Ui.draw(g, t, Ui.Role.BODY_BOLD, x + (w - tw) / 2, y + (h + Ui.Role.BODY_BOLD.cap()) / 2);
+	}
+
+	/** A small tick box, 9×9. */
+	static void checkbox(GuiGraphicsExtractor g, int x, int y, boolean on, boolean hover) {
+		g.fill(x, y, x + 9, y + 9, 0xFF1E1E1E);
+		Ui.ring(g, x, y, 9, 9, 1, hover ? Ui.WHITE : on ? Ui.accent() : 0xFF555555);
+		if (on) g.fill(x + 2, y + 2, x + 7, y + 7, Ui.accent());
+	}
+
+	/** A rounded-look chip with a label (for island lists and filters). */
+	static void chip(GuiGraphicsExtractor g, net.minecraft.client.gui.Font font, int x, int y, int w, String label, boolean on, boolean hover) {
+		g.fill(x, y, x + w, y + 11, on ? (Ui.accent() & 0x00FFFFFF) | 0x60000000 : hover ? 0x30FFFFFF : 0x18FFFFFF);
+		Ui.ring(g, x, y, w, 11, 1, on ? Ui.accent() : hover ? 0xFFAAAAAA : Ui.rule());
+		g.text(font, label, x + (w - font.width(label)) / 2, y + 2, on ? Ui.WHITE : 0xFFBBBBBB, true);
 	}
 
 	/** Slider track with a fill and a knob; value 0..1. */

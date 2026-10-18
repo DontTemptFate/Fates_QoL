@@ -36,6 +36,8 @@ import java.util.regex.Pattern;
 public final class GardenFeature extends Feature {
 	final Setting<Boolean> pestAlert = setting(Setting.bool("garden.pestAlert", "Pest alert", true)
 			.help("A title and sound when a pest appears, with its plot."));
+	final io.github.donttemptfate.fatesofa.core.Alert pest = new io.github.donttemptfate.fatesofa.core.Alert(this, "garden.pestAlert", "Pest alert",
+			"PEST!", "Plot {plot}", 0xFF55FF55, "minecraft:block.note_block.pling|1|2", "plot");
 
 	static final Pattern PEST = Pattern.compile(".*Pests? (?:has|have) (?:appeared|spawned) in (?:the )?Plot - (?<plot>[\\w ]+)!?.*");
 	static final String[][] CROPS = {{"WHEAT", "WHEAT"}, {"CARROT", "CARROT_ITEM"}, {"POTATO", "POTATO_ITEM"}, {"PUMPKIN", "PUMPKIN"},
@@ -71,8 +73,7 @@ public final class GardenFeature extends Feature {
 				} catch (IllegalArgumentException ignored) {
 					// repo pattern without a plot group
 				}
-				Alerts.title("PEST!", 0x55FF55, plot == null ? null : "Plot " + plot.trim());
-				Alerts.ding();
+				pest.fire(java.util.Map.of("plot", plot == null ? "?" : plot.trim()), o.state.island(), System.currentTimeMillis());
 			}
 		}));
 		Hud.register(new HudElement("garden", "Garden", this, HudPos.at(Anchor.LEFT, 4, 60), 20, this::card, this::sample,

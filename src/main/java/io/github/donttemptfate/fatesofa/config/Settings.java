@@ -47,6 +47,7 @@ public final class Settings {
 	public synchronized <T> Setting<T> declare(Setting<T> s) {
 		Setting<?> old = declared.putIfAbsent(s.key, s);
 		if (old != null && old != s) throw new IllegalStateException("setting declared twice: " + s.key);
+		if (s.rainbow != null) declared.putIfAbsent(s.rainbow.key, s.rainbow);
 		return s;
 	}
 
@@ -154,7 +155,7 @@ public final class Settings {
 					yield v < s.min || v > s.max || Double.isNaN(v) ? null : v;
 				}
 				case ENUM -> p.isString() && s.options.contains(p.getAsString()) ? p.getAsString() : null;
-				case STRING -> p.isString() ? p.getAsString() : null;
+				case STRING, SOUND, ISLANDS, LINES, TEMPLATE, RULES -> p.isString() && p.getAsString().length() <= s.maxLength ? p.getAsString() : null;
 			};
 		} catch (RuntimeException ex) {
 			return null;

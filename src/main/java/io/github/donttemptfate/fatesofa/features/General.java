@@ -32,6 +32,9 @@ public final class General {
 	public static final Setting<Boolean> REPO_AUTO = Setting.bool("general.repoAuto", "Update item data automatically", true)
 			.help("Check GitHub for newer item data once an hour.").keywords("neu repo").build();
 
+	public static final Setting<Boolean> ADVANCED = Setting.bool("general.advanced", "Show advanced settings", false)
+			.help("Lists every option of every feature. Off: the less common ones stay behind \"+N advanced\" on each feature.").build();
+
 	public static List<Setting<?>> lookSettings() {
 		return List.of(THEME, CHAKRA);
 	}
@@ -46,6 +49,7 @@ public final class General {
 
 	public static void declare(Ofa o) {
 		o.settings.declare(ONBOARDED);
+		o.settings.declare(ADVANCED);
 		for (Setting<?> s : globals()) o.settings.declare(s);
 		apply(o);
 		o.settings.onChange(k -> {

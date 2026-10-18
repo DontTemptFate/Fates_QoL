@@ -44,6 +44,7 @@ public final class Hud {
 			if (k.startsWith("hud.") || k.startsWith("hudhide.")) invalidate();
 		});
 		HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, Identifier.fromNamespaceAndPath(FatesOfaClient.MOD_ID, "hud"), (g, delta) -> {
+			io.github.donttemptfate.fatesofa.core.Diagnostics.frame();
 			if (editing) return;
 			try {
 				draw(g, false);
@@ -117,8 +118,12 @@ public final class Hud {
 		els.sort(Comparator.comparingInt(e -> -e.priority));
 		List<Layout.Item> items = new ArrayList<>();
 		Map<String, Card> cards = new LinkedHashMap<>();
+		var mc = Minecraft.getInstance();
+		var ofa = io.github.donttemptfate.fatesofa.Ofa.get();
+		boolean menuOpen = mc != null && mc.gui != null && mc.gui.screen() != null;
 		for (HudElement e : els) {
 			if (!sample && (hidden(e) || !e.owner.active())) continue;
+			if (!sample && e.display != null && ofa != null && !e.display.visible(ofa.state.island(), menuOpen)) continue;
 			if (sample && !all && !e.owner.active()) continue;
 			Card c = null;
 			if (!sample || e.owner.active()) {

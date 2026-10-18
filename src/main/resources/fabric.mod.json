@@ -14,13 +14,17 @@
 	"icon": "assets/fatesofa/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"client": ["io.github.donttemptfate.fatesofa.FatesOfaClient"]
+		"client": ["io.github.donttemptfate.fatesofa.FatesOfaClient"],
+		"modmenu": ["io.github.donttemptfate.fatesofa.compat.ModMenuEntry"]
 	},
 	"mixins": ["fatesofa.mixins.json", "fatesofa.version.mixins.json"],
 	"depends": {
 		"fabricloader": ">=0.19.3",
 		"minecraft": "${minecraft_dep}",
 		"java": ">=25",
-		"fabric-api": "*"
+		"fabric-api": "${fabric_api_dep}"
+	},
+	"suggests": {
+		"modmenu": "*"
 	}
 }

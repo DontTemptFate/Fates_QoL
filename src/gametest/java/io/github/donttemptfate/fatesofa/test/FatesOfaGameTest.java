@@ -53,6 +53,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			realClick(ctx, false);
 			realClick(ctx, true);
 			realSlider(ctx);
+			settingsMachinery(ctx);
 
 			// settings pages
 			ctx.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null)));
@@ -363,6 +364,122 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		ctx.takeScreenshot("00d_real_slider");
 		check(!before.equals(after), "a real mouse click on a slider didn't change its setting");
 		ctx.runOnClient(mc -> mc.gui.setScreen(null));
+		ctx.waitTicks(5);
+	}
+
+	/** Clicks a named control of the open settings screen with the real mouse. */
+	static void clickNamed(ClientGameTestContext ctx, String name, boolean right) {
+		double scale = ctx.computeOnClient(mc -> mc.getWindow().getGuiScale());
+		double[] at = ctx.computeOnClient(mc -> mc.gui.screen() instanceof SettingsScreen st ? st.point(name) : null);
+		check(at != null, "settings control not on screen: " + name);
+		ctx.getInput().setCursorPos(at[0] * scale, at[1] * scale);
+		ctx.waitTicks(2);
+		ctx.getInput().pressMouse(right ? com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_RIGHT : com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT);
+		ctx.waitTicks(4);
+	}
+
+	static void search(ClientGameTestContext ctx, String text) {
+		ctx.runOnClient(mc -> ((SettingsScreen) mc.gui.screen()).searchFor(text));
+		ctx.waitTicks(4);
+	}
+
+	static String value(String key) {
+		var o = Ofa.get();
+		return String.valueOf(o.settings.get(o.settings.find(key)));
+	}
+
+	/** Batch 4: groups, line lists, island chips, colour picker, rule editor, sound picker, key capture, view switches, diagnostics. */
+	static void settingsMachinery(ClientGameTestContext ctx) {
+		var o = Ofa.get();
+		ctx.runOnClient(mc -> {
+			SettingsScreen.resetView();
+			mc.gui.setScreen(new SettingsScreen(null));
+		});
+		ctx.waitFor(mc -> mc.gui.screen() instanceof SettingsScreen, 100);
+		ctx.waitTicks(5);
+
+		// Display bundle on the location card: lines, islands, colour picker with rainbow
+		search(ctx, "Location card");
+		ctx.takeScreenshot("05a_display_bundle");
+		search(ctx, "location.lines");
+		clickNamed(ctx, "setting:location.lines", false);
+		clickNamed(ctx, "line:location.lines:server", false);
+		check(!value("location.lines").contains("server"), "unticking a line didn't hide it: " + value("location.lines"));
+		clickNamed(ctx, "up:location.lines:area", false);
+		check(value("location.lines").startsWith("island,area"), "moving a line up didn't reorder: " + value("location.lines"));
+		search(ctx, "location.show");
+		clickNamed(ctx, "setting:location.show", false);
+		clickNamed(ctx, "island:location.show:GARDEN", false);
+		check(value("location.show").equals("GARDEN"), "island chip didn't pick the Garden: " + value("location.show"));
+		search(ctx, "location.accent");
+		clickNamed(ctx, "setting:location.accent", false);
+		clickNamed(ctx, "rainbow:location.accent", false);
+		check(o.settings.on((io.github.donttemptfate.fatesofa.config.Setting<Boolean>) o.settings.find("location.accent.rainbow")), "rainbow switch didn't turn on");
+		ctx.takeScreenshot("05b_editors_open");
+
+		// rule editor: add a rule by typing
+		search(ctx, "chat.rules");
+		clickNamed(ctx, "setting:chat.rules", false);
+		clickNamed(ctx, "rule-add:chat.rules", false);
+		ctx.getInput().typeChars("Watchdog => hide");
+		ctx.waitTicks(2);
+		ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RETURN);
+		ctx.waitTicks(3);
+		check(value("chat.rules").equals("Watchdog => hide"), "typed rule wasn't saved: " + value("chat.rules"));
+		ctx.takeScreenshot("05c_rules");
+
+		// sound picker on the pest alert (Alert bundle)
+		search(ctx, "garden.pestAlert.sound");
+		String before = value("garden.pestAlert.sound");
+		clickNamed(ctx, "setting:garden.pestAlert.sound", false);
+		clickNamed(ctx, "sound-next:garden.pestAlert.sound", false);
+		check(!before.equals(value("garden.pestAlert.sound")), "sound picker didn't change the sound");
+		ctx.takeScreenshot("05d_sound");
+
+		// view switches: changed only
+		search(ctx, "");
+		clickNamed(ctx, "view:changed", false);
+		ctx.takeScreenshot("05e_changed_only");
+		clickNamed(ctx, "view:changed", false);
+
+		// key capture for an OFA key binding, on the Start page
+		boolean found = false;
+		for (int i = 0; i < 15 && !found; i++) {
+			found = ctx.computeOnClient(mc -> ((SettingsScreen) mc.gui.screen()).point("key:key.fatesofa.hud_editor") != null);
+			if (!found) {
+				ctx.runOnClient(mc -> mc.gui.screen().mouseScrolled(100, 100, 0, -3));
+				ctx.waitTicks(2);
+			}
+		}
+		check(found, "the key list isn't on the Start page");
+		clickNamed(ctx, "key:key.fatesofa.hud_editor", false);
+		ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_J);
+		ctx.waitTicks(3);
+		String bound = ctx.computeOnClient(mc -> io.github.donttemptfate.fatesofa.game.Keys.hudEditor.getTranslatedKeyMessage().getString());
+		check(bound.equalsIgnoreCase("J"), "key capture didn't bind the HUD editor key: " + bound);
+		ctx.takeScreenshot("05f_keys");
+		ctx.runOnClient(mc -> io.github.donttemptfate.fatesofa.game.Keys.rebind(io.github.donttemptfate.fatesofa.game.Keys.hudEditor, -1));
+
+		// diagnostics: per-feature timing
+		ctx.waitTicks(50);
+		ctx.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null)));
+		ctx.waitTicks(3);
+		double scale = ctx.computeOnClient(mc -> mc.getWindow().getGuiScale());
+		double[] diag = ctx.computeOnClient(mc -> ((SettingsScreen) mc.gui.screen()).sidebarPoint("Diagnostics"));
+		ctx.getInput().setCursorPos(diag[0] * scale, diag[1] * scale);
+		ctx.waitTicks(2);
+		ctx.getInput().pressMouse(com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT);
+		ctx.waitTicks(5);
+		ctx.takeScreenshot("05g_diagnostics");
+		check(io.github.donttemptfate.fatesofa.core.Diagnostics.fps() > 0, "diagnostics measured no frames");
+
+		// put things back for the rest of the test
+		ctx.runOnClient(mc -> {
+			for (String k : new String[] {"location.lines", "location.show", "location.accent.rainbow", "chat.rules", "garden.pestAlert.sound"})
+				o.settings.reset(o.settings.find(k));
+			SettingsScreen.resetView();
+			mc.gui.setScreen(null);
+		});
 		ctx.waitTicks(5);
 	}
 

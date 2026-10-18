@@ -19,6 +19,8 @@ public final class HudElement {
 	final Supplier<Card> content;
 	final Supplier<Card> sample;
 	final BooleanSupplier visible;
+	/** The owner's Display bundle (islands, hide in menus), or null. */
+	public io.github.donttemptfate.fatesofa.core.Display display;
 
 	/**
 	 * @param content what to show now (null = nothing)
@@ -35,5 +37,11 @@ public final class HudElement {
 		this.content = content;
 		this.sample = sample;
 		this.visible = visible == null ? () -> true : visible;
+	}
+
+	/** Lets the Display bundle decide where and when this card shows. */
+	public HudElement display(io.github.donttemptfate.fatesofa.core.Display d) {
+		this.display = d;
+		return this;
 	}
 }
