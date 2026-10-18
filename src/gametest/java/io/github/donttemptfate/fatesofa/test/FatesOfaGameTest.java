@@ -124,7 +124,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				double want = b.base() + 10 * 80_000 + 5.9e6;
 				check(Math.abs(b.total() - want) < 1, "worth with upgrades " + b.total() + " ≠ " + want);
 				var lines = new java.util.ArrayList<Component>();
-				net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.invoker().getTooltipLines(hype, net.minecraft.world.item.Item.TooltipContext.EMPTY,
+				net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.invoker().getTooltip(hype, net.minecraft.world.item.Item.TooltipContext.EMPTY,
 						net.minecraft.world.item.TooltipFlag.NORMAL, lines);
 				String text = String.join("\n", lines.stream().map(Component::getString).toList());
 				FatesOfaClient.LOG.info("[gametest] tooltip lines:\n{}", text);
