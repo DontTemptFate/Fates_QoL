@@ -31,7 +31,7 @@ import java.util.Map;
  * not buy advice); beside "Manage Auctions", what sold, what expired and the coins waiting to be collected.
  */
 public final class AuctionHelper extends Feature {
-	final Setting<String> lines = setting(Setting.lines("auctionhelper.lines", "Lines under listings", Display.lines(
+	final Setting<String> lines = setting(Setting.lines("auctionhelper.tooltip", "Lines under listings", Display.lines(
 			"lbin", "Lowest BIN of this item", "compare", "This listing vs the lowest BIN (%)", "worth", "Worth with upgrades", "sales", "Sales a day"),
 			List.of("lbin", "compare", "worth")));
 	final Display display = new Display(this, "auctionhelper", 0xFFFFAA00, Display.lines("sold", "Sold (coins to collect)", "expired", "Expired",
