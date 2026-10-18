@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.donttemptfate.fatesofa.MarketsTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:54:39.487Z" hostname="runnervm8k3b6" time="0.001">
+  <properties/>
+  <testcase name="auctionListings" classname="io.github.donttemptfate.fatesofa.MarketsTest" time="0.001"/>
+  <testcase name="bazaarOrders" classname="io.github.donttemptfate.fatesofa.MarketsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,1381 @@
+Compiled from "AbstractCommandBlockEditScreen.java"
+public abstract class net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen extends net.minecraft.client.gui.screens.Screen {
+  private static final net.minecraft.network.chat.Component SET_COMMAND_LABEL;
+  private static final net.minecraft.network.chat.Component COMMAND_LABEL;
+  private static final net.minecraft.network.chat.Component PREVIOUS_OUTPUT_LABEL;
+  protected net.minecraft.client.gui.components.EditBox commandEdit;
+  protected net.minecraft.client.gui.components.EditBox previousEdit;
+  protected net.minecraft.client.gui.components.Button doneButton;
+  protected net.minecraft.client.gui.components.Button cancelButton;
+  protected net.minecraft.client.gui.components.CycleButton<java.lang.Boolean> outputButton;
+  private net.minecraft.client.gui.components.CommandSuggestions commandSuggestions;
+  public net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen();
+  public void tick();
+  protected abstract net.minecraft.world.level.BaseCommandBlock getCommandBlock();
+  protected abstract int getPreviousY();
+  protected void init();
+  protected void addExtraControls();
+  protected void setInitialFocus();
+  protected net.minecraft.network.chat.Component getUsageNarration();
+  public void resize(int, int);
+  protected void updatePreviousOutput(boolean);
+  protected void onDone();
+  protected abstract void populateAndSendPacket();
+  private void onEdited(java.lang.String);
+  public boolean isInGameUi();
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public boolean mouseScrolled(double, double, double, double);
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void lambda$init$2(net.minecraft.client.gui.components.Button);
+  private void lambda$init$1(net.minecraft.client.gui.components.Button);
+  private void lambda$init$0(net.minecraft.client.gui.components.CycleButton, java.lang.Boolean);
+  static {};
+}
+Compiled from "AbstractCommandBlockEditScreen.java"
+class net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen$1 extends net.minecraft.client.gui.components.EditBox {
+  final net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen this$0;
+  net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen$1(net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen, net.minecraft.client.gui.Font, int, int, int, int, net.minecraft.network.chat.Component);
+  protected net.minecraft.network.chat.MutableComponent createNarrationMessage();
+}
+Compiled from "AbstractContainerScreen.java"
+public abstract class net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<T extends net.minecraft.world.inventory.AbstractContainerMenu> extends net.minecraft.client.gui.screens.Screen implements net.minecraft.client.gui.screens.inventory.MenuAccess<T> {
+  public static final net.minecraft.resources.Identifier INVENTORY_LOCATION;
+  private static final net.minecraft.resources.Identifier SLOT_HIGHLIGHT_BACK_SPRITE;
+  private static final net.minecraft.resources.Identifier SLOT_HIGHLIGHT_FRONT_SPRITE;
+  protected static final int BACKGROUND_TEXTURE_WIDTH;
+  protected static final int BACKGROUND_TEXTURE_HEIGHT;
+  protected static final int DEFAULT_IMAGE_WIDTH;
+  protected static final int DEFAULT_IMAGE_HEIGHT;
+  protected final int imageWidth;
+  protected final int imageHeight;
+  protected int titleLabelX;
+  protected int titleLabelY;
+  protected int inventoryLabelX;
+  protected int inventoryLabelY;
+  private final java.util.List<net.minecraft.client.gui.ItemSlotMouseAction> itemSlotMouseActions;
+  protected final T menu;
+  protected final net.minecraft.network.chat.Component playerInventoryTitle;
+  protected net.minecraft.world.inventory.Slot hoveredSlot;
+  private net.minecraft.world.inventory.Slot lastClickSlot;
+  protected int leftPos;
+  protected int topPos;
+  protected final java.util.Set<net.minecraft.world.inventory.Slot> quickCraftSlots;
+  protected boolean isQuickCrafting;
+  private int quickCraftingType;
+  private int quickCraftingButton;
+  private boolean skipNextRelease;
+  private int quickCraftingRemainder;
+  private boolean doubleclick;
+  private net.minecraft.world.item.ItemStack lastQuickMoved;
+  public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen(T, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  public net.minecraft.client.gui.screens.inventory.AbstractContainerScreen(T, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component, int, int);
+  protected void init();
+  protected void addItemSlotMouseAction(net.minecraft.client.gui.ItemSlotMouseAction);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public void extractContents(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public void extractCarriedItem(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  protected void extractSlots(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public boolean mouseScrolled(double, double, double, double);
+  private void extractSlotHighlightBack(net.minecraft.client.gui.GuiGraphicsExtractor);
+  private void extractSlotHighlightFront(net.minecraft.client.gui.GuiGraphicsExtractor);
+  protected void extractTooltip(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  private boolean showTooltipWithItemInHand(net.minecraft.world.item.ItemStack);
+  protected java.util.List<net.minecraft.network.chat.Component> getTooltipFromContainerItem(net.minecraft.world.item.ItemStack);
+  private void extractFloatingItem(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.item.ItemStack, int, int, java.lang.String);
+  protected void extractLabels(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  protected void extractSlot(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.inventory.Slot, int, int);
+  private void recalculateQuickCraftRemaining();
+  private net.minecraft.world.inventory.Slot getHoveredSlot(double, double);
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  private void checkHotbarMouseClicked(net.minecraft.client.input.MouseButtonEvent);
+  protected boolean hasClickedOutside(double, double, int, int);
+  public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent, double, double);
+  public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent);
+  private boolean isHovering(net.minecraft.world.inventory.Slot, double, double);
+  protected boolean isHovering(int, int, int, int, double, double);
+  private void onStopHovering(net.minecraft.world.inventory.Slot);
+  protected void slotClicked(net.minecraft.world.inventory.Slot, int, int, net.minecraft.world.inventory.ContainerInput);
+  protected void onMouseClickAction(net.minecraft.world.inventory.Slot, net.minecraft.world.inventory.ContainerInput);
+  protected void handleSlotStateChanged(int, int, boolean);
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  protected boolean checkHotbarKeyPressed(net.minecraft.client.input.KeyEvent);
+  public void removed();
+  public boolean isPauseScreen();
+  public boolean isInGameUi();
+  public final void tick();
+  protected void containerTick();
+  private boolean shouldAddSlotToQuickCraft(net.minecraft.world.inventory.Slot, net.minecraft.world.item.ItemStack);
+  private void quickCraftToSlots();
+  public T getMenu();
+  public void onClose();
+  static {};
+}
+Compiled from "AbstractFurnaceScreen.java"
+public abstract class net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen<T extends net.minecraft.world.inventory.AbstractFurnaceMenu> extends net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen<T> {
+  private final net.minecraft.resources.Identifier texture;
+  private final net.minecraft.resources.Identifier litProgressSprite;
+  private final net.minecraft.resources.Identifier burnProgressSprite;
+  public net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen(T, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component, net.minecraft.network.chat.Component, net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, java.util.List<net.minecraft.client.gui.screens.recipebook.RecipeBookComponent$TabInfo>);
+  public void init();
+  protected net.minecraft.client.gui.navigation.ScreenPosition getRecipeBookButtonPosition();
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+}
+Compiled from "AbstractMountInventoryScreen.java"
+public abstract class net.minecraft.client.gui.screens.inventory.AbstractMountInventoryScreen<T extends net.minecraft.world.inventory.AbstractMountInventoryMenu> extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<T> {
+  protected final int inventoryColumns;
+  protected float xMouse;
+  protected float yMouse;
+  protected final net.minecraft.world.entity.LivingEntity mount;
+  public net.minecraft.client.gui.screens.inventory.AbstractMountInventoryScreen(T, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component, int, net.minecraft.world.entity.LivingEntity);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  protected void extractSlot(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  protected abstract net.minecraft.resources.Identifier getBackgroundTextureLocation();
+  protected abstract net.minecraft.resources.Identifier getSlotSpriteLocation();
+  protected abstract net.minecraft.resources.Identifier getChestSlotsSpriteLocation();
+  protected abstract boolean shouldRenderSaddleSlot();
+  protected abstract boolean shouldRenderArmorSlot();
+}
+Compiled from "AbstractRecipeBookScreen.java"
+public abstract class net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen<T extends net.minecraft.world.inventory.RecipeBookMenu> extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<T> implements net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener {
+  private final net.minecraft.client.gui.screens.recipebook.RecipeBookComponent<?> recipeBookComponent;
+  private boolean widthTooNarrow;
+  public net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen(T, net.minecraft.client.gui.screens.recipebook.RecipeBookComponent<?>, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void init();
+  protected abstract net.minecraft.client.gui.navigation.ScreenPosition getRecipeBookButtonPosition();
+  private void initButton();
+  protected void onRecipeBookButtonClick();
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  protected void extractSlots(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  protected boolean isBiggerResultSlot();
+  public boolean charTyped(net.minecraft.client.input.CharacterEvent);
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent, double, double);
+  protected boolean isHovering(int, int, int, int, double, double);
+  protected boolean hasClickedOutside(double, double, int, int);
+  protected void slotClicked(net.minecraft.world.inventory.Slot, int, int, net.minecraft.world.inventory.ContainerInput);
+  public void containerTick();
+  public void recipesUpdated();
+  public void fillGhostRecipe(net.minecraft.world.item.crafting.display.RecipeDisplay);
+  private void lambda$initButton$0(net.minecraft.client.gui.components.Button);
+}
+Compiled from "AbstractSignEditScreen.java"
+public abstract class net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen extends net.minecraft.client.gui.screens.Screen {
+  protected final net.minecraft.world.level.block.entity.SignBlockEntity sign;
+  private net.minecraft.world.level.block.entity.SignText text;
+  private final java.lang.String[] messages;
+  private final boolean isFrontText;
+  protected final net.minecraft.world.level.block.state.properties.WoodType woodType;
+  private long cursorBlinkStartTime;
+  private int line;
+  private net.minecraft.client.gui.font.TextFieldHelper signField;
+  private net.minecraft.client.gui.components.IMEPreeditOverlay preeditOverlay;
+  private final org.joml.Vector2f cursorPosScratch;
+  public net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen(net.minecraft.world.level.block.entity.SignBlockEntity, boolean, boolean);
+  public net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen(net.minecraft.world.level.block.entity.SignBlockEntity, boolean, boolean, net.minecraft.network.chat.Component);
+  protected void init();
+  public void tick();
+  private boolean isValid();
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public boolean charTyped(net.minecraft.client.input.CharacterEvent);
+  public boolean preeditUpdated(net.minecraft.client.input.PreeditEvent);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public void onClose();
+  public void removed();
+  public boolean isPauseScreen();
+  public boolean isInGameUi();
+  protected abstract void extractSignBackground(net.minecraft.client.gui.GuiGraphicsExtractor);
+  protected abstract org.joml.Vector3fc getSignTextScale();
+  protected abstract float getSignYOffset();
+  private void extractSign(net.minecraft.client.gui.GuiGraphicsExtractor);
+  private void extractSignText(net.minecraft.client.gui.GuiGraphicsExtractor, org.joml.Vector2f);
+  private void setMessage(java.lang.String);
+  private void onDone();
+  private boolean lambda$init$2(java.lang.String);
+  private java.lang.String lambda$init$1();
+  private void lambda$init$0(net.minecraft.client.gui.components.Button);
+  private static java.lang.String[] lambda$new$1(int);
+  private net.minecraft.network.chat.Component lambda$new$0(boolean, int);
+}
+Compiled from "AnvilScreen.java"
+public class net.minecraft.client.gui.screens.inventory.AnvilScreen extends net.minecraft.client.gui.screens.inventory.ItemCombinerScreen<net.minecraft.world.inventory.AnvilMenu> {
+  private static final net.minecraft.resources.Identifier TEXT_FIELD_SPRITE;
+  private static final net.minecraft.resources.Identifier TEXT_FIELD_DISABLED_SPRITE;
+  private static final net.minecraft.resources.Identifier ERROR_SPRITE;
+  private static final net.minecraft.resources.Identifier ANVIL_LOCATION;
+  private static final net.minecraft.network.chat.Component TOO_EXPENSIVE_TEXT;
+  private net.minecraft.client.gui.components.EditBox name;
+  private final net.minecraft.world.entity.player.Player player;
+  public net.minecraft.client.gui.screens.inventory.AnvilScreen(net.minecraft.world.inventory.AnvilMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void subInit();
+  protected void containerTick();
+  protected void setInitialFocus();
+  public void resize(int, int);
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  private void onNameChanged(java.lang.String);
+  protected void extractLabels(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  protected void extractErrorIcon(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public void slotChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, net.minecraft.world.item.ItemStack);
+  static {};
+}
+Compiled from "BeaconScreen.java"
+public class net.minecraft.client.gui.screens.inventory.BeaconScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.BeaconMenu> {
+  private static final net.minecraft.resources.Identifier BEACON_LOCATION;
+  private static final net.minecraft.resources.Identifier BUTTON_DISABLED_SPRITE;
+  private static final net.minecraft.resources.Identifier BUTTON_SELECTED_SPRITE;
+  private static final net.minecraft.resources.Identifier BUTTON_HIGHLIGHTED_SPRITE;
+  private static final net.minecraft.resources.Identifier BUTTON_SPRITE;
+  private static final net.minecraft.resources.Identifier CONFIRM_SPRITE;
+  private static final net.minecraft.resources.Identifier CANCEL_SPRITE;
+  private static final net.minecraft.network.chat.Component PRIMARY_EFFECT_LABEL;
+  private static final net.minecraft.network.chat.Component SECONDARY_EFFECT_LABEL;
+  private final java.util.List<net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconButton> beaconButtons;
+  private net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> primary;
+  private net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> secondary;
+  public net.minecraft.client.gui.screens.inventory.BeaconScreen(net.minecraft.world.inventory.BeaconMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  private <T extends net.minecraft.client.gui.components.AbstractWidget & net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconButton> void addBeaconButton(T);
+  protected void init();
+  public void containerTick();
+  private void updateButtons();
+  protected void extractLabels(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static net.minecraft.client.Minecraft access$000(net.minecraft.client.gui.screens.inventory.BeaconScreen);
+  static net.minecraft.client.Minecraft access$100(net.minecraft.client.gui.screens.inventory.BeaconScreen);
+  static net.minecraft.client.Minecraft access$200(net.minecraft.client.gui.screens.inventory.BeaconScreen);
+  private static void lambda$updateButtons$0(int, net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconButton);
+  static {};
+}
+Compiled from "BeaconScreen.java"
+class net.minecraft.client.gui.screens.inventory.BeaconScreen$1 implements net.minecraft.world.inventory.ContainerListener {
+  final net.minecraft.world.inventory.BeaconMenu val$menu;
+  final net.minecraft.client.gui.screens.inventory.BeaconScreen this$0;
+  net.minecraft.client.gui.screens.inventory.BeaconScreen$1();
+  public void slotChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, net.minecraft.world.item.ItemStack);
+  public void dataChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, int);
+}
+Compiled from "BeaconScreen.java"
+interface net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconButton {
+  public abstract void updateStatus(int);
+}
+Compiled from "BeaconScreen.java"
+class net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconCancelButton extends net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconSpriteScreenButton {
+  final net.minecraft.client.gui.screens.inventory.BeaconScreen this$0;
+  public net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconCancelButton(net.minecraft.client.gui.screens.inventory.BeaconScreen, int, int);
+  public void onPress(net.minecraft.client.input.InputWithModifiers);
+  public void updateStatus(int);
+}
+Compiled from "BeaconScreen.java"
+class net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconConfirmButton extends net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconSpriteScreenButton {
+  final net.minecraft.client.gui.screens.inventory.BeaconScreen this$0;
+  public net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconConfirmButton(net.minecraft.client.gui.screens.inventory.BeaconScreen, int, int);
+  public void onPress(net.minecraft.client.input.InputWithModifiers);
+  public void updateStatus(int);
+}
+Compiled from "BeaconScreen.java"
+class net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconPowerButton extends net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconScreenButton {
+  private final boolean isPrimary;
+  protected final int tier;
+  private net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect;
+  private net.minecraft.resources.Identifier sprite;
+  final net.minecraft.client.gui.screens.inventory.BeaconScreen this$0;
+  public net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconPowerButton(int, int, net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>, boolean, int);
+  protected void setEffect(net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>);
+  protected net.minecraft.network.chat.MutableComponent createEffectDescription(net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>);
+  public void onPress(net.minecraft.client.input.InputWithModifiers);
+  protected void extractIcon(net.minecraft.client.gui.GuiGraphicsExtractor);
+  public void updateStatus(int);
+  protected net.minecraft.network.chat.MutableComponent createNarrationMessage();
+}
+Compiled from "BeaconScreen.java"
+abstract class net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconScreenButton extends net.minecraft.client.gui.components.AbstractButton implements net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconButton {
+  private boolean selected;
+  protected net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconScreenButton(int, int);
+  protected net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconScreenButton(int, int, net.minecraft.network.chat.Component);
+  public void extractContents(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  protected abstract void extractIcon(net.minecraft.client.gui.GuiGraphicsExtractor);
+  public boolean isSelected();
+  public void setSelected(boolean);
+  public void updateWidgetNarration(net.minecraft.client.gui.narration.NarrationElementOutput);
+}
+Compiled from "BeaconScreen.java"
+abstract class net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconSpriteScreenButton extends net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconScreenButton {
+  private final net.minecraft.resources.Identifier sprite;
+  protected net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconSpriteScreenButton(int, int, net.minecraft.resources.Identifier, net.minecraft.network.chat.Component);
+  protected void extractIcon(net.minecraft.client.gui.GuiGraphicsExtractor);
+}
+Compiled from "BeaconScreen.java"
+class net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconUpgradePowerButton extends net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconPowerButton {
+  final net.minecraft.client.gui.screens.inventory.BeaconScreen this$0;
+  public net.minecraft.client.gui.screens.inventory.BeaconScreen$BeaconUpgradePowerButton(int, int, net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>);
+  protected net.minecraft.network.chat.MutableComponent createEffectDescription(net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>);
+  public void updateStatus(int);
+}
+Compiled from "BlastFurnaceScreen.java"
+public class net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen extends net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen<net.minecraft.world.inventory.BlastFurnaceMenu> {
+  private static final net.minecraft.resources.Identifier LIT_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier BURN_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier TEXTURE;
+  private static final net.minecraft.network.chat.Component FILTER_NAME;
+  private static final java.util.List<net.minecraft.client.gui.screens.recipebook.RecipeBookComponent$TabInfo> TABS;
+  public net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen(net.minecraft.world.inventory.BlastFurnaceMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  static {};
+}
+Compiled from "BookEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.BookEditScreen extends net.minecraft.client.gui.screens.Screen {
+  public static final int TEXT_WIDTH;
+  public static final int TEXT_HEIGHT;
+  public static final int IMAGE_WIDTH;
+  public static final int IMAGE_HEIGHT;
+  public static final int BACKGROUND_TEXTURE_WIDTH;
+  public static final int BACKGROUND_TEXTURE_HEIGHT;
+  private static final int MENU_BUTTON_MARGIN;
+  private static final int MENU_BUTTON_SIZE;
+  private static final int PAGE_BUTTON_Y;
+  private static final int PAGE_BACK_BUTTON_X;
+  private static final int PAGE_FORWARD_BUTTON_X;
+  private static final int PAGE_INDICATOR_TEXT_Y_OFFSET;
+  private static final int PAGE_INDICATOR_X_OFFSET;
+  private static final net.minecraft.network.chat.Component TITLE;
+  private static final net.minecraft.network.chat.Component SIGN_BOOK_LABEL;
+  private final net.minecraft.world.entity.player.Player owner;
+  private final net.minecraft.world.item.ItemStack book;
+  private final net.minecraft.client.gui.screens.inventory.BookSignScreen signScreen;
+  private int currentPage;
+  private final java.util.List<java.lang.String> pages;
+  private net.minecraft.client.gui.screens.inventory.PageButton forwardButton;
+  private net.minecraft.client.gui.screens.inventory.PageButton backButton;
+  private final net.minecraft.world.InteractionHand hand;
+  private net.minecraft.network.chat.Component numberOfPages;
+  private net.minecraft.client.gui.components.MultiLineEditBox page;
+  public net.minecraft.client.gui.screens.inventory.BookEditScreen(net.minecraft.world.entity.player.Player, net.minecraft.world.item.ItemStack, net.minecraft.world.InteractionHand, net.minecraft.world.item.component.WritableBookContent);
+  private int getNumPages();
+  protected void init();
+  private int backgroundLeft();
+  private int backgroundTop();
+  private int menuControlsTop();
+  protected void setInitialFocus();
+  public net.minecraft.network.chat.Component getNarrationMessage();
+  private net.minecraft.network.chat.Component getPageNumberMessage();
+  private void pageBack();
+  private void pageForward();
+  private void updatePageContent();
+  private void updateButtonVisibility();
+  private void eraseEmptyTrailingPages();
+  private void saveChanges();
+  private void updateLocalCopy();
+  private void appendPageToBook();
+  public boolean isInGameUi();
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void visitText(net.minecraft.client.gui.ActiveTextCollector);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void lambda$init$4(net.minecraft.client.gui.components.Button);
+  private void lambda$init$3(net.minecraft.client.gui.components.Button);
+  private void lambda$init$2(net.minecraft.client.gui.components.Button);
+  private void lambda$init$1(net.minecraft.client.gui.components.Button);
+  private void lambda$init$0(java.lang.String);
+  static {};
+}
+Compiled from "BookSignScreen.java"
+public class net.minecraft.client.gui.screens.inventory.BookSignScreen extends net.minecraft.client.gui.screens.Screen {
+  private static final net.minecraft.network.chat.Component EDIT_TITLE_LABEL;
+  private static final net.minecraft.network.chat.Component FINALIZE_WARNING_LABEL;
+  private static final net.minecraft.network.chat.Component TITLE;
+  private static final net.minecraft.network.chat.Component TITLE_EDIT_BOX;
+  private final net.minecraft.client.gui.screens.inventory.BookEditScreen bookEditScreen;
+  private final net.minecraft.world.entity.player.Player owner;
+  private final java.util.List<java.lang.String> pages;
+  private final net.minecraft.world.InteractionHand hand;
+  private final net.minecraft.network.chat.Component ownerText;
+  private net.minecraft.client.gui.components.EditBox titleBox;
+  private java.lang.String titleValue;
+  public net.minecraft.client.gui.screens.inventory.BookSignScreen(net.minecraft.client.gui.screens.inventory.BookEditScreen, net.minecraft.world.entity.player.Player, net.minecraft.world.InteractionHand, java.util.List<java.lang.String>);
+  protected void init();
+  protected void setInitialFocus();
+  private void saveChanges();
+  public boolean isInGameUi();
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void lambda$init$2(net.minecraft.client.gui.components.Button);
+  private static void lambda$init$1(net.minecraft.client.gui.components.Button, java.lang.String);
+  private void lambda$init$0(net.minecraft.client.gui.components.Button);
+  static {};
+}
+Compiled from "BookViewScreen.java"
+public class net.minecraft.client.gui.screens.inventory.BookViewScreen extends net.minecraft.client.gui.screens.Screen {
+  public static final int PAGE_INDICATOR_TEXT_Y_OFFSET;
+  public static final int PAGE_TEXT_X_OFFSET;
+  public static final int PAGE_TEXT_Y_OFFSET;
+  private static final int BACKGROUND_TEXTURE_WIDTH;
+  private static final int BACKGROUND_TEXTURE_HEIGHT;
+  private static final net.minecraft.network.chat.Component TITLE;
+  private static final net.minecraft.network.chat.Style PAGE_TEXT_STYLE;
+  public static final net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess EMPTY_ACCESS;
+  public static final net.minecraft.resources.Identifier BOOK_LOCATION;
+  protected static final int TEXT_WIDTH;
+  protected static final int TEXT_HEIGHT;
+  protected static final int IMAGE_WIDTH;
+  private static final int PAGE_INDICATOR_X_OFFSET;
+  protected static final int IMAGE_HEIGHT;
+  private static final int PAGE_BUTTON_Y;
+  private static final int PAGE_BACK_BUTTON_X;
+  private static final int PAGE_FORWARD_BUTTON_X;
+  private net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess bookAccess;
+  private int currentPage;
+  private java.util.List<net.minecraft.util.FormattedCharSequence> cachedPageComponents;
+  private int cachedPage;
+  private net.minecraft.network.chat.Component pageMsg;
+  private net.minecraft.client.gui.screens.inventory.PageButton forwardButton;
+  private net.minecraft.client.gui.screens.inventory.PageButton backButton;
+  private final boolean playTurnSound;
+  public net.minecraft.client.gui.screens.inventory.BookViewScreen(net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess);
+  public net.minecraft.client.gui.screens.inventory.BookViewScreen();
+  private net.minecraft.client.gui.screens.inventory.BookViewScreen(net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess, boolean);
+  public void setBookAccess(net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess);
+  public boolean setPage(int);
+  protected boolean forcePage(int);
+  protected void init();
+  public net.minecraft.network.chat.Component getNarrationMessage();
+  private net.minecraft.network.chat.Component getPageNumberMessage();
+  protected void createMenuControls();
+  protected void createPageControlButtons();
+  private int getNumPages();
+  protected void pageBack();
+  protected void pageForward();
+  private void updateButtonVisibility();
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void visitText(net.minecraft.client.gui.ActiveTextCollector, boolean);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private int backgroundLeft();
+  private int backgroundTop();
+  protected int menuControlsTop();
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  protected boolean handleClickEvent(net.minecraft.network.chat.ClickEvent);
+  protected void closeContainerOnServer();
+  public boolean isInGameUi();
+  private void lambda$createPageControlButtons$1(net.minecraft.client.gui.components.Button);
+  private void lambda$createPageControlButtons$0(net.minecraft.client.gui.components.Button);
+  private void lambda$createMenuControls$0(net.minecraft.client.gui.components.Button);
+  static {};
+}
+Compiled from "BookViewScreen.java"
+public final class net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess extends java.lang.Record {
+  private final java.util.List<net.minecraft.network.chat.Component> pages;
+  public net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess(java.util.List<net.minecraft.network.chat.Component>);
+  public int getPageCount();
+  public net.minecraft.network.chat.Component getPage(int);
+  public static net.minecraft.client.gui.screens.inventory.BookViewScreen$BookAccess fromItem(net.minecraft.world.item.ItemStack);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public java.util.List<net.minecraft.network.chat.Component> pages();
+}
+Compiled from "BrewingStandScreen.java"
+public class net.minecraft.client.gui.screens.inventory.BrewingStandScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.BrewingStandMenu> {
+  private static final net.minecraft.resources.Identifier FUEL_LENGTH_SPRITE;
+  private static final net.minecraft.resources.Identifier BREW_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier BUBBLES_SPRITE;
+  private static final net.minecraft.resources.Identifier BREWING_STAND_LOCATION;
+  private static final int[] BUBBLELENGTHS;
+  public net.minecraft.client.gui.screens.inventory.BrewingStandScreen(net.minecraft.world.inventory.BrewingStandMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void init();
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static {};
+}
+Compiled from "CartographyTableScreen.java"
+public class net.minecraft.client.gui.screens.inventory.CartographyTableScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.CartographyTableMenu> {
+  private static final net.minecraft.resources.Identifier ERROR_SPRITE;
+  private static final net.minecraft.resources.Identifier SCALED_MAP_SPRITE;
+  private static final net.minecraft.resources.Identifier DUPLICATED_MAP_SPRITE;
+  private static final net.minecraft.resources.Identifier MAP_SPRITE;
+  private static final net.minecraft.resources.Identifier LOCKED_SPRITE;
+  private static final net.minecraft.resources.Identifier BG_LOCATION;
+  private final net.minecraft.client.renderer.state.MapRenderState mapRenderState;
+  public net.minecraft.client.gui.screens.inventory.CartographyTableScreen(net.minecraft.world.inventory.CartographyTableMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void extractResultingMap(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.level.saveddata.maps.MapId, net.minecraft.world.level.saveddata.maps.MapItemSavedData, boolean, boolean, boolean, boolean);
+  private void extractMap(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.level.saveddata.maps.MapId, net.minecraft.world.level.saveddata.maps.MapItemSavedData, int, int, float);
+  static {};
+}
+Compiled from "CommandBlockEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen extends net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen {
+  private final net.minecraft.world.level.block.entity.CommandBlockEntity autoCommandBlock;
+  private net.minecraft.client.gui.components.CycleButton<net.minecraft.world.level.block.entity.CommandBlockEntity$Mode> modeButton;
+  private net.minecraft.client.gui.components.CycleButton<java.lang.Boolean> conditionalButton;
+  private net.minecraft.client.gui.components.CycleButton<java.lang.Boolean> autoexecButton;
+  private net.minecraft.world.level.block.entity.CommandBlockEntity$Mode mode;
+  private boolean conditional;
+  private boolean autoexec;
+  public net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen(net.minecraft.world.level.block.entity.CommandBlockEntity);
+  protected net.minecraft.world.level.BaseCommandBlock getCommandBlock();
+  protected int getPreviousY();
+  protected void init();
+  protected void addExtraControls();
+  private void enableControls(boolean);
+  public void updateGui();
+  public void resize(int, int);
+  protected void populateAndSendPacket();
+  private void lambda$addExtraControls$3(net.minecraft.client.gui.components.CycleButton, java.lang.Boolean);
+  private void lambda$addExtraControls$2(net.minecraft.client.gui.components.CycleButton, java.lang.Boolean);
+  private void lambda$addExtraControls$1(net.minecraft.client.gui.components.CycleButton, net.minecraft.world.level.block.entity.CommandBlockEntity$Mode);
+  private static net.minecraft.network.chat.Component lambda$addExtraControls$0(net.minecraft.world.level.block.entity.CommandBlockEntity$Mode);
+}
+Compiled from "CommandBlockEditScreen.java"
+class net.minecraft.client.gui.screens.inventory.CommandBlockEditScreen$1 {
+  static final int[] $SwitchMap$net$minecraft$world$level$block$entity$CommandBlockEntity$Mode;
+  static {};
+}
+Compiled from "ContainerScreen.java"
+public class net.minecraft.client.gui.screens.inventory.ContainerScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.ChestMenu> {
+  private static final net.minecraft.resources.Identifier CONTAINER_BACKGROUND;
+  private final int containerRows;
+  public net.minecraft.client.gui.screens.inventory.ContainerScreen(net.minecraft.world.inventory.ChestMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static {};
+}
+Compiled from "CrafterScreen.java"
+public class net.minecraft.client.gui.screens.inventory.CrafterScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.CrafterMenu> {
+  private static final net.minecraft.resources.Identifier DISABLED_SLOT_LOCATION_SPRITE;
+  private static final net.minecraft.resources.Identifier POWERED_REDSTONE_LOCATION_SPRITE;
+  private static final net.minecraft.resources.Identifier UNPOWERED_REDSTONE_LOCATION_SPRITE;
+  private static final net.minecraft.resources.Identifier CONTAINER_LOCATION;
+  private static final net.minecraft.network.chat.Component DISABLED_SLOT_TOOLTIP;
+  private final net.minecraft.world.entity.player.Player player;
+  public net.minecraft.client.gui.screens.inventory.CrafterScreen(net.minecraft.world.inventory.CrafterMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void init();
+  protected void slotClicked(net.minecraft.world.inventory.Slot, int, int, net.minecraft.world.inventory.ContainerInput);
+  private void enableSlot(int);
+  private void disableSlot(int);
+  private void updateSlotState(int, boolean);
+  public void extractSlot(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.inventory.Slot, int, int);
+  private void extractDisabledSlot(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.inventory.CrafterSlot);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void extractRedstone(net.minecraft.client.gui.GuiGraphicsExtractor);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static {};
+}
+Compiled from "CrafterScreen.java"
+class net.minecraft.client.gui.screens.inventory.CrafterScreen$1 {
+  static final int[] $SwitchMap$net$minecraft$world$inventory$ContainerInput;
+  static {};
+}
+Compiled from "CraftingScreen.java"
+public class net.minecraft.client.gui.screens.inventory.CraftingScreen extends net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen<net.minecraft.world.inventory.CraftingMenu> {
+  private static final net.minecraft.resources.Identifier CRAFTING_TABLE_LOCATION;
+  public net.minecraft.client.gui.screens.inventory.CraftingScreen(net.minecraft.world.inventory.CraftingMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void init();
+  protected net.minecraft.client.gui.navigation.ScreenPosition getRecipeBookButtonPosition();
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static {};
+}
+Compiled from "CreativeInventoryListener.java"
+public class net.minecraft.client.gui.screens.inventory.CreativeInventoryListener implements net.minecraft.world.inventory.ContainerListener {
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.gui.screens.inventory.CreativeInventoryListener(net.minecraft.client.Minecraft);
+  public void slotChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, net.minecraft.world.item.ItemStack);
+  public void dataChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, int);
+}
+Compiled from "CreativeModeInventoryScreen.java"
+public class net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$ItemPickerMenu> {
+  private static final net.minecraft.resources.Identifier SCROLLER_SPRITE;
+  private static final net.minecraft.resources.Identifier SCROLLER_DISABLED_SPRITE;
+  private static final net.minecraft.resources.Identifier[] UNSELECTED_TOP_TABS;
+  private static final net.minecraft.resources.Identifier[] SELECTED_TOP_TABS;
+  private static final net.minecraft.resources.Identifier[] UNSELECTED_BOTTOM_TABS;
+  private static final net.minecraft.resources.Identifier[] SELECTED_BOTTOM_TABS;
+  private static final int NUM_ROWS;
+  private static final int NUM_COLS;
+  private static final int TAB_WIDTH;
+  private static final int TAB_HEIGHT;
+  private static final int SCROLLER_WIDTH;
+  private static final int SCROLLER_HEIGHT;
+  private static final net.minecraft.world.SimpleContainer CONTAINER;
+  private static final net.minecraft.network.chat.Component TRASH_SLOT_TOOLTIP;
+  private static net.minecraft.world.item.CreativeModeTab selectedTab;
+  private float scrollOffs;
+  private boolean scrolling;
+  private net.minecraft.client.gui.components.EditBox searchBox;
+  private java.util.List<net.minecraft.world.inventory.Slot> originalSlots;
+  private net.minecraft.world.inventory.Slot destroyItemSlot;
+  private net.minecraft.client.gui.screens.inventory.CreativeInventoryListener listener;
+  private boolean ignoreTextInput;
+  private boolean hasClickedOutside;
+  private final java.util.Set<net.minecraft.tags.TagKey<net.minecraft.world.item.Item>> visibleTags;
+  private final boolean displayOperatorCreativeTab;
+  private final net.minecraft.client.gui.screens.inventory.EffectsInInventory effects;
+  public net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(net.minecraft.client.player.LocalPlayer, net.minecraft.world.flag.FeatureFlagSet, boolean);
+  private boolean hasPermissions(net.minecraft.world.entity.player.Player);
+  private void tryRefreshInvalidatedTabs(net.minecraft.world.flag.FeatureFlagSet, boolean, net.minecraft.core.HolderLookup$Provider);
+  private boolean tryRebuildTabContents(net.minecraft.client.multiplayer.SessionSearchTrees, net.minecraft.world.flag.FeatureFlagSet, boolean, net.minecraft.core.HolderLookup$Provider);
+  private void refreshCurrentTabContents(java.util.Collection<net.minecraft.world.item.ItemStack>);
+  public void containerTick();
+  protected void slotClicked(net.minecraft.world.inventory.Slot, int, int, net.minecraft.world.inventory.ContainerInput);
+  private boolean isCreativeSlot(net.minecraft.world.inventory.Slot);
+  protected void init();
+  public void resize(int, int);
+  public void removed();
+  public boolean charTyped(net.minecraft.client.input.CharacterEvent);
+  public boolean preeditUpdated(net.minecraft.client.input.PreeditEvent);
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public boolean keyReleased(net.minecraft.client.input.KeyEvent);
+  private void refreshSearchResults();
+  private void updateVisibleTags(java.lang.String);
+  protected void extractLabels(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent);
+  private boolean canScroll();
+  private void selectTab(net.minecraft.world.item.CreativeModeTab);
+  public boolean mouseScrolled(double, double, double, double);
+  protected boolean hasClickedOutside(double, double, int, int);
+  protected boolean insideScrollbar(double, double);
+  public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent, double, double);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public boolean showsActiveEffects();
+  public java.util.List<net.minecraft.network.chat.Component> getTooltipFromContainerItem(net.minecraft.world.item.ItemStack);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private int getTabX(net.minecraft.world.item.CreativeModeTab);
+  private int getTabY(net.minecraft.world.item.CreativeModeTab);
+  protected boolean checkTabClicked(net.minecraft.world.item.CreativeModeTab, double, double);
+  protected boolean checkTabHovering(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.item.CreativeModeTab, int, int);
+  protected void extractTabButton(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, net.minecraft.world.item.CreativeModeTab);
+  public boolean isInventoryOpen();
+  public static void handleHotbarLoadOrSave(net.minecraft.client.Minecraft, int, boolean, boolean);
+  private static void lambda$getTooltipFromContainerItem$0(net.minecraft.world.item.ItemStack, java.util.List, net.minecraft.tags.TagKey);
+  private static boolean lambda$updateVisibleTags$2(java.util.function.Predicate, net.minecraft.tags.TagKey);
+  private static boolean lambda$updateVisibleTags$1(java.lang.String, java.lang.String, net.minecraft.resources.Identifier);
+  private static boolean lambda$updateVisibleTags$0(java.lang.String, net.minecraft.resources.Identifier);
+  static {};
+}
+Compiled from "CreativeModeInventoryScreen.java"
+class net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$CustomCreativeSlot extends net.minecraft.world.inventory.Slot {
+  public net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$CustomCreativeSlot(net.minecraft.world.Container, int, int, int);
+  public boolean mayPickup(net.minecraft.world.entity.player.Player);
+}
+Compiled from "CreativeModeInventoryScreen.java"
+public class net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$ItemPickerMenu extends net.minecraft.world.inventory.AbstractContainerMenu {
+  public final net.minecraft.core.NonNullList<net.minecraft.world.item.ItemStack> items;
+  private final net.minecraft.world.inventory.AbstractContainerMenu inventoryMenu;
+  public net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$ItemPickerMenu(net.minecraft.world.entity.player.Player);
+  public boolean stillValid(net.minecraft.world.entity.player.Player);
+  protected int calculateRowCount();
+  protected int getRowIndexForScroll(float);
+  protected float getScrollForRowIndex(int);
+  protected float subtractInputFromScroll(float, double);
+  public void scrollTo(float);
+  public boolean canScroll();
+  public net.minecraft.world.item.ItemStack quickMoveStack(net.minecraft.world.entity.player.Player, int);
+  public boolean canTakeItemForPickAll(net.minecraft.world.item.ItemStack, net.minecraft.world.inventory.Slot);
+  public boolean canDragTo(net.minecraft.world.inventory.Slot);
+  public net.minecraft.world.item.ItemStack getCarried();
+  public void setCarried(net.minecraft.world.item.ItemStack);
+}
+Compiled from "CreativeModeInventoryScreen.java"
+class net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$SlotWrapper extends net.minecraft.world.inventory.Slot {
+  private final net.minecraft.world.inventory.Slot target;
+  public net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$SlotWrapper(net.minecraft.world.inventory.Slot, int, int, int);
+  public void onTake(net.minecraft.world.entity.player.Player, net.minecraft.world.item.ItemStack);
+  public boolean mayPlace(net.minecraft.world.item.ItemStack);
+  public net.minecraft.world.item.ItemStack getItem();
+  public boolean hasItem();
+  public void setByPlayer(net.minecraft.world.item.ItemStack, net.minecraft.world.item.ItemStack);
+  public void set(net.minecraft.world.item.ItemStack);
+  public void setChanged();
+  public int getMaxStackSize();
+  public int getMaxStackSize(net.minecraft.world.item.ItemStack);
+  public net.minecraft.resources.Identifier getNoItemIcon();
+  public net.minecraft.world.item.ItemStack remove(int);
+  public boolean isActive();
+  public boolean mayPickup(net.minecraft.world.entity.player.Player);
+}
+Compiled from "CyclingSlotBackground.java"
+public class net.minecraft.client.gui.screens.inventory.CyclingSlotBackground {
+  private static final int ICON_CHANGE_TICK_RATE;
+  private static final int ICON_SIZE;
+  private static final int ICON_TRANSITION_TICK_DURATION;
+  private final int slotIndex;
+  private java.util.List<net.minecraft.resources.Identifier> icons;
+  private int tick;
+  private int iconIndex;
+  public net.minecraft.client.gui.screens.inventory.CyclingSlotBackground(int);
+  public void tick(java.util.List<net.minecraft.resources.Identifier>);
+  public void extractRenderState(net.minecraft.world.inventory.AbstractContainerMenu, net.minecraft.client.gui.GuiGraphicsExtractor, float, int, int);
+  private void extractIcon(net.minecraft.world.inventory.Slot, net.minecraft.resources.Identifier, float, net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  private float getIconTransitionTransparency(float);
+}
+Compiled from "DispenserScreen.java"
+public class net.minecraft.client.gui.screens.inventory.DispenserScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.DispenserMenu> {
+  private static final net.minecraft.resources.Identifier CONTAINER_LOCATION;
+  public net.minecraft.client.gui.screens.inventory.DispenserScreen(net.minecraft.world.inventory.DispenserMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void init();
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static {};
+}
+Compiled from "EffectsInInventory.java"
+public class net.minecraft.client.gui.screens.inventory.EffectsInInventory {
+  private static final net.minecraft.resources.Identifier EFFECT_BACKGROUND_SPRITE;
+  private static final net.minecraft.resources.Identifier EFFECT_BACKGROUND_AMBIENT_SPRITE;
+  private static final int ICON_SIZE;
+  public static final int SPACING;
+  private static final int TEXT_X_OFFSET;
+  public static final int SPRITE_SQUARE_SIZE;
+  private final net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<?> screen;
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.gui.screens.inventory.EffectsInInventory(net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<?>);
+  public boolean canSeeEffects();
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  private void extractEffects(net.minecraft.client.gui.GuiGraphicsExtractor, java.util.Collection<net.minecraft.world.effect.MobEffectInstance>, int, int, int, int, int);
+  private int extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.gui.Font, net.minecraft.network.chat.Component, net.minecraft.network.chat.Component, int, int, boolean, int);
+  private void extractText(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.network.chat.Component, net.minecraft.network.chat.Component, net.minecraft.client.gui.Font, int, int, int, int, int, int);
+  private net.minecraft.network.chat.Component getEffectName(net.minecraft.world.effect.MobEffectInstance);
+  static {};
+}
+Compiled from "EnchantmentNames.java"
+public class net.minecraft.client.gui.screens.inventory.EnchantmentNames {
+  private static final net.minecraft.network.chat.FontDescription ALT_FONT;
+  private static final net.minecraft.network.chat.Style ROOT_STYLE;
+  private static final net.minecraft.client.gui.screens.inventory.EnchantmentNames INSTANCE;
+  private final net.minecraft.util.RandomSource random;
+  private final java.lang.String[] words;
+  private net.minecraft.client.gui.screens.inventory.EnchantmentNames();
+  public static net.minecraft.client.gui.screens.inventory.EnchantmentNames getInstance();
+  public net.minecraft.network.chat.FormattedText getRandomName(net.minecraft.client.gui.Font, int);
+  public void initSeed(long);
+  static {};
+}
+Compiled from "EnchantmentScreen.java"
+public class net.minecraft.client.gui.screens.inventory.EnchantmentScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.EnchantmentMenu> {
+  private static final net.minecraft.resources.Identifier[] ENABLED_LEVEL_SPRITES;
+  private static final net.minecraft.resources.Identifier[] DISABLED_LEVEL_SPRITES;
+  private static final net.minecraft.resources.Identifier ENCHANTMENT_SLOT_DISABLED_SPRITE;
+  private static final net.minecraft.resources.Identifier ENCHANTMENT_SLOT_HIGHLIGHTED_SPRITE;
+  private static final net.minecraft.resources.Identifier ENCHANTMENT_SLOT_SPRITE;
+  private static final net.minecraft.resources.Identifier ENCHANTING_TABLE_LOCATION;
+  private static final net.minecraft.resources.Identifier ENCHANTING_BOOK_LOCATION;
+  private final net.minecraft.util.RandomSource random;
+  private net.minecraft.client.model.object.book.BookModel bookModel;
+  public float flip;
+  public float oFlip;
+  public float flipT;
+  public float flipA;
+  public float open;
+  public float oOpen;
+  private net.minecraft.world.item.ItemStack last;
+  public net.minecraft.client.gui.screens.inventory.EnchantmentScreen(net.minecraft.world.inventory.EnchantmentMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void init();
+  public void containerTick();
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void extractBook(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public void tickBook();
+  static {};
+}
+Compiled from "FurnaceScreen.java"
+public class net.minecraft.client.gui.screens.inventory.FurnaceScreen extends net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen<net.minecraft.world.inventory.FurnaceMenu> {
+  private static final net.minecraft.resources.Identifier LIT_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier BURN_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier TEXTURE;
+  private static final net.minecraft.network.chat.Component FILTER_NAME;
+  private static final java.util.List<net.minecraft.client.gui.screens.recipebook.RecipeBookComponent$TabInfo> TABS;
+  public net.minecraft.client.gui.screens.inventory.FurnaceScreen(net.minecraft.world.inventory.FurnaceMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  static {};
+}
+Compiled from "GrindstoneScreen.java"
+public class net.minecraft.client.gui.screens.inventory.GrindstoneScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.GrindstoneMenu> {
+  private static final net.minecraft.resources.Identifier ERROR_SPRITE;
+  private static final net.minecraft.resources.Identifier GRINDSTONE_LOCATION;
+  public net.minecraft.client.gui.screens.inventory.GrindstoneScreen(net.minecraft.world.inventory.GrindstoneMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static {};
+}
+Compiled from "HangingSignEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.HangingSignEditScreen extends net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen {
+  public static final float MAGIC_BACKGROUND_SCALE;
+  private static final org.joml.Vector3fc TEXT_SCALE;
+  private static final int TEXTURE_WIDTH;
+  private static final int TEXTURE_HEIGHT;
+  private final net.minecraft.resources.Identifier texture;
+  public net.minecraft.client.gui.screens.inventory.HangingSignEditScreen(net.minecraft.world.level.block.entity.SignBlockEntity, boolean, boolean);
+  protected float getSignYOffset();
+  protected void extractSignBackground(net.minecraft.client.gui.GuiGraphicsExtractor);
+  protected org.joml.Vector3fc getSignTextScale();
+  static {};
+}
+Compiled from "HopperScreen.java"
+public class net.minecraft.client.gui.screens.inventory.HopperScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.HopperMenu> {
+  private static final net.minecraft.resources.Identifier HOPPER_LOCATION;
+  public net.minecraft.client.gui.screens.inventory.HopperScreen(net.minecraft.world.inventory.HopperMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static {};
+}
+Compiled from "HorseInventoryScreen.java"
+public class net.minecraft.client.gui.screens.inventory.HorseInventoryScreen extends net.minecraft.client.gui.screens.inventory.AbstractMountInventoryScreen<net.minecraft.world.inventory.HorseInventoryMenu> {
+  private static final net.minecraft.resources.Identifier SLOT_SPRITE;
+  private static final net.minecraft.resources.Identifier CHEST_SLOTS_SPRITE;
+  private static final net.minecraft.resources.Identifier HORSE_INVENTORY_LOCATION;
+  public net.minecraft.client.gui.screens.inventory.HorseInventoryScreen(net.minecraft.world.inventory.HorseInventoryMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.world.entity.animal.equine.AbstractHorse, int);
+  protected net.minecraft.resources.Identifier getBackgroundTextureLocation();
+  protected net.minecraft.resources.Identifier getSlotSpriteLocation();
+  protected net.minecraft.resources.Identifier getChestSlotsSpriteLocation();
+  protected boolean shouldRenderSaddleSlot();
+  protected boolean shouldRenderArmorSlot();
+  static {};
+}
+Compiled from "InventoryScreen.java"
+public class net.minecraft.client.gui.screens.inventory.InventoryScreen extends net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen<net.minecraft.world.inventory.InventoryMenu> {
+  private float xMouse;
+  private float yMouse;
+  private boolean buttonClicked;
+  private final net.minecraft.client.gui.screens.inventory.EffectsInInventory effects;
+  public net.minecraft.client.gui.screens.inventory.InventoryScreen(net.minecraft.world.entity.player.Player);
+  public void containerTick();
+  protected void init();
+  protected net.minecraft.client.gui.navigation.ScreenPosition getRecipeBookButtonPosition();
+  protected void onRecipeBookButtonClick();
+  protected void extractLabels(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public boolean showsActiveEffects();
+  protected boolean isBiggerResultSlot();
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public static void extractEntityInInventoryFollowsMouse(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, int, int, int, float, float, float, net.minecraft.world.entity.LivingEntity);
+  private static net.minecraft.client.renderer.entity.state.EntityRenderState extractRenderState(net.minecraft.world.entity.LivingEntity);
+  public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent);
+}
+Compiled from "ItemCombinerScreen.java"
+public abstract class net.minecraft.client.gui.screens.inventory.ItemCombinerScreen<T extends net.minecraft.world.inventory.ItemCombinerMenu> extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<T> implements net.minecraft.world.inventory.ContainerListener {
+  private final net.minecraft.resources.Identifier menuResource;
+  public net.minecraft.client.gui.screens.inventory.ItemCombinerScreen(T, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component, net.minecraft.resources.Identifier);
+  protected void subInit();
+  protected void init();
+  public void removed();
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  protected abstract void extractErrorIcon(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public void dataChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, int);
+  public void slotChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, net.minecraft.world.item.ItemStack);
+}
+Compiled from "JigsawBlockEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.JigsawBlockEditScreen extends net.minecraft.client.gui.screens.Screen {
+  private static final net.minecraft.network.chat.Component JOINT_LABEL;
+  private static final net.minecraft.network.chat.Component POOL_LABEL;
+  private static final net.minecraft.network.chat.Component NAME_LABEL;
+  private static final net.minecraft.network.chat.Component TARGET_LABEL;
+  private static final net.minecraft.network.chat.Component FINAL_STATE_LABEL;
+  private static final net.minecraft.network.chat.Component PLACEMENT_PRIORITY_LABEL;
+  private static final net.minecraft.network.chat.Component PLACEMENT_PRIORITY_TOOLTIP;
+  private static final net.minecraft.network.chat.Component SELECTION_PRIORITY_LABEL;
+  private static final net.minecraft.network.chat.Component SELECTION_PRIORITY_TOOLTIP;
+  private final net.minecraft.world.level.block.entity.JigsawBlockEntity jigsawEntity;
+  private net.minecraft.client.gui.components.EditBox nameEdit;
+  private net.minecraft.client.gui.components.EditBox targetEdit;
+  private net.minecraft.client.gui.components.EditBox poolEdit;
+  private net.minecraft.client.gui.components.EditBox finalStateEdit;
+  private net.minecraft.client.gui.components.EditBox selectionPriorityEdit;
+  private net.minecraft.client.gui.components.EditBox placementPriorityEdit;
+  private int levels;
+  private boolean keepJigsaws;
+  private net.minecraft.client.gui.components.CycleButton<net.minecraft.world.level.block.entity.JigsawBlockEntity$JointType> jointButton;
+  private net.minecraft.client.gui.components.Button doneButton;
+  private net.minecraft.client.gui.components.Button generateButton;
+  private net.minecraft.world.level.block.entity.JigsawBlockEntity$JointType joint;
+  public net.minecraft.client.gui.screens.inventory.JigsawBlockEditScreen(net.minecraft.world.level.block.entity.JigsawBlockEntity);
+  private void onDone();
+  private void onCancel();
+  private void sendToServer();
+  private int parseAsInt(java.lang.String);
+  private void sendGenerate();
+  public void onClose();
+  protected void init();
+  protected void setInitialFocus();
+  public static boolean isValidIdentifier(java.lang.String);
+  private void updateValidity();
+  public boolean isInGameUi();
+  public void resize(int, int);
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void lambda$init$7(net.minecraft.client.gui.components.Button);
+  private void lambda$init$6(net.minecraft.client.gui.components.Button);
+  private void lambda$init$5(net.minecraft.client.gui.components.Button);
+  private void lambda$init$4(net.minecraft.client.gui.components.CycleButton, java.lang.Boolean);
+  private void lambda$init$3(net.minecraft.client.gui.components.CycleButton, net.minecraft.world.level.block.entity.JigsawBlockEntity$JointType);
+  private void lambda$init$2(java.lang.String);
+  private void lambda$init$1(java.lang.String);
+  private void lambda$init$0(java.lang.String);
+  static {};
+}
+Compiled from "JigsawBlockEditScreen.java"
+class net.minecraft.client.gui.screens.inventory.JigsawBlockEditScreen$1 extends net.minecraft.client.gui.components.AbstractSliderButton {
+  final net.minecraft.client.gui.screens.inventory.JigsawBlockEditScreen this$0;
+  net.minecraft.client.gui.screens.inventory.JigsawBlockEditScreen$1(net.minecraft.client.gui.screens.inventory.JigsawBlockEditScreen, int, int, int, int, net.minecraft.network.chat.Component, double);
+  protected void updateMessage();
+  protected void applyValue();
+}
+Compiled from "LecternScreen.java"
+public class net.minecraft.client.gui.screens.inventory.LecternScreen extends net.minecraft.client.gui.screens.inventory.BookViewScreen implements net.minecraft.client.gui.screens.inventory.MenuAccess<net.minecraft.world.inventory.LecternMenu> {
+  private static final int MENU_BUTTON_MARGIN;
+  private static final int MENU_BUTTON_SIZE;
+  private static final net.minecraft.network.chat.Component TAKE_BOOK_LABEL;
+  private final net.minecraft.world.inventory.LecternMenu menu;
+  private final net.minecraft.world.inventory.ContainerListener listener;
+  public net.minecraft.client.gui.screens.inventory.LecternScreen(net.minecraft.world.inventory.LecternMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  public net.minecraft.world.inventory.LecternMenu getMenu();
+  protected void init();
+  public void onClose();
+  public void removed();
+  protected void createMenuControls();
+  protected void pageBack();
+  protected void pageForward();
+  protected boolean forcePage(int);
+  private void sendButtonClick(int);
+  public boolean isPauseScreen();
+  private void bookChanged();
+  private void pageChanged();
+  protected void closeContainerOnServer();
+  public net.minecraft.world.inventory.AbstractContainerMenu getMenu();
+  private void lambda$createMenuControls$1(net.minecraft.client.gui.components.Button);
+  private void lambda$createMenuControls$0(net.minecraft.client.gui.components.Button);
+  static {};
+}
+Compiled from "LecternScreen.java"
+class net.minecraft.client.gui.screens.inventory.LecternScreen$1 implements net.minecraft.world.inventory.ContainerListener {
+  final net.minecraft.client.gui.screens.inventory.LecternScreen this$0;
+  net.minecraft.client.gui.screens.inventory.LecternScreen$1(net.minecraft.client.gui.screens.inventory.LecternScreen);
+  public void slotChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, net.minecraft.world.item.ItemStack);
+  public void dataChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, int);
+}
+Compiled from "LoomScreen.java"
+public class net.minecraft.client.gui.screens.inventory.LoomScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.LoomMenu> {
+  private static final net.minecraft.resources.Identifier BANNER_SLOT_SPRITE;
+  private static final net.minecraft.resources.Identifier DYE_SLOT_SPRITE;
+  private static final net.minecraft.resources.Identifier PATTERN_SLOT_SPRITE;
+  private static final net.minecraft.resources.Identifier SCROLLER_SPRITE;
+  private static final net.minecraft.resources.Identifier SCROLLER_DISABLED_SPRITE;
+  private static final net.minecraft.resources.Identifier PATTERN_SELECTED_SPRITE;
+  private static final net.minecraft.resources.Identifier PATTERN_HIGHLIGHTED_SPRITE;
+  private static final net.minecraft.resources.Identifier PATTERN_SPRITE;
+  private static final net.minecraft.resources.Identifier ERROR_SPRITE;
+  private static final net.minecraft.resources.Identifier BG_LOCATION;
+  private static final int PATTERN_COLUMNS;
+  private static final int PATTERN_ROWS;
+  private static final int SCROLLER_WIDTH;
+  private static final int SCROLLER_HEIGHT;
+  private static final int PATTERN_IMAGE_SIZE;
+  private static final int SCROLLER_FULL_HEIGHT;
+  private static final int PATTERNS_X;
+  private static final int PATTERNS_Y;
+  private static final float BANNER_PATTERN_TEXTURE_SIZE;
+  private static final float BANNER_PATTERN_WIDTH;
+  private static final float BANNER_PATTERN_HEIGHT;
+  private net.minecraft.client.model.object.banner.BannerFlagModel flag;
+  private net.minecraft.world.level.block.entity.BannerPatternLayers resultBannerPatterns;
+  private net.minecraft.world.item.ItemStack bannerStack;
+  private net.minecraft.world.item.ItemStack dyeStack;
+  private net.minecraft.world.item.ItemStack patternStack;
+  private boolean displayPatterns;
+  private boolean hasMaxPatterns;
+  private float scrollOffs;
+  private boolean scrolling;
+  private int startRow;
+  public net.minecraft.client.gui.screens.inventory.LoomScreen(net.minecraft.world.inventory.LoomMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void init();
+  private int totalRowCount();
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private boolean isScrollBarActive();
+  private void extractBannerOnButton(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent, double, double);
+  public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent);
+  public boolean mouseScrolled(double, double, double, double);
+  protected boolean hasClickedOutside(double, double, int, int);
+  private void containerChanged();
+  static {};
+}
+Compiled from "MenuAccess.java"
+public interface net.minecraft.client.gui.screens.inventory.MenuAccess<T extends net.minecraft.world.inventory.AbstractContainerMenu> {
+  public abstract T getMenu();
+}
+Compiled from "MerchantScreen.java"
+public class net.minecraft.client.gui.screens.inventory.MerchantScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.MerchantMenu> {
+  private static final net.minecraft.resources.Identifier OUT_OF_STOCK_SPRITE;
+  private static final net.minecraft.resources.Identifier EXPERIENCE_BAR_BACKGROUND_SPRITE;
+  private static final net.minecraft.resources.Identifier EXPERIENCE_BAR_CURRENT_SPRITE;
+  private static final net.minecraft.resources.Identifier EXPERIENCE_BAR_RESULT_SPRITE;
+  private static final net.minecraft.resources.Identifier SCROLLER_SPRITE;
+  private static final net.minecraft.resources.Identifier SCROLLER_DISABLED_SPRITE;
+  private static final net.minecraft.resources.Identifier TRADE_ARROW_OUT_OF_STOCK_SPRITE;
+  private static final net.minecraft.resources.Identifier TRADE_ARROW_SPRITE;
+  private static final net.minecraft.resources.Identifier DISCOUNT_STRIKETHRUOGH_SPRITE;
+  private static final net.minecraft.resources.Identifier VILLAGER_LOCATION;
+  private static final int TEXTURE_WIDTH;
+  private static final int TEXTURE_HEIGHT;
+  private static final int MERCHANT_MENU_PART_X;
+  private static final int PROGRESS_BAR_X;
+  private static final int PROGRESS_BAR_Y;
+  private static final int SELL_ITEM_1_X;
+  private static final int SELL_ITEM_2_X;
+  private static final int BUY_ITEM_X;
+  private static final int LABEL_Y;
+  private static final int NUMBER_OF_OFFER_BUTTONS;
+  private static final int TRADE_BUTTON_X;
+  private static final int TRADE_BUTTON_HEIGHT;
+  private static final int TRADE_BUTTON_WIDTH;
+  private static final int SCROLLER_HEIGHT;
+  private static final int SCROLLER_WIDTH;
+  private static final int SCROLL_BAR_HEIGHT;
+  private static final int SCROLL_BAR_TOP_POS_Y;
+  private static final int SCROLL_BAR_START_X;
+  private static final net.minecraft.network.chat.Component TRADES_LABEL;
+  private static final net.minecraft.network.chat.Component DEPRECATED_TOOLTIP;
+  private int shopItem;
+  private final net.minecraft.client.gui.screens.inventory.MerchantScreen$TradeOfferButton[] tradeOfferButtons;
+  private int scrollOff;
+  private boolean isDragging;
+  public net.minecraft.client.gui.screens.inventory.MerchantScreen(net.minecraft.world.inventory.MerchantMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  private void postButtonClick();
+  protected void init();
+  protected void extractLabels(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void extractProgressBar(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, net.minecraft.world.item.trading.MerchantOffer);
+  private void extractScroller(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, int, int, net.minecraft.world.item.trading.MerchantOffers);
+  public void extractContents(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void extractButtonArrows(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.item.trading.MerchantOffer, int, int);
+  private void extractAndDecorateCostA(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.item.ItemStack, net.minecraft.world.item.ItemStack, int, int);
+  private boolean canScroll(int);
+  public boolean mouseScrolled(double, double, double, double);
+  public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent, double, double);
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent);
+  static net.minecraft.client.gui.Font access$000(net.minecraft.client.gui.screens.inventory.MerchantScreen);
+  static net.minecraft.client.gui.Font access$100(net.minecraft.client.gui.screens.inventory.MerchantScreen);
+  static net.minecraft.client.gui.Font access$200(net.minecraft.client.gui.screens.inventory.MerchantScreen);
+  private void lambda$init$0(net.minecraft.client.gui.components.Button);
+  static {};
+}
+Compiled from "MerchantScreen.java"
+class net.minecraft.client.gui.screens.inventory.MerchantScreen$TradeOfferButton extends net.minecraft.client.gui.components.Button$Plain {
+  private final int index;
+  final net.minecraft.client.gui.screens.inventory.MerchantScreen this$0;
+  public net.minecraft.client.gui.screens.inventory.MerchantScreen$TradeOfferButton(net.minecraft.client.gui.screens.inventory.MerchantScreen, int, int, int, net.minecraft.client.gui.components.Button$OnPress);
+  public int getIndex();
+  public void extractToolTip(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+}
+Compiled from "MinecartCommandBlockEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.MinecartCommandBlockEditScreen extends net.minecraft.client.gui.screens.inventory.AbstractCommandBlockEditScreen {
+  private final net.minecraft.world.entity.vehicle.minecart.MinecartCommandBlock minecart;
+  public net.minecraft.client.gui.screens.inventory.MinecartCommandBlockEditScreen(net.minecraft.world.entity.vehicle.minecart.MinecartCommandBlock);
+  protected net.minecraft.world.level.BaseCommandBlock getCommandBlock();
+  protected int getPreviousY();
+  protected void init();
+  protected void populateAndSendPacket();
+}
+Compiled from "NautilusInventoryScreen.java"
+public class net.minecraft.client.gui.screens.inventory.NautilusInventoryScreen extends net.minecraft.client.gui.screens.inventory.AbstractMountInventoryScreen<net.minecraft.world.inventory.NautilusInventoryMenu> {
+  private static final net.minecraft.resources.Identifier SLOT_SPRITE;
+  private static final net.minecraft.resources.Identifier NAUTILUS_INVENTORY_LOCATION;
+  public net.minecraft.client.gui.screens.inventory.NautilusInventoryScreen(net.minecraft.world.inventory.NautilusInventoryMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.world.entity.animal.nautilus.AbstractNautilus, int);
+  protected net.minecraft.resources.Identifier getBackgroundTextureLocation();
+  protected net.minecraft.resources.Identifier getSlotSpriteLocation();
+  protected net.minecraft.resources.Identifier getChestSlotsSpriteLocation();
+  protected boolean shouldRenderSaddleSlot();
+  protected boolean shouldRenderArmorSlot();
+  static {};
+}
+Compiled from "PageButton.java"
+public class net.minecraft.client.gui.screens.inventory.PageButton extends net.minecraft.client.gui.components.Button {
+  private static final net.minecraft.resources.Identifier PAGE_FORWARD_HIGHLIGHTED_SPRITE;
+  private static final net.minecraft.resources.Identifier PAGE_FORWARD_SPRITE;
+  private static final net.minecraft.resources.Identifier PAGE_BACKWARD_HIGHLIGHTED_SPRITE;
+  private static final net.minecraft.resources.Identifier PAGE_BACKWARD_SPRITE;
+  private static final net.minecraft.network.chat.Component PAGE_BUTTON_NEXT;
+  private static final net.minecraft.network.chat.Component PAGE_BUTTON_PREVIOUS;
+  private final boolean isForward;
+  private final boolean playTurnSound;
+  public net.minecraft.client.gui.screens.inventory.PageButton(int, int, boolean, net.minecraft.client.gui.components.Button$OnPress, boolean);
+  public void extractContents(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public void playDownSound(net.minecraft.client.sounds.SoundManager);
+  public boolean shouldTakeFocusAfterInteraction();
+  static {};
+}
+Compiled from "ShulkerBoxScreen.java"
+public class net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.ShulkerBoxMenu> {
+  private static final net.minecraft.resources.Identifier CONTAINER_TEXTURE;
+  public net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen(net.minecraft.world.inventory.ShulkerBoxMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  static {};
+}
+Compiled from "SignEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.SignEditScreen extends net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen {
+  public static final float MAGIC_BACKGROUND_SCALE;
+  public static final float MAGIC_TEXT_SCALE;
+  private static final int TEXTURE_WIDTH;
+  private static final int TEXTURE_HEIGHT;
+  private static final int POST_HEIGHT;
+  private static final org.joml.Vector3fc TEXT_SCALE;
+  private final int displayedHeight;
+  private final net.minecraft.resources.Identifier texture;
+  public net.minecraft.client.gui.screens.inventory.SignEditScreen(net.minecraft.world.level.block.entity.SignBlockEntity, boolean, boolean);
+  protected float getSignYOffset();
+  protected void extractSignBackground(net.minecraft.client.gui.GuiGraphicsExtractor);
+  protected org.joml.Vector3fc getSignTextScale();
+  static {};
+}
+Compiled from "SmithingScreen.java"
+public class net.minecraft.client.gui.screens.inventory.SmithingScreen extends net.minecraft.client.gui.screens.inventory.ItemCombinerScreen<net.minecraft.world.inventory.SmithingMenu> {
+  private static final net.minecraft.resources.Identifier ERROR_SPRITE;
+  private static final net.minecraft.resources.Identifier EMPTY_SLOT_SMITHING_TEMPLATE_ARMOR_TRIM;
+  private static final net.minecraft.resources.Identifier EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE;
+  private static final net.minecraft.network.chat.Component MISSING_TEMPLATE_TOOLTIP;
+  private static final net.minecraft.network.chat.Component ERROR_TOOLTIP;
+  private static final java.util.List<net.minecraft.resources.Identifier> EMPTY_SLOT_SMITHING_TEMPLATES;
+  private static final int TITLE_LABEL_X;
+  private static final int TITLE_LABEL_Y;
+  private static final int ERROR_ICON_WIDTH;
+  private static final int ERROR_ICON_HEIGHT;
+  private static final int ERROR_ICON_X;
+  private static final int ERROR_ICON_Y;
+  private static final int TOOLTIP_WIDTH;
+  private static final int ARMOR_STAND_Y_ROT;
+  private static final int ARMOR_STAND_X_ROT;
+  private static final org.joml.Vector3fc ARMOR_STAND_TRANSLATION;
+  private static final org.joml.Quaternionfc ARMOR_STAND_ANGLE;
+  private static final int ARMOR_STAND_SCALE;
+  private static final int ARMOR_STAND_LEFT;
+  private static final int ARMOR_STAND_TOP;
+  private static final int ARMOR_STAND_RIGHT;
+  private static final int ARMOR_STAND_BOTTOM;
+  private final net.minecraft.client.gui.screens.inventory.CyclingSlotBackground templateIcon;
+  private final net.minecraft.client.gui.screens.inventory.CyclingSlotBackground baseIcon;
+  private final net.minecraft.client.gui.screens.inventory.CyclingSlotBackground additionalIcon;
+  private final net.minecraft.client.renderer.entity.state.ArmorStandRenderState armorStandPreview;
+  public net.minecraft.client.gui.screens.inventory.SmithingScreen(net.minecraft.world.inventory.SmithingMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  protected void subInit();
+  public void containerTick();
+  private java.util.Optional<net.minecraft.world.item.SmithingTemplateItem> getTemplateItem();
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public void slotChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, net.minecraft.world.item.ItemStack);
+  private void updateArmorStandPreview(net.minecraft.world.item.ItemStack);
+  protected void extractErrorIcon(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  private void extractOnboardingTooltips(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  private boolean hasRecipeError();
+  private void lambda$extractOnboardingTooltips$0(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, net.minecraft.network.chat.Component);
+  static {};
+}
+Compiled from "SmokerScreen.java"
+public class net.minecraft.client.gui.screens.inventory.SmokerScreen extends net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen<net.minecraft.world.inventory.SmokerMenu> {
+  private static final net.minecraft.resources.Identifier LIT_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier BURN_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier TEXTURE;
+  private static final net.minecraft.network.chat.Component FILTER_NAME;
+  private static final java.util.List<net.minecraft.client.gui.screens.recipebook.RecipeBookComponent$TabInfo> TABS;
+  public net.minecraft.client.gui.screens.inventory.SmokerScreen(net.minecraft.world.inventory.SmokerMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  static {};
+}
+Compiled from "StonecutterScreen.java"
+public class net.minecraft.client.gui.screens.inventory.StonecutterScreen extends net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<net.minecraft.world.inventory.StonecutterMenu> {
+  private static final net.minecraft.resources.Identifier SCROLLER_SPRITE;
+  private static final net.minecraft.resources.Identifier SCROLLER_DISABLED_SPRITE;
+  private static final net.minecraft.resources.Identifier RECIPE_SELECTED_SPRITE;
+  private static final net.minecraft.resources.Identifier RECIPE_HIGHLIGHTED_SPRITE;
+  private static final net.minecraft.resources.Identifier RECIPE_SPRITE;
+  private static final net.minecraft.resources.Identifier BG_LOCATION;
+  private static final int SCROLLER_WIDTH;
+  private static final int SCROLLER_HEIGHT;
+  private static final int RECIPES_COLUMNS;
+  private static final int RECIPES_ROWS;
+  private static final int RECIPES_IMAGE_SIZE_WIDTH;
+  private static final int RECIPES_IMAGE_SIZE_HEIGHT;
+  private static final int SCROLLER_FULL_HEIGHT;
+  private static final int RECIPES_X;
+  private static final int RECIPES_Y;
+  private float scrollOffs;
+  private boolean scrolling;
+  private int startIndex;
+  private boolean displayRecipes;
+  public net.minecraft.client.gui.screens.inventory.StonecutterScreen(net.minecraft.world.inventory.StonecutterMenu, net.minecraft.world.entity.player.Inventory, net.minecraft.network.chat.Component);
+  public void extractBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  protected void extractTooltip(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  private void extractButtons(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, int, int, int);
+  private void extractRecipes(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, int);
+  public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);
+  public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent, double, double);
+  public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent);
+  public boolean mouseScrolled(double, double, double, double);
+  private boolean isScrollBarActive();
+  protected int getOffscreenRows();
+  private void containerChanged();
+  static {};
+}
+Compiled from "StructureBlockEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen extends net.minecraft.client.gui.screens.Screen {
+  private static final net.minecraft.network.chat.Component NAME_LABEL;
+  private static final net.minecraft.network.chat.Component POSITION_LABEL;
+  private static final net.minecraft.network.chat.Component SIZE_LABEL;
+  private static final net.minecraft.network.chat.Component INTEGRITY_LABEL;
+  private static final net.minecraft.network.chat.Component CUSTOM_DATA_LABEL;
+  private static final net.minecraft.network.chat.Component INCLUDE_ENTITIES_LABEL;
+  private static final net.minecraft.network.chat.Component STRICT_LABEL;
+  private static final net.minecraft.network.chat.Component DETECT_SIZE_LABEL;
+  private static final net.minecraft.network.chat.Component SHOW_AIR_LABEL;
+  private static final net.minecraft.network.chat.Component SHOW_BOUNDING_BOX_LABEL;
+  private static final com.google.common.collect.ImmutableList<net.minecraft.world.level.block.state.properties.StructureMode> ALL_MODES;
+  private static final com.google.common.collect.ImmutableList<net.minecraft.world.level.block.state.properties.StructureMode> DEFAULT_MODES;
+  private final net.minecraft.world.level.block.entity.StructureBlockEntity structure;
+  private net.minecraft.world.level.block.Mirror initialMirror;
+  private net.minecraft.world.level.block.Rotation initialRotation;
+  private net.minecraft.world.level.block.state.properties.StructureMode initialMode;
+  private boolean initialEntityIgnoring;
+  private boolean initialStrict;
+  private boolean initialShowAir;
+  private boolean initialShowBoundingBox;
+  private net.minecraft.client.gui.components.EditBox nameEdit;
+  private net.minecraft.client.gui.components.EditBox posXEdit;
+  private net.minecraft.client.gui.components.EditBox posYEdit;
+  private net.minecraft.client.gui.components.EditBox posZEdit;
+  private net.minecraft.client.gui.components.EditBox sizeXEdit;
+  private net.minecraft.client.gui.components.EditBox sizeYEdit;
+  private net.minecraft.client.gui.components.EditBox sizeZEdit;
+  private net.minecraft.client.gui.components.EditBox integrityEdit;
+  private net.minecraft.client.gui.components.EditBox seedEdit;
+  private net.minecraft.client.gui.components.EditBox dataEdit;
+  private net.minecraft.client.gui.components.Button saveButton;
+  private net.minecraft.client.gui.components.Button loadButton;
+  private net.minecraft.client.gui.components.Button rot0Button;
+  private net.minecraft.client.gui.components.Button rot90Button;
+  private net.minecraft.client.gui.components.Button rot180Button;
+  private net.minecraft.client.gui.components.Button rot270Button;
+  private net.minecraft.client.gui.components.Button detectButton;
+  private net.minecraft.client.gui.components.CycleButton<java.lang.Boolean> includeEntitiesButton;
+  private net.minecraft.client.gui.components.CycleButton<java.lang.Boolean> strictButton;
+  private net.minecraft.client.gui.components.CycleButton<net.minecraft.world.level.block.Mirror> mirrorButton;
+  private net.minecraft.client.gui.components.CycleButton<java.lang.Boolean> toggleAirButton;
+  private net.minecraft.client.gui.components.CycleButton<java.lang.Boolean> toggleBoundingBox;
+  private final java.text.DecimalFormat decimalFormat;
+  public net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen(net.minecraft.world.level.block.entity.StructureBlockEntity);
+  private void onDone();
+  private void onCancel();
+  protected void init();
+  protected void setInitialFocus();
+  public void resize(int, int);
+  private void updateDirectionButtons();
+  private void updateMode(net.minecraft.world.level.block.state.properties.StructureMode);
+  private boolean sendToServer(net.minecraft.world.level.block.entity.StructureBlockEntity$UpdateType);
+  private long parseSeed(java.lang.String);
+  private float parseIntegrity(java.lang.String);
+  private int parseCoordinate(java.lang.String);
+  public void onClose();
+  public boolean keyPressed(net.minecraft.client.input.KeyEvent);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public boolean isPauseScreen();
+  public boolean isInGameUi();
+  static boolean access$000(net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen, java.lang.String, int, int);
+  private void lambda$init$15(net.minecraft.client.gui.components.Button);
+  private void lambda$init$14(net.minecraft.client.gui.components.Button);
+  private void lambda$init$13(net.minecraft.client.gui.components.Button);
+  private void lambda$init$12(net.minecraft.client.gui.components.Button);
+  private void lambda$init$11(net.minecraft.client.gui.components.CycleButton, java.lang.Boolean);
+  private void lambda$init$10(net.minecraft.client.gui.components.CycleButton, java.lang.Boolean);
+  private void lambda$init$9(net.minecraft.client.gui.components.CycleButton, net.minecraft.world.level.block.Mirror);
+  private void lambda$init$8(net.minecraft.client.gui.components.CycleButton, java.lang.Boolean);
+  private void lambda$init$7(net.minecraft.client.gui.components.CycleButton, java.lang.Boolean);
+  private void lambda$init$6(net.minecraft.client.gui.components.Button);
+  private void lambda$init$5(net.minecraft.client.gui.components.CycleButton, net.minecraft.world.level.block.state.properties.StructureMode);
+  private static net.minecraft.network.chat.Component lambda$init$4(net.minecraft.world.level.block.state.properties.StructureMode);
+  private void lambda$init$3(net.minecraft.client.gui.components.Button);
+  private void lambda$init$2(net.minecraft.client.gui.components.Button);
+  private void lambda$init$1(net.minecraft.client.gui.components.Button);
+  private void lambda$init$0(net.minecraft.client.gui.components.Button);
+  private static boolean lambda$static$0(net.minecraft.world.level.block.state.properties.StructureMode);
+  static {};
+}
+Compiled from "StructureBlockEditScreen.java"
+class net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen$1 extends net.minecraft.client.gui.components.EditBox {
+  final net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen this$0;
+  net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen$1(net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen, net.minecraft.client.gui.Font, int, int, int, int, net.minecraft.network.chat.Component);
+  public boolean charTyped(net.minecraft.client.input.CharacterEvent);
+}
+Compiled from "StructureBlockEditScreen.java"
+class net.minecraft.client.gui.screens.inventory.StructureBlockEditScreen$2 {
+  static final int[] $SwitchMap$net$minecraft$world$level$block$Rotation;
+  static final int[] $SwitchMap$net$minecraft$world$level$block$state$properties$StructureMode;
+  static {};
+}
+Compiled from "TestBlockEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.TestBlockEditScreen extends net.minecraft.client.gui.screens.Screen {
+  private static final java.util.List<net.minecraft.world.level.block.state.properties.TestBlockMode> MODES;
+  private static final net.minecraft.network.chat.Component TITLE;
+  private static final net.minecraft.network.chat.Component MESSAGE_LABEL;
+  private final net.minecraft.core.BlockPos position;
+  private net.minecraft.world.level.block.state.properties.TestBlockMode mode;
+  private java.lang.String message;
+  private net.minecraft.client.gui.components.EditBox messageEdit;
+  public net.minecraft.client.gui.screens.inventory.TestBlockEditScreen(net.minecraft.world.level.block.entity.TestBlockEntity);
+  public void init();
+  protected void setInitialFocus();
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  public boolean isPauseScreen();
+  public boolean isInGameUi();
+  private void onDone();
+  public void onClose();
+  private void onCancel();
+  private void updateMode(net.minecraft.world.level.block.state.properties.TestBlockMode);
+  private void lambda$init$2(net.minecraft.client.gui.components.Button);
+  private void lambda$init$1(net.minecraft.client.gui.components.Button);
+  private void lambda$init$0(net.minecraft.client.gui.components.CycleButton, net.minecraft.world.level.block.state.properties.TestBlockMode);
+  static {};
+}
+Compiled from "TestInstanceBlockEditScreen.java"
+public class net.minecraft.client.gui.screens.inventory.TestInstanceBlockEditScreen extends net.minecraft.client.gui.screens.Screen {
+  private static final net.minecraft.network.chat.Component ID_LABEL;
+  private static final net.minecraft.network.chat.Component SIZE_LABEL;
+  private static final net.minecraft.network.chat.Component INCLUDE_ENTITIES_LABEL;
+  private static final net.minecraft.network.chat.Component ROTATION_LABEL;
+  private static final int BUTTON_PADDING;
+  private static final int WIDTH;
+  private final net.minecraft.world.level.block.entity.TestInstanceBlockEntity blockEntity;
+  private net.minecraft.client.gui.components.EditBox idEdit;
+  private net.minecraft.client.gui.components.EditBox sizeXEdit;
+  private net.minecraft.client.gui.components.EditBox sizeYEdit;
+  private net.minecraft.client.gui.components.EditBox sizeZEdit;
+  private net.minecraft.client.gui.components.FittingMultiLineTextWidget infoWidget;
+  private net.minecraft.client.gui.components.Button saveButton;
+  private net.minecraft.client.gui.components.Button exportButton;
+  private net.minecraft.client.gui.components.CycleButton<java.lang.Boolean> includeEntitiesButton;
+  private net.minecraft.client.gui.components.CycleButton<net.minecraft.world.level.block.Rotation> rotationButton;
+  public net.minecraft.client.gui.screens.inventory.TestInstanceBlockEditScreen(net.minecraft.world.level.block.entity.TestInstanceBlockEntity);
+  protected void init();
+  private void updateSaveState();
+  private static net.minecraft.network.chat.Component rotationDisplay(net.minecraft.world.level.block.Rotation);
+  private void setSize(net.minecraft.core.Vec3i);
+  private int widgetX(int, int);
+  private static int widgetSize(int);
+  private static float exactWidgetSize(int);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);
+  private void updateTestInfo(boolean);
+  private void onDone();
+  private boolean sendToServer(net.minecraft.network.protocol.game.ServerboundTestInstanceBlockActionPacket$Action);
+  public void setStatus(net.minecraft.network.chat.Component, java.util.Optional<net.minecraft.core.Vec3i>);
+  private void onCancel();
+  private static int parseSize(java.lang.String);
+  public boolean isInGameUi();
+  private static void lambda$setStatus$0(net.minecraft.network.chat.MutableComponent, net.minecraft.network.chat.Component);
+  private static net.minecraft.resources.ResourceKey lambda$sendToServer$0(net.minecraft.resources.Identifier);
+  private void lambda$init$7(net.minecraft.client.gui.components.Button);
+  private void lambda$init$6(net.minecraft.client.gui.components.Button);
+  private void lambda$init$5(net.minecraft.client.gui.components.Button);
+  private void lambda$init$4(net.minecraft.client.gui.components.Button);
+  private void lambda$init$3(net.minecraft.client.gui.components.Button);
+  private void lambda$init$2(net.minecraft.client.gui.components.Button);
+  private void lambda$init$1(net.minecraft.client.gui.components.CycleButton, net.minecraft.world.level.block.Rotation);
+  private void lambda$init$0(java.lang.String);
+  static {};
+}
+Compiled from "TestInstanceBlockEditScreen.java"
+class net.minecraft.client.gui.screens.inventory.TestInstanceBlockEditScreen$1 {
+  static final int[] $SwitchMap$net$minecraft$world$level$block$Rotation;
+  static {};
+}

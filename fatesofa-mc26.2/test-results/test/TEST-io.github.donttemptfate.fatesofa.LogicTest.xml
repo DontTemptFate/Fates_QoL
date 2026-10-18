@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.donttemptfate.fatesofa.LogicTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:54:27.032Z" hostname="runnervm8k3b6" time="0.006">
+  <properties/>
+  <testcase name="dungeonMap" classname="io.github.donttemptfate.fatesofa.LogicTest" time="0.001"/>
+  <testcase name="dungeonScore" classname="io.github.donttemptfate.fatesofa.LogicTest" time="0.0"/>
+  <testcase name="skyblockTime" classname="io.github.donttemptfate.fatesofa.LogicTest" time="0.004"/>
+  <testcase name="session" classname="io.github.donttemptfate.fatesofa.LogicTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

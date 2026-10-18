@@ -1,0 +1,14 @@
+sha=5cf64a202fd93da3e70d3351f7479b789740679b
+run=https://github.com/DontTemptFate/Fates_QoL/actions/runs/39142522273
+[fatesofa-mc26.2]
+result=success
+gametest=success
+[fatesofa-mc26.3]
+result=success
+gametest=success
+[together-mc26.2]
+flipper=success
+gametest=success
+[together-mc26.3]
+flipper=success
+gametest=success

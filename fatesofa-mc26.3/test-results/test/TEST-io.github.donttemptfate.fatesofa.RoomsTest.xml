@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.donttemptfate.fatesofa.RoomsTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:54:39.514Z" hostname="runnervm8k3b6" time="0.076">
+  <properties/>
+  <testcase name="openedChestsDontChangeTheRoom" classname="io.github.donttemptfate.fatesofa.RoomsTest" time="0.019"/>
+  <testcase name="walkingIntoAnotherRoomIsntASecret" classname="io.github.donttemptfate.fatesofa.RoomsTest" time="0.003"/>
+  <testcase name="learnsSecretsAndRoutesFromTheCounter" classname="io.github.donttemptfate.fatesofa.RoomsTest" time="0.003"/>
+  <testcase name="badShareFilesAreRejectedOrTrimmed" classname="io.github.donttemptfate.fatesofa.RoomsTest" time="0.034"/>
+  <testcase name="gridCells" classname="io.github.donttemptfate.fatesofa.RoomsTest" time="0.0"/>
+  <testcase name="shareFilesRoundTripAndOnlyCarryYourOwnFinds" classname="io.github.donttemptfate.fatesofa.RoomsTest" time="0.001"/>
+  <testcase name="recorderLeavesOutWhatPlayersTypeAndHidesNames" classname="io.github.donttemptfate.fatesofa.RoomsTest" time="0.006"/>
+  <testcase name="sameRoomAnyFacingGetsSameIdAndPositions" classname="io.github.donttemptfate.fatesofa.RoomsTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

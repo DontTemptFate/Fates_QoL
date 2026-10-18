@@ -1,0 +1,200 @@
+Compiled from "DynamicAtlasAllocator.java"
+public class net.minecraft.client.gui.render.DynamicAtlasAllocator<K> {
+  private final int width;
+  private final java.util.List<net.minecraft.client.gui.render.DynamicAtlasAllocator$Slot> slots;
+  private final java.util.Map<K, net.minecraft.client.gui.render.DynamicAtlasAllocator$Slot> usedSlotByKey;
+  private final java.util.BitSet freeSlots;
+  public net.minecraft.client.gui.render.DynamicAtlasAllocator(int, int);
+  public boolean reclaimSpaceFor(java.util.Set<K>);
+  public void endFrame();
+  private void freeSlotIf(java.util.function.BiPredicate<K, net.minecraft.client.gui.render.DynamicAtlasAllocator$Slot>);
+  public boolean hasSpaceForAll(java.util.Set<K>);
+  public net.minecraft.client.gui.render.DynamicAtlasAllocator$Slot getOrAllocate(K, boolean);
+  public int freeSlotCount();
+  public java.util.Set<K> usedSlotKeys();
+  private boolean lambda$freeSlotIf$0(java.util.function.BiPredicate, java.util.Map$Entry);
+  private static boolean lambda$endFrame$0(java.lang.Object, net.minecraft.client.gui.render.DynamicAtlasAllocator$Slot);
+  private static boolean lambda$reclaimSpaceFor$0(org.apache.commons.lang3.mutable.MutableInt, java.util.Set, java.lang.Object, net.minecraft.client.gui.render.DynamicAtlasAllocator$Slot);
+}
+Compiled from "DynamicAtlasAllocator.java"
+public class net.minecraft.client.gui.render.DynamicAtlasAllocator$Slot {
+  private final int x;
+  private final int y;
+  private boolean fresh;
+  private boolean discardAfterFrame;
+  private net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState externalState;
+  private net.minecraft.client.gui.render.DynamicAtlasAllocator$Slot(int, int);
+  public int x();
+  public int y();
+  public net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState state();
+}
+Compiled from "DynamicAtlasAllocator.java"
+public final class net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState extends java.lang.Enum<net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState> {
+  public static final net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState EMPTY;
+  public static final net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState STALE;
+  public static final net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState READY;
+  private static final net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState[] $VALUES;
+  public static net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState[] values();
+  public static net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState valueOf(java.lang.String);
+  private net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState();
+  private static net.minecraft.client.gui.render.DynamicAtlasAllocator$SlotState[] $values();
+  static {};
+}
+Compiled from "GuiItemAtlas.java"
+public class net.minecraft.client.gui.render.GuiItemAtlas implements java.lang.AutoCloseable {
+  private static final int MINIMUM_TEXTURE_SIZE;
+  private final net.minecraft.client.renderer.SubmitNodeStorage submitNodeStorage;
+  private final net.minecraft.client.renderer.feature.FeatureRenderDispatcher featureRenderDispatcher;
+  private final int textureSize;
+  private final int slotTextureSize;
+  private final com.mojang.blaze3d.textures.GpuTexture texture;
+  private final com.mojang.blaze3d.textures.GpuTextureView textureView;
+  private final com.mojang.blaze3d.textures.GpuTexture depthTexture;
+  private final com.mojang.blaze3d.textures.GpuTextureView depthTextureView;
+  private final net.minecraft.client.gui.render.DynamicAtlasAllocator<java.lang.Object> allocator;
+  private final com.mojang.blaze3d.vertex.PoseStack poseStack;
+  private final net.minecraft.client.renderer.Projection projection;
+  private final net.minecraft.client.renderer.ProjectionMatrixBuffer projectionMatrixBuffer;
+  public net.minecraft.client.gui.render.GuiItemAtlas(net.minecraft.client.renderer.feature.FeatureRenderDispatcher, int, int);
+  public static int computeTextureSizeFor(int, int);
+  public void endFrame();
+  public boolean tryPrepareFor(java.util.Set<java.lang.Object>);
+  public net.minecraft.client.gui.render.GuiItemAtlas$SlotView getOrUpdate(net.minecraft.client.renderer.item.TrackingItemStackRenderState);
+  private void drawToSlot(int, int, boolean, net.minecraft.client.renderer.item.ItemStackRenderState);
+  public int textureSize();
+  public void close();
+}
+Compiled from "GuiItemAtlas.java"
+class net.minecraft.client.gui.render.GuiItemAtlas$1 {
+  static final int[] $SwitchMap$net$minecraft$client$gui$render$DynamicAtlasAllocator$SlotState;
+  static {};
+}
+Compiled from "GuiItemAtlas.java"
+public final class net.minecraft.client.gui.render.GuiItemAtlas$SlotView extends java.lang.Record {
+  private final com.mojang.blaze3d.textures.GpuTextureView textureView;
+  private final float u0;
+  private final float v0;
+  private final float u1;
+  private final float v1;
+  public net.minecraft.client.gui.render.GuiItemAtlas$SlotView(com.mojang.blaze3d.textures.GpuTextureView, float, float, float, float);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public com.mojang.blaze3d.textures.GpuTextureView textureView();
+  public float u0();
+  public float v0();
+  public float u1();
+  public float v1();
+}
+Compiled from "GuiRenderer.java"
+public class net.minecraft.client.gui.render.GuiRenderer implements java.lang.AutoCloseable {
+  private static final org.slf4j.Logger LOGGER;
+  private static final float MAX_GUI_Z;
+  public static final float MIN_GUI_Z;
+  private static final float GUI_Z_NEAR;
+  public static final int GUI_3D_Z_FAR;
+  public static final int GUI_3D_Z_NEAR;
+  public static final int DEFAULT_ITEM_SIZE;
+  public static final org.joml.Vector4fc CLEAR_COLOR;
+  private static final java.util.Comparator<net.minecraft.client.gui.navigation.ScreenRectangle> SCISSOR_COMPARATOR;
+  private static final java.util.Comparator<net.minecraft.client.gui.render.TextureSetup> TEXTURE_COMPARATOR;
+  private static final java.util.Comparator<net.minecraft.client.renderer.state.gui.GuiElementRenderState> ELEMENT_SORT_COMPARATOR;
+  private final java.util.Map<java.lang.Object, net.minecraft.client.gui.render.pip.OversizedItemRenderer> oversizedItemRenderers;
+  private final net.minecraft.client.renderer.state.gui.GuiRenderState renderState;
+  private final java.util.List<net.minecraft.client.gui.render.GuiRenderer$Draw> draws;
+  private final net.minecraft.client.renderer.StagedVertexBuffer vertexBuffer;
+  private int firstDrawIndexAfterBlur;
+  private final net.minecraft.client.renderer.Projection guiProjection;
+  private final net.minecraft.client.renderer.ProjectionMatrixBuffer guiProjectionMatrixBuffer;
+  private final net.minecraft.client.renderer.feature.FeatureRenderDispatcher featureRenderDispatcher;
+  private final java.util.Map<java.lang.Class<? extends net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState>, net.minecraft.client.gui.render.pip.PictureInPictureRenderer<?>> pictureInPictureRenderers;
+  private net.minecraft.client.gui.render.GuiItemAtlas itemAtlas;
+  private int cachedGuiScale;
+  private final net.minecraft.client.renderer.CubeMap cubeMap;
+  private net.minecraft.client.gui.navigation.ScreenRectangle previousScissorArea;
+  private com.mojang.blaze3d.pipeline.RenderPipeline previousPipeline;
+  private net.minecraft.client.gui.render.TextureSetup previousTextureSetup;
+  private net.minecraft.client.renderer.StagedVertexBuffer$Draw previousDraw;
+  public net.minecraft.client.gui.render.GuiRenderer(net.minecraft.client.renderer.state.gui.GuiRenderState, net.minecraft.client.renderer.feature.FeatureRenderDispatcher, java.util.List<net.minecraft.client.gui.render.pip.PictureInPictureRenderer<?>>);
+  public void endFrame();
+  public void render();
+  private void clearUnusedOversizedItemRenderers();
+  private void prepare();
+  private void addElementsToMeshes(net.minecraft.client.renderer.state.gui.GuiRenderState$TraverseRange);
+  private void draw();
+  private void executeDrawRange(java.util.function.Supplier<java.lang.String>, com.mojang.blaze3d.pipeline.RenderTarget, com.mojang.blaze3d.buffers.GpuBufferSlice, int, int);
+  private void addElementToMesh(net.minecraft.client.renderer.state.gui.GuiElementRenderState);
+  private void prepareText();
+  private void prepareItemElements();
+  private void preparePictureInPicture();
+  private <T extends net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState> void preparePictureInPictureState(T, int);
+  private void submitBlitFromItemAtlas(net.minecraft.client.renderer.state.gui.GuiItemRenderState, net.minecraft.client.gui.render.GuiItemAtlas$SlotView);
+  private net.minecraft.client.gui.render.GuiItemAtlas prepareItemAtlas(java.util.Set<java.lang.Object>, int);
+  private int getGuiScaleInvalidatingItemAtlasIfChanged();
+  private void invalidateItemAtlas();
+  private void executeDraw(net.minecraft.client.gui.render.GuiRenderer$Draw, com.mojang.blaze3d.systems.RenderPass);
+  private boolean scissorChanged(net.minecraft.client.gui.navigation.ScreenRectangle, net.minecraft.client.gui.navigation.ScreenRectangle);
+  private void enableScissor(net.minecraft.client.gui.navigation.ScreenRectangle, com.mojang.blaze3d.systems.RenderPass);
+  public void registerPanoramaTextures(net.minecraft.client.renderer.texture.TextureManager);
+  public void close();
+  private void lambda$preparePictureInPicture$0(int, net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState);
+  private void lambda$prepareItemElements$1(int, net.minecraft.client.renderer.state.gui.GuiItemRenderState);
+  private static net.minecraft.client.gui.render.pip.OversizedItemRenderer lambda$prepareItemElements$2(java.lang.Object);
+  private void lambda$prepareItemElements$0(org.apache.commons.lang3.mutable.MutableBoolean, net.minecraft.client.gui.render.GuiItemAtlas, net.minecraft.client.renderer.state.gui.GuiItemRenderState);
+  private void lambda$prepareText$0(net.minecraft.client.renderer.state.gui.GuiTextRenderState);
+  private static java.lang.String lambda$draw$1();
+  private static java.lang.String lambda$draw$0();
+  private static java.lang.String lambda$new$0();
+  static {};
+}
+Compiled from "GuiRenderer.java"
+class net.minecraft.client.gui.render.GuiRenderer$1 implements net.minecraft.client.gui.Font$GlyphVisitor {
+  final org.joml.Matrix3x2fc val$pose;
+  final net.minecraft.client.gui.navigation.ScreenRectangle val$scissor;
+  final net.minecraft.client.gui.render.GuiRenderer this$0;
+  net.minecraft.client.gui.render.GuiRenderer$1();
+  public void acceptRenderable(net.minecraft.client.gui.font.TextRenderable);
+}
+Compiled from "GuiRenderer.java"
+final class net.minecraft.client.gui.render.GuiRenderer$Draw extends java.lang.Record {
+  private final net.minecraft.client.renderer.StagedVertexBuffer$Draw draw;
+  private final com.mojang.blaze3d.pipeline.RenderPipeline pipeline;
+  private final net.minecraft.client.gui.render.TextureSetup textureSetup;
+  private final net.minecraft.client.gui.navigation.ScreenRectangle scissorArea;
+  private net.minecraft.client.gui.render.GuiRenderer$Draw(net.minecraft.client.renderer.StagedVertexBuffer$Draw, com.mojang.blaze3d.pipeline.RenderPipeline, net.minecraft.client.gui.render.TextureSetup, net.minecraft.client.gui.navigation.ScreenRectangle);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.client.renderer.StagedVertexBuffer$Draw draw();
+  public com.mojang.blaze3d.pipeline.RenderPipeline pipeline();
+  public net.minecraft.client.gui.render.TextureSetup textureSetup();
+  public net.minecraft.client.gui.navigation.ScreenRectangle scissorArea();
+}
+Compiled from "TextureSetup.java"
+public final class net.minecraft.client.gui.render.TextureSetup extends java.lang.Record {
+  private final com.mojang.blaze3d.textures.GpuTextureView texure0;
+  private final com.mojang.blaze3d.textures.GpuTextureView texure1;
+  private final com.mojang.blaze3d.textures.GpuTextureView texure2;
+  private final com.mojang.blaze3d.textures.GpuSampler sampler0;
+  private final com.mojang.blaze3d.textures.GpuSampler sampler1;
+  private final com.mojang.blaze3d.textures.GpuSampler sampler2;
+  private static final net.minecraft.client.gui.render.TextureSetup NO_TEXTURE_SETUP;
+  private static int sortKeySeed;
+  public net.minecraft.client.gui.render.TextureSetup(com.mojang.blaze3d.textures.GpuTextureView, com.mojang.blaze3d.textures.GpuTextureView, com.mojang.blaze3d.textures.GpuTextureView, com.mojang.blaze3d.textures.GpuSampler, com.mojang.blaze3d.textures.GpuSampler, com.mojang.blaze3d.textures.GpuSampler);
+  public static net.minecraft.client.gui.render.TextureSetup singleTexture(com.mojang.blaze3d.textures.GpuTextureView, com.mojang.blaze3d.textures.GpuSampler);
+  public static net.minecraft.client.gui.render.TextureSetup singleTextureWithLightmap(com.mojang.blaze3d.textures.GpuTextureView, com.mojang.blaze3d.textures.GpuSampler);
+  public static net.minecraft.client.gui.render.TextureSetup doubleTexture(com.mojang.blaze3d.textures.GpuTextureView, com.mojang.blaze3d.textures.GpuSampler, com.mojang.blaze3d.textures.GpuTextureView, com.mojang.blaze3d.textures.GpuSampler);
+  public static net.minecraft.client.gui.render.TextureSetup noTexture();
+  public int getSortKey();
+  public static void updateSortKeySeed();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public com.mojang.blaze3d.textures.GpuTextureView texure0();
+  public com.mojang.blaze3d.textures.GpuTextureView texure1();
+  public com.mojang.blaze3d.textures.GpuTextureView texure2();
+  public com.mojang.blaze3d.textures.GpuSampler sampler0();
+  public com.mojang.blaze3d.textures.GpuSampler sampler1();
+  public com.mojang.blaze3d.textures.GpuSampler sampler2();
+  static {};
+}

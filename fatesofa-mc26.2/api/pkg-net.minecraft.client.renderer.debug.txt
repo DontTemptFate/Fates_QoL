@@ -1,0 +1,410 @@
+Compiled from "BeeDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.BeeDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final boolean SHOW_GOAL_FOR_ALL_BEES;
+  private static final boolean SHOW_NAME_FOR_ALL_BEES;
+  private static final boolean SHOW_HIVE_FOR_ALL_BEES;
+  private static final boolean SHOW_FLOWER_POS_FOR_ALL_BEES;
+  private static final boolean SHOW_TRAVEL_TICKS_FOR_ALL_BEES;
+  private static final boolean SHOW_GOAL_FOR_SELECTED_BEE;
+  private static final boolean SHOW_NAME_FOR_SELECTED_BEE;
+  private static final boolean SHOW_HIVE_FOR_SELECTED_BEE;
+  private static final boolean SHOW_FLOWER_POS_FOR_SELECTED_BEE;
+  private static final boolean SHOW_TRAVEL_TICKS_FOR_SELECTED_BEE;
+  private static final boolean SHOW_HIVE_MEMBERS;
+  private static final boolean SHOW_BLACKLISTS;
+  private static final int MAX_RENDER_DIST_FOR_HIVE_OVERLAY;
+  private static final int MAX_RENDER_DIST_FOR_BEE_OVERLAY;
+  private static final int MAX_TARGETING_DIST;
+  private static final float TEXT_SCALE;
+  private static final int ORANGE;
+  private static final int GRAY;
+  private static final int PINK;
+  private final net.minecraft.client.Minecraft minecraft;
+  private java.util.UUID lastLookedAtUuid;
+  public net.minecraft.client.renderer.debug.BeeDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private void doRender(net.minecraft.util.debug.DebugValueAccess);
+  private java.util.Map<net.minecraft.core.BlockPos, java.util.Set<java.util.UUID>> createHiveBlacklistMap(net.minecraft.util.debug.DebugValueAccess);
+  private void renderFlowerInfos(net.minecraft.util.debug.DebugValueAccess);
+  private static java.lang.String getBeeUuidsAsString(java.util.Collection<java.util.UUID>);
+  private static void highlightHive(net.minecraft.core.BlockPos);
+  private void renderGhostHive(net.minecraft.core.BlockPos, java.util.List<java.lang.String>);
+  private void renderHiveInfo(net.minecraft.core.BlockPos, net.minecraft.util.debug.DebugHiveInfo, java.util.Collection<java.util.UUID>, net.minecraft.util.debug.DebugValueAccess);
+  private void renderBeeInfo(net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBeeInfo, net.minecraft.util.debug.DebugGoalInfo);
+  private static void renderTextOverHive(java.lang.String, net.minecraft.core.BlockPos, int, int);
+  private net.minecraft.client.Camera getCamera();
+  private java.lang.String getPosDescription(net.minecraft.world.entity.Entity, net.minecraft.core.BlockPos);
+  private boolean isBeeSelected(net.minecraft.world.entity.Entity);
+  private java.util.Collection<java.util.UUID> getHiveMembers(net.minecraft.core.BlockPos, net.minecraft.util.debug.DebugValueAccess);
+  private java.util.Map<net.minecraft.core.BlockPos, java.util.List<java.lang.String>> getGhostHives(net.minecraft.util.debug.DebugValueAccess);
+  private void updateLastLookedAtUuid();
+  private void lambda$updateLastLookedAtUuid$0(net.minecraft.world.entity.Entity);
+  private static void lambda$getGhostHives$0(net.minecraft.util.debug.DebugValueAccess, java.util.Map, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBeeInfo);
+  private static java.util.List lambda$getGhostHives$1(net.minecraft.core.BlockPos);
+  private static void lambda$getHiveMembers$0(net.minecraft.core.BlockPos, java.util.Set, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBeeInfo);
+  private static void lambda$renderFlowerInfos$2(net.minecraft.core.BlockPos, java.util.Set);
+  private static void lambda$renderFlowerInfos$0(java.util.Map, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBeeInfo);
+  private static java.util.Set lambda$renderFlowerInfos$1(net.minecraft.core.BlockPos);
+  private static void lambda$createHiveBlacklistMap$0(java.util.Map, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBeeInfo);
+  private static java.util.Set lambda$createHiveBlacklistMap$1(net.minecraft.core.BlockPos);
+  private void lambda$doRender$2(net.minecraft.core.BlockPos, net.minecraft.core.BlockPos, java.util.List);
+  private void lambda$doRender$1(net.minecraft.core.BlockPos, java.util.Map, net.minecraft.util.debug.DebugValueAccess, net.minecraft.core.BlockPos, net.minecraft.util.debug.DebugHiveInfo);
+  private void lambda$doRender$0(net.minecraft.util.debug.DebugValueAccess, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBeeInfo);
+}
+Compiled from "BrainDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.BrainDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final boolean SHOW_NAME_FOR_ALL;
+  private static final boolean SHOW_PROFESSION_FOR_ALL;
+  private static final boolean SHOW_BEHAVIORS_FOR_ALL;
+  private static final boolean SHOW_ACTIVITIES_FOR_ALL;
+  private static final boolean SHOW_INVENTORY_FOR_ALL;
+  private static final boolean SHOW_GOSSIPS_FOR_ALL;
+  private static final boolean SHOW_HEALTH_FOR_ALL;
+  private static final boolean SHOW_WANTS_GOLEM_FOR_ALL;
+  private static final boolean SHOW_ANGER_LEVEL_FOR_ALL;
+  private static final boolean SHOW_NAME_FOR_SELECTED;
+  private static final boolean SHOW_PROFESSION_FOR_SELECTED;
+  private static final boolean SHOW_BEHAVIORS_FOR_SELECTED;
+  private static final boolean SHOW_ACTIVITIES_FOR_SELECTED;
+  private static final boolean SHOW_MEMORIES_FOR_SELECTED;
+  private static final boolean SHOW_INVENTORY_FOR_SELECTED;
+  private static final boolean SHOW_GOSSIPS_FOR_SELECTED;
+  private static final boolean SHOW_HEALTH_FOR_SELECTED;
+  private static final boolean SHOW_WANTS_GOLEM_FOR_SELECTED;
+  private static final boolean SHOW_ANGER_LEVEL_FOR_SELECTED;
+  private static final int MAX_RENDER_DIST_FOR_BRAIN_INFO;
+  private static final int MAX_TARGETING_DIST;
+  private static final float TEXT_SCALE;
+  private static final int CYAN;
+  private static final int GRAY;
+  private static final int PINK;
+  private static final int ORANGE;
+  private final net.minecraft.client.Minecraft minecraft;
+  private java.util.UUID lastLookedAtUuid;
+  public net.minecraft.client.renderer.debug.BrainDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private void doRender(net.minecraft.util.debug.DebugValueAccess);
+  private void renderBrainInfo(net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBrainDump);
+  private boolean isMobSelected(net.minecraft.world.entity.Entity);
+  public java.util.Map<net.minecraft.core.BlockPos, java.util.List<java.lang.String>> getGhostPois(net.minecraft.util.debug.DebugValueAccess);
+  private void updateLastLookedAtUuid();
+  private void lambda$updateLastLookedAtUuid$0(net.minecraft.world.entity.Entity);
+  private static void lambda$getGhostPois$0(java.util.Map, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBrainDump);
+  private static java.util.List lambda$getGhostPois$1(net.minecraft.core.BlockPos);
+  private void lambda$doRender$0(net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBrainDump);
+}
+Compiled from "BreezeDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.BreezeDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final int JUMP_TARGET_LINE_COLOR;
+  private static final int TARGET_LINE_COLOR;
+  private static final int INNER_CIRCLE_COLOR;
+  private static final int MIDDLE_CIRCLE_COLOR;
+  private static final int OUTER_CIRCLE_COLOR;
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.renderer.debug.BreezeDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private void lambda$emitGizmos$0(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBreezeInfo);
+  private static void lambda$emitGizmos$3(net.minecraft.world.entity.Entity, net.minecraft.core.BlockPos);
+  private static void lambda$emitGizmos$2(net.minecraft.world.entity.Entity, net.minecraft.world.phys.Vec3);
+  private net.minecraft.world.phys.Vec3 lambda$emitGizmos$1(net.minecraft.world.entity.Entity);
+  static {};
+}
+Compiled from "ChunkBorderRenderer.java"
+public class net.minecraft.client.renderer.debug.ChunkBorderRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final float THICK_WIDTH;
+  private static final float THIN_WIDTH;
+  private final net.minecraft.client.Minecraft minecraft;
+  private static final int CELL_BORDER;
+  private static final int YELLOW;
+  private static final int MAJOR_LINES;
+  public net.minecraft.client.renderer.debug.ChunkBorderRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  static {};
+}
+Compiled from "ChunkCullingDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.ChunkCullingDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  public static final net.minecraft.core.Direction[] DIRECTIONS;
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.renderer.debug.ChunkCullingDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private void addFrustumLine(net.minecraft.world.phys.Vec3, org.joml.Vector4f, org.joml.Vector4f);
+  private void addFrustumQuad(net.minecraft.world.phys.Vec3, org.joml.Vector4f[], int, int, int, int, int, int, int);
+  static {};
+}
+Compiled from "ChunkDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.ChunkDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  private double lastUpdateTime;
+  private final int radius;
+  private net.minecraft.client.renderer.debug.ChunkDebugRenderer$ChunkData data;
+  public net.minecraft.client.renderer.debug.ChunkDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+}
+Compiled from "ChunkDebugRenderer.java"
+final class net.minecraft.client.renderer.debug.ChunkDebugRenderer$ChunkData {
+  private final java.util.Map<net.minecraft.world.level.ChunkPos, java.lang.String> clientData;
+  private final java.util.concurrent.CompletableFuture<java.util.Map<net.minecraft.world.level.ChunkPos, java.lang.String>> serverData;
+  private net.minecraft.client.renderer.debug.ChunkDebugRenderer$ChunkData(net.minecraft.client.renderer.debug.ChunkDebugRenderer, net.minecraft.client.server.IntegratedServer, double, double);
+  private static java.util.Map lambda$new$0(net.minecraft.client.server.IntegratedServer, net.minecraft.resources.ResourceKey, int, int);
+}
+Compiled from "CollisionBoxRenderer.java"
+public class net.minecraft.client.renderer.debug.CollisionBoxRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  private double lastUpdateTime;
+  private java.util.List<net.minecraft.world.phys.shapes.VoxelShape> shapes;
+  public net.minecraft.client.renderer.debug.CollisionBoxRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+}
+Compiled from "DebugRenderer.java"
+public class net.minecraft.client.renderer.debug.DebugRenderer {
+  private final java.util.List<net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer> renderers;
+  private long lastDebugEntriesVersion;
+  public net.minecraft.client.renderer.debug.DebugRenderer();
+  public void refreshRendererList();
+  public void emitGizmos(net.minecraft.client.renderer.culling.Frustum, double, double, double, float);
+  public static java.util.Optional<net.minecraft.world.entity.Entity> getTargetedEntity(net.minecraft.world.entity.Entity, int);
+  private static net.minecraft.world.phys.Vec3 mixColor(float);
+  private static net.minecraft.world.phys.Vec3 shiftHue(float, float, float, float);
+}
+Compiled from "DebugRenderer.java"
+public interface net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  public abstract void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+}
+Compiled from "EntityBlockIntersectionDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.EntityBlockIntersectionDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final float PADDING;
+  public net.minecraft.client.renderer.debug.EntityBlockIntersectionDebugRenderer();
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void lambda$emitGizmos$0(net.minecraft.core.BlockPos, net.minecraft.util.debug.DebugEntityBlockIntersection);
+}
+Compiled from "EntityHitboxDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.EntityHitboxDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.renderer.debug.EntityHitboxDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private net.minecraft.world.entity.Entity getServerEntity(net.minecraft.world.entity.Entity);
+  private void showHitboxes(net.minecraft.world.entity.Entity, float, boolean);
+}
+Compiled from "GameEventListenerRenderer.java"
+public class net.minecraft.client.renderer.debug.GameEventListenerRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final float BOX_HEIGHT;
+  public net.minecraft.client.renderer.debug.GameEventListenerRenderer();
+  private void forEachListener(net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.debug.GameEventListenerRenderer$ListenerVisitor);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void lambda$emitGizmos$3(net.minecraft.util.debug.DebugGameEventInfo, int, int);
+  private static void lambda$emitGizmos$2(net.minecraft.world.phys.Vec3, int);
+  private static void lambda$emitGizmos$1(net.minecraft.world.phys.Vec3, int);
+  private static void lambda$emitGizmos$0(net.minecraft.world.phys.Vec3, int);
+  private static void lambda$forEachListener$1(net.minecraft.client.renderer.debug.GameEventListenerRenderer$ListenerVisitor, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugGameEventListenerInfo);
+  private static void lambda$forEachListener$0(net.minecraft.client.renderer.debug.GameEventListenerRenderer$ListenerVisitor, net.minecraft.core.BlockPos, net.minecraft.util.debug.DebugGameEventListenerInfo);
+}
+Compiled from "GameEventListenerRenderer.java"
+interface net.minecraft.client.renderer.debug.GameEventListenerRenderer$ListenerVisitor {
+  public abstract void accept(net.minecraft.world.phys.Vec3, int);
+}
+Compiled from "GameTestBlockHighlightRenderer.java"
+public class net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer {
+  private static final int SHOW_POS_DURATION_MS;
+  private static final float PADDING;
+  private final java.util.Map<net.minecraft.core.BlockPos, net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer$Marker> markers;
+  public net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer();
+  public void highlightPos(net.minecraft.core.BlockPos, net.minecraft.core.BlockPos);
+  public void clear();
+  public void emitGizmos();
+  private void renderMarker(net.minecraft.core.BlockPos, net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer$Marker);
+  private void lambda$emitGizmos$1(net.minecraft.core.BlockPos, net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer$Marker);
+  private static boolean lambda$emitGizmos$0(long, java.util.Map$Entry);
+}
+Compiled from "GameTestBlockHighlightRenderer.java"
+final class net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer$Marker extends java.lang.Record {
+  private final int color;
+  private final java.lang.String text;
+  private final long removeAtTime;
+  private net.minecraft.client.renderer.debug.GameTestBlockHighlightRenderer$Marker(int, java.lang.String, long);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int color();
+  public java.lang.String text();
+  public long removeAtTime();
+}
+Compiled from "GoalSelectorDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.GoalSelectorDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final int MAX_RENDER_DIST;
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.renderer.debug.GoalSelectorDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void lambda$emitGizmos$0(net.minecraft.core.BlockPos, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugGoalInfo);
+}
+Compiled from "HeightMapRenderer.java"
+public class net.minecraft.client.renderer.debug.HeightMapRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  private static final int CHUNK_DIST;
+  private static final float BOX_HEIGHT;
+  public net.minecraft.client.renderer.debug.HeightMapRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private org.joml.Vector3f getColor(net.minecraft.world.level.levelgen.Heightmap$Types);
+}
+Compiled from "HeightMapRenderer.java"
+class net.minecraft.client.renderer.debug.HeightMapRenderer$1 {
+  static final int[] $SwitchMap$net$minecraft$world$level$levelgen$Heightmap$Types;
+  static {};
+}
+Compiled from "LightDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.LightDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  private final boolean showBlockLight;
+  private final boolean showSkyLight;
+  private static final int MAX_RENDER_DIST;
+  public net.minecraft.client.renderer.debug.LightDebugRenderer(net.minecraft.client.Minecraft, boolean, boolean);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+}
+Compiled from "LightSectionDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.LightSectionDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final java.time.Duration REFRESH_INTERVAL;
+  private static final int RADIUS;
+  private static final int LIGHT_AND_BLOCKS_COLOR;
+  private static final int LIGHT_ONLY_COLOR;
+  private final net.minecraft.client.Minecraft minecraft;
+  private final net.minecraft.world.level.LightLayer lightLayer;
+  private java.time.Instant lastUpdateTime;
+  private net.minecraft.client.renderer.debug.LightSectionDebugRenderer$SectionData data;
+  public net.minecraft.client.renderer.debug.LightSectionDebugRenderer(net.minecraft.client.Minecraft, net.minecraft.world.level.LightLayer);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void renderFaces(net.minecraft.world.phys.shapes.DiscreteVoxelShape, net.minecraft.core.SectionPos, int);
+  private static void renderEdges(net.minecraft.world.phys.shapes.DiscreteVoxelShape, net.minecraft.core.SectionPos, int);
+  private static void renderFace(net.minecraft.core.Direction, int, int, int, int);
+  private static void renderEdge(int, int, int, int, int, int, int);
+  private static void lambda$renderEdges$0(net.minecraft.core.SectionPos, int, int, int, int, int, int, int);
+  private static void lambda$renderFaces$0(net.minecraft.core.SectionPos, int, net.minecraft.core.Direction, int, int, int);
+  static {};
+}
+Compiled from "LightSectionDebugRenderer.java"
+final class net.minecraft.client.renderer.debug.LightSectionDebugRenderer$SectionData {
+  private final net.minecraft.world.phys.shapes.DiscreteVoxelShape lightAndBlocksShape;
+  private final net.minecraft.world.phys.shapes.DiscreteVoxelShape lightShape;
+  private final net.minecraft.core.SectionPos minPos;
+  private net.minecraft.client.renderer.debug.LightSectionDebugRenderer$SectionData(net.minecraft.world.level.lighting.LevelLightEngine, net.minecraft.core.SectionPos, int, net.minecraft.world.level.LightLayer);
+}
+Compiled from "NeighborsUpdateRenderer.java"
+public class net.minecraft.client.renderer.debug.NeighborsUpdateRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  public net.minecraft.client.renderer.debug.NeighborsUpdateRenderer();
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void lambda$emitGizmos$0(java.util.Map, net.minecraft.core.BlockPos, int, int);
+}
+Compiled from "NeighborsUpdateRenderer.java"
+final class net.minecraft.client.renderer.debug.NeighborsUpdateRenderer$LastUpdate extends java.lang.Record {
+  private final int count;
+  private final int age;
+  private static final net.minecraft.client.renderer.debug.NeighborsUpdateRenderer$LastUpdate NONE;
+  private net.minecraft.client.renderer.debug.NeighborsUpdateRenderer$LastUpdate(int, int);
+  public net.minecraft.client.renderer.debug.NeighborsUpdateRenderer$LastUpdate tryCount(int);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int count();
+  public int age();
+  static {};
+}
+Compiled from "OctreeDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.OctreeDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.renderer.debug.OctreeDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private void renderNode(net.minecraft.client.renderer.Octree$Node, int, boolean, org.apache.commons.lang3.mutable.MutableInt, boolean);
+  private static float getColorComponent(long, float);
+  private void lambda$emitGizmos$0(org.apache.commons.lang3.mutable.MutableInt, net.minecraft.client.renderer.Octree$Node, boolean, int, boolean);
+}
+Compiled from "PathfindingRenderer.java"
+public class net.minecraft.client.renderer.debug.PathfindingRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final float MAX_RENDER_DIST;
+  private static final int MAX_TARGETING_DIST;
+  private static final boolean SHOW_ONLY_SELECTED;
+  private static final boolean SHOW_OPEN_CLOSED;
+  private static final boolean SHOW_OPEN_CLOSED_COST_MALUS;
+  private static final boolean SHOW_OPEN_CLOSED_NODE_TYPE_WITH_TEXT;
+  private static final boolean SHOW_OPEN_CLOSED_NODE_TYPE_WITH_BOX;
+  private static final boolean SHOW_GROUND_LABELS;
+  private static final float TEXT_SCALE;
+  public net.minecraft.client.renderer.debug.PathfindingRenderer();
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void renderPath(double, double, double, net.minecraft.world.level.pathfinder.Path, float);
+  public static void renderPath(net.minecraft.world.level.pathfinder.Path, float, boolean, boolean, double, double, double);
+  public static void renderPathLine(net.minecraft.world.level.pathfinder.Path, double, double, double);
+  private static float distanceToCamera(net.minecraft.core.BlockPos, double, double, double);
+  private static void lambda$emitGizmos$0(double, double, double, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugPathInfo);
+}
+Compiled from "PoiDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.PoiDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final int MAX_RENDER_DIST_FOR_POI_INFO;
+  private static final float TEXT_SCALE;
+  private static final int ORANGE;
+  private final net.minecraft.client.renderer.debug.BrainDebugRenderer brainRenderer;
+  public net.minecraft.client.renderer.debug.PoiDebugRenderer(net.minecraft.client.renderer.debug.BrainDebugRenderer);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void highlightPoi(net.minecraft.core.BlockPos);
+  private void renderGhostPoi(net.minecraft.core.BlockPos, java.util.List<java.lang.String>);
+  private void renderPoiInfo(net.minecraft.util.debug.DebugPoiInfo, net.minecraft.util.debug.DebugValueAccess);
+  private static void renderTextOverPoi(java.lang.String, net.minecraft.util.debug.DebugPoiInfo, int, int);
+  private java.util.List<java.lang.String> getTicketHolderNames(net.minecraft.util.debug.DebugPoiInfo, boolean, net.minecraft.util.debug.DebugValueAccess);
+  private static void lambda$getTicketHolderNames$0(boolean, net.minecraft.util.debug.DebugPoiInfo, java.util.List, net.minecraft.world.entity.Entity, net.minecraft.util.debug.DebugBrainDump);
+  private void lambda$emitGizmos$1(net.minecraft.util.debug.DebugValueAccess, net.minecraft.core.BlockPos, net.minecraft.core.BlockPos, java.util.List);
+  private void lambda$emitGizmos$0(net.minecraft.core.BlockPos, net.minecraft.util.debug.DebugValueAccess, net.minecraft.core.BlockPos, net.minecraft.util.debug.DebugPoiInfo);
+}
+Compiled from "RaidDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.RaidDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private static final int MAX_RENDER_DIST;
+  private static final float TEXT_SCALE;
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.renderer.debug.RaidDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void highlightRaidCenter(net.minecraft.core.BlockPos);
+  private static void renderTextOverBlock(java.lang.String, net.minecraft.core.BlockPos, int);
+  private net.minecraft.client.Camera getCamera();
+  private static void lambda$emitGizmos$0(net.minecraft.core.BlockPos, net.minecraft.world.level.ChunkPos, java.util.List);
+}
+Compiled from "RedstoneWireOrientationsRenderer.java"
+public class net.minecraft.client.renderer.debug.RedstoneWireOrientationsRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  public net.minecraft.client.renderer.debug.RedstoneWireOrientationsRenderer();
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void lambda$emitGizmos$0(net.minecraft.core.BlockPos, net.minecraft.world.level.redstone.Orientation);
+}
+Compiled from "SolidFaceRenderer.java"
+public class net.minecraft.client.renderer.debug.SolidFaceRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.renderer.debug.SolidFaceRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void addFaceIfSturdy(net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.BlockGetter, net.minecraft.core.Direction, net.minecraft.world.phys.Vec3, net.minecraft.world.phys.Vec3, int);
+}
+Compiled from "StructureRenderer.java"
+public class net.minecraft.client.renderer.debug.StructureRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  public net.minecraft.client.renderer.debug.StructureRenderer();
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void lambda$emitGizmos$0(net.minecraft.world.level.ChunkPos, java.util.List);
+}
+Compiled from "SupportBlockRenderer.java"
+public class net.minecraft.client.renderer.debug.SupportBlockRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  private double lastUpdateTime;
+  private java.util.List<net.minecraft.world.entity.Entity> surroundEntities;
+  public net.minecraft.client.renderer.debug.SupportBlockRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private void drawHighlights(net.minecraft.world.entity.Entity, java.util.function.DoubleSupplier, int);
+  private double getBias(net.minecraft.world.entity.Entity);
+  private void highlightPosition(net.minecraft.core.BlockPos, double, int);
+  private void lambda$drawHighlights$0(java.util.function.DoubleSupplier, net.minecraft.world.entity.Entity, int, net.minecraft.core.BlockPos);
+  private double lambda$emitGizmos$1(net.minecraft.world.entity.Entity);
+  private static double lambda$emitGizmos$0();
+}
+Compiled from "VillageSectionsDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.VillageSectionsDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  public net.minecraft.client.renderer.debug.VillageSectionsDebugRenderer();
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+  private static void lambda$emitGizmos$0(net.minecraft.core.BlockPos, net.minecraft.util.Unit);
+}
+Compiled from "WaterDebugRenderer.java"
+public class net.minecraft.client.renderer.debug.WaterDebugRenderer implements net.minecraft.client.renderer.debug.DebugRenderer$SimpleDebugRenderer {
+  private final net.minecraft.client.Minecraft minecraft;
+  public net.minecraft.client.renderer.debug.WaterDebugRenderer(net.minecraft.client.Minecraft);
+  public void emitGizmos(double, double, double, net.minecraft.util.debug.DebugValueAccess, net.minecraft.client.renderer.culling.Frustum, float);
+}

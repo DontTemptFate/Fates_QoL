@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.donttemptfate.fatesofa.CoreTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:54:26.939Z" hostname="runnervm8k3b6" time="0.03">
+  <properties/>
+  <testcase name="settingsRoundTrip" classname="io.github.donttemptfate.fatesofa.CoreTest" time="0.019"/>
+  <testcase name="tabAndState" classname="io.github.donttemptfate.fatesofa.CoreTest" time="0.004"/>
+  <testcase name="errorBudget" classname="io.github.donttemptfate.fatesofa.CoreTest" time="0.0"/>
+  <testcase name="scoreboard" classname="io.github.donttemptfate.fatesofa.CoreTest" time="0.001"/>
+  <testcase name="layoutAvoidsOverlapAndReserved" classname="io.github.donttemptfate.fatesofa.CoreTest" time="0.005"/>
+  <testcase name="brokenSettingsFileMeansDefaults" classname="io.github.donttemptfate.fatesofa.CoreTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

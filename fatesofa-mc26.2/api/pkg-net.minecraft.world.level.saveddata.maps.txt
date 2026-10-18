@@ -1,0 +1,285 @@
+Compiled from "MapBanner.java"
+public final class net.minecraft.world.level.saveddata.maps.MapBanner extends java.lang.Record {
+  private final net.minecraft.core.BlockPos pos;
+  private final net.minecraft.world.item.DyeColor color;
+  private final java.util.Optional<net.minecraft.network.chat.Component> name;
+  public static final com.mojang.serialization.Codec<net.minecraft.world.level.saveddata.maps.MapBanner> CODEC;
+  public net.minecraft.world.level.saveddata.maps.MapBanner(net.minecraft.core.BlockPos, net.minecraft.world.item.DyeColor, java.util.Optional<net.minecraft.network.chat.Component>);
+  public static net.minecraft.world.level.saveddata.maps.MapBanner fromWorld(net.minecraft.world.level.BlockGetter, net.minecraft.core.BlockPos);
+  public net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> getDecoration();
+  public java.lang.String getId();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.core.BlockPos pos();
+  public net.minecraft.world.item.DyeColor color();
+  public java.util.Optional<net.minecraft.network.chat.Component> name();
+  private static com.mojang.datafixers.kinds.App lambda$static$0(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "MapBanner.java"
+class net.minecraft.world.level.saveddata.maps.MapBanner$1 {
+  static final int[] $SwitchMap$net$minecraft$world$item$DyeColor;
+  static {};
+}
+Compiled from "MapDecoration.java"
+public final class net.minecraft.world.level.saveddata.maps.MapDecoration extends java.lang.Record {
+  private final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> type;
+  private final byte x;
+  private final byte y;
+  private final byte rot;
+  private final java.util.Optional<net.minecraft.network.chat.Component> name;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.world.level.saveddata.maps.MapDecoration> STREAM_CODEC;
+  public net.minecraft.world.level.saveddata.maps.MapDecoration(net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>, byte, byte, byte, java.util.Optional<net.minecraft.network.chat.Component>);
+  public net.minecraft.resources.Identifier getSpriteLocation();
+  public boolean renderOnFrame();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> type();
+  public byte x();
+  public byte y();
+  public byte rot();
+  public java.util.Optional<net.minecraft.network.chat.Component> name();
+  static {};
+}
+Compiled from "MapDecorationType.java"
+public final class net.minecraft.world.level.saveddata.maps.MapDecorationType extends java.lang.Record {
+  private final net.minecraft.resources.Identifier assetId;
+  private final boolean showOnItemFrame;
+  private final int mapColor;
+  private final boolean explorationMapElement;
+  private final boolean trackCount;
+  public static final int NO_MAP_COLOR;
+  public static final com.mojang.serialization.Codec<net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>> STREAM_CODEC;
+  public net.minecraft.world.level.saveddata.maps.MapDecorationType(net.minecraft.resources.Identifier, boolean, int, boolean, boolean);
+  public boolean hasMapColor();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.resources.Identifier assetId();
+  public boolean showOnItemFrame();
+  public int mapColor();
+  public boolean explorationMapElement();
+  public boolean trackCount();
+  static {};
+}
+Compiled from "MapDecorationTypes.java"
+public class net.minecraft.world.level.saveddata.maps.MapDecorationTypes {
+  private static final int COPPER_COLOR;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> PLAYER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> FRAME;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> RED_MARKER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> BLUE_MARKER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> TARGET_X;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> TARGET_POINT;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> PLAYER_OFF_MAP;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> PLAYER_OFF_LIMITS;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> WOODLAND_MANSION;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> OCEAN_MONUMENT;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> WHITE_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> ORANGE_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> MAGENTA_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> LIGHT_BLUE_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> YELLOW_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> LIME_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> PINK_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> GRAY_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> LIGHT_GRAY_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> CYAN_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> PURPLE_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> BLUE_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> BROWN_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> GREEN_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> RED_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> BLACK_BANNER;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> RED_X;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> DESERT_VILLAGE;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> PLAINS_VILLAGE;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> SAVANNA_VILLAGE;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> SNOWY_VILLAGE;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> TAIGA_VILLAGE;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> JUNGLE_TEMPLE;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> SWAMP_HUT;
+  public static final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> TRIAL_CHAMBERS;
+  public net.minecraft.world.level.saveddata.maps.MapDecorationTypes();
+  public static net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> bootstrap(net.minecraft.core.Registry<net.minecraft.world.level.saveddata.maps.MapDecorationType>);
+  private static net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> register(java.lang.String, java.lang.String, boolean, boolean);
+  private static net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> register(java.lang.String, java.lang.String, boolean, int, boolean, boolean);
+  static {};
+}
+Compiled from "MapFrame.java"
+public final class net.minecraft.world.level.saveddata.maps.MapFrame extends java.lang.Record {
+  private final net.minecraft.core.BlockPos pos;
+  private final int rotation;
+  private final int entityId;
+  public static final com.mojang.serialization.Codec<net.minecraft.world.level.saveddata.maps.MapFrame> CODEC;
+  public net.minecraft.world.level.saveddata.maps.MapFrame(net.minecraft.core.BlockPos, int, int);
+  public java.lang.String getId();
+  public static java.lang.String frameId(net.minecraft.core.BlockPos);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.core.BlockPos pos();
+  public int rotation();
+  public int entityId();
+  private static com.mojang.datafixers.kinds.App lambda$static$0(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "MapId.java"
+public final class net.minecraft.world.level.saveddata.maps.MapId extends java.lang.Record implements net.minecraft.world.item.component.TooltipProvider {
+  private final int id;
+  public static final com.mojang.serialization.Codec<net.minecraft.world.level.saveddata.maps.MapId> CODEC;
+  public static final net.minecraft.network.codec.StreamCodec<io.netty.buffer.ByteBuf, net.minecraft.world.level.saveddata.maps.MapId> STREAM_CODEC;
+  private static final net.minecraft.network.chat.Component LOCKED_TEXT;
+  public net.minecraft.world.level.saveddata.maps.MapId(int);
+  public java.lang.String key();
+  public void addToTooltip(net.minecraft.world.item.Item$TooltipContext, java.util.function.Consumer<net.minecraft.network.chat.Component>, net.minecraft.world.item.TooltipFlag, net.minecraft.core.component.DataComponentGetter);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int id();
+  static {};
+}
+Compiled from "MapIndex.java"
+public class net.minecraft.world.level.saveddata.maps.MapIndex extends net.minecraft.world.level.saveddata.SavedData {
+  private static final int NO_MAP_ID;
+  public static final com.mojang.serialization.Codec<net.minecraft.world.level.saveddata.maps.MapIndex> CODEC;
+  public static final net.minecraft.world.level.saveddata.SavedDataType<net.minecraft.world.level.saveddata.maps.MapIndex> TYPE;
+  private int lastMapId;
+  public net.minecraft.world.level.saveddata.maps.MapIndex();
+  public net.minecraft.world.level.saveddata.maps.MapIndex(int);
+  public net.minecraft.world.level.saveddata.maps.MapId getNextMapId();
+  private static com.mojang.datafixers.kinds.App lambda$static$0(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.lang.Integer lambda$static$1(net.minecraft.world.level.saveddata.maps.MapIndex);
+  static {};
+}
+Compiled from "MapItemSavedData.java"
+public class net.minecraft.world.level.saveddata.maps.MapItemSavedData extends net.minecraft.world.level.saveddata.SavedData {
+  private static final int MAP_SIZE;
+  private static final int HALF_MAP_SIZE;
+  public static final int MAX_SCALE;
+  public static final int TRACKED_DECORATION_LIMIT;
+  private static final java.lang.String FRAME_PREFIX;
+  public static final com.mojang.serialization.Codec<net.minecraft.world.level.saveddata.maps.MapItemSavedData> CODEC;
+  public final int centerX;
+  public final int centerZ;
+  public final net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension;
+  private final boolean trackingPosition;
+  private final boolean unlimitedTracking;
+  public final byte scale;
+  public byte[] colors;
+  public final boolean locked;
+  private final java.util.List<net.minecraft.world.level.saveddata.maps.MapItemSavedData$HoldingPlayer> carriedBy;
+  private final java.util.Map<net.minecraft.world.entity.player.Player, net.minecraft.world.level.saveddata.maps.MapItemSavedData$HoldingPlayer> carriedByPlayers;
+  private final java.util.Map<java.lang.String, net.minecraft.world.level.saveddata.maps.MapBanner> bannerMarkers;
+  private final java.util.Map<java.lang.String, net.minecraft.world.level.saveddata.maps.MapDecoration> decorations;
+  private final java.util.Map<java.lang.String, net.minecraft.world.level.saveddata.maps.MapFrame> frameMarkers;
+  private int trackedDecorationCount;
+  public static net.minecraft.world.level.saveddata.SavedDataType<net.minecraft.world.level.saveddata.maps.MapItemSavedData> type(net.minecraft.world.level.saveddata.maps.MapId);
+  private net.minecraft.world.level.saveddata.maps.MapItemSavedData(int, int, byte, boolean, boolean, boolean, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>);
+  private net.minecraft.world.level.saveddata.maps.MapItemSavedData(net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>, int, int, byte, java.nio.ByteBuffer, boolean, boolean, boolean, java.util.List<net.minecraft.world.level.saveddata.maps.MapBanner>, java.util.List<net.minecraft.world.level.saveddata.maps.MapFrame>);
+  public static net.minecraft.world.level.saveddata.maps.MapItemSavedData createFresh(double, double, byte, boolean, boolean, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>);
+  public static net.minecraft.world.level.saveddata.maps.MapItemSavedData createForClient(byte, boolean, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>);
+  public net.minecraft.world.level.saveddata.maps.MapItemSavedData locked();
+  public net.minecraft.world.level.saveddata.maps.MapItemSavedData scaled();
+  private static java.util.function.Predicate<net.minecraft.world.item.ItemStack> mapMatcher(net.minecraft.world.item.ItemStack);
+  public void tickCarriedBy(net.minecraft.world.entity.player.Player, net.minecraft.world.item.ItemStack, net.minecraft.world.entity.decoration.ItemFrame);
+  private static boolean hasMapInvisibilityItemEquipped(net.minecraft.world.entity.player.Player);
+  private void removeDecoration(java.lang.String);
+  public static void addTargetDecoration(net.minecraft.world.item.ItemStack, net.minecraft.core.BlockPos, java.lang.String, net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>);
+  private void addDecoration(net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>, net.minecraft.world.level.LevelAccessor, java.lang.String, double, double, double, net.minecraft.network.chat.Component);
+  private net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapDecorationLocation calculateDecorationLocationAndType(net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>, net.minecraft.world.level.LevelAccessor, double, float, float);
+  private com.mojang.datafixers.util.Pair<net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>, java.lang.Byte> playerDecorationTypeAndRotation(net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>, net.minecraft.world.level.LevelAccessor, double, float, float);
+  private byte calculateRotation(net.minecraft.world.level.LevelAccessor, double);
+  private static boolean isInsideMap(float, float);
+  private net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> decorationTypeForPlayerOutsideMap(float, float);
+  private static byte clampMapCoordinate(float);
+  public net.minecraft.network.protocol.Packet<?> getUpdatePacket(net.minecraft.world.level.saveddata.maps.MapId, net.minecraft.world.entity.player.Player);
+  private void setColorsDirty(int, int);
+  private void setDecorationsDirty();
+  public net.minecraft.world.level.saveddata.maps.MapItemSavedData$HoldingPlayer getHoldingPlayer(net.minecraft.world.entity.player.Player);
+  public boolean toggleBanner(net.minecraft.world.level.LevelAccessor, net.minecraft.core.BlockPos);
+  public void checkBanners(net.minecraft.world.level.BlockGetter, int, int);
+  public java.util.Collection<net.minecraft.world.level.saveddata.maps.MapBanner> getBanners();
+  public void removedFromFrame(net.minecraft.core.BlockPos, int);
+  public boolean updateColor(int, int, byte);
+  public void setColor(int, int, byte);
+  public boolean isExplorationMap();
+  public void addClientSideDecorations(java.util.List<net.minecraft.world.level.saveddata.maps.MapDecoration>);
+  public java.lang.Iterable<net.minecraft.world.level.saveddata.maps.MapDecoration> getDecorations();
+  public boolean isTrackedCountOverLimit(int);
+  private static java.lang.String getFrameKey(int);
+  private static net.minecraft.world.item.component.MapDecorations lambda$addTargetDecoration$0(java.lang.String, net.minecraft.world.item.component.MapDecorations$Entry, net.minecraft.world.item.component.MapDecorations);
+  private void lambda$tickCarriedBy$0(net.minecraft.world.entity.player.Player, java.lang.String, net.minecraft.world.item.component.MapDecorations$Entry);
+  private static boolean lambda$mapMatcher$0(net.minecraft.world.item.ItemStack, net.minecraft.world.level.saveddata.maps.MapId, net.minecraft.world.item.ItemStack);
+  private static net.minecraft.world.level.saveddata.maps.MapItemSavedData lambda$type$0();
+  private static com.mojang.datafixers.kinds.App lambda$static$0(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  private static java.util.List lambda$static$10(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static java.util.List lambda$static$9(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static java.lang.Boolean lambda$static$8(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static java.lang.Boolean lambda$static$7(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static java.lang.Boolean lambda$static$6(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static java.nio.ByteBuffer lambda$static$5(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static java.lang.Byte lambda$static$4(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static java.lang.Integer lambda$static$3(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static java.lang.Integer lambda$static$2(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  private static net.minecraft.resources.ResourceKey lambda$static$1(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  static {};
+}
+Compiled from "MapItemSavedData.java"
+public class net.minecraft.world.level.saveddata.maps.MapItemSavedData$HoldingPlayer {
+  public final net.minecraft.world.entity.player.Player player;
+  private boolean dirtyData;
+  private int minDirtyX;
+  private int minDirtyY;
+  private int maxDirtyX;
+  private int maxDirtyY;
+  private boolean dirtyDecorations;
+  private int tick;
+  public int step;
+  final net.minecraft.world.level.saveddata.maps.MapItemSavedData this$0;
+  private net.minecraft.world.level.saveddata.maps.MapItemSavedData$HoldingPlayer(net.minecraft.world.level.saveddata.maps.MapItemSavedData, net.minecraft.world.entity.player.Player);
+  private net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapPatch createPatch();
+  private net.minecraft.network.protocol.Packet<?> nextUpdatePacket(net.minecraft.world.level.saveddata.maps.MapId);
+  private void markColorsDirty(int, int);
+  private void markDecorationsDirty();
+}
+Compiled from "MapItemSavedData.java"
+final class net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapDecorationLocation extends java.lang.Record {
+  private final net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> type;
+  private final byte x;
+  private final byte y;
+  private final byte rot;
+  private net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapDecorationLocation(net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType>, byte, byte, byte);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.core.Holder<net.minecraft.world.level.saveddata.maps.MapDecorationType> type();
+  public byte x();
+  public byte y();
+  public byte rot();
+}
+Compiled from "MapItemSavedData.java"
+public final class net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapPatch extends java.lang.Record {
+  private final int startX;
+  private final int startY;
+  private final int width;
+  private final int height;
+  private final byte[] mapColors;
+  public static final net.minecraft.network.codec.StreamCodec<io.netty.buffer.ByteBuf, java.util.Optional<net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapPatch>> STREAM_CODEC;
+  public net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapPatch(int, int, int, int, byte[]);
+  private static void write(io.netty.buffer.ByteBuf, java.util.Optional<net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapPatch>);
+  private static java.util.Optional<net.minecraft.world.level.saveddata.maps.MapItemSavedData$MapPatch> read(io.netty.buffer.ByteBuf);
+  public void applyToMap(net.minecraft.world.level.saveddata.maps.MapItemSavedData);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int startX();
+  public int startY();
+  public int width();
+  public int height();
+  public byte[] mapColors();
+  static {};
+}

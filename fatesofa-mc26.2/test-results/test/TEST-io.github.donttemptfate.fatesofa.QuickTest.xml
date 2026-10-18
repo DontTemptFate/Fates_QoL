@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.donttemptfate.fatesofa.QuickTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:54:27.056Z" hostname="runnervm8k3b6" time="0.004">
+  <properties/>
+  <testcase name="commandsAreCleanedToOneLine" classname="io.github.donttemptfate.fatesofa.QuickTest" time="0.001"/>
+  <testcase name="aliasesAreCheckedAndSaved" classname="io.github.donttemptfate.fatesofa.QuickTest" time="0.001"/>
+  <testcase name="defaultsWhenNothingSavedAndBadEntriesSkipped" classname="io.github.donttemptfate.fatesofa.QuickTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

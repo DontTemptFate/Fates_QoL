@@ -1,0 +1,121 @@
+Compiled from "AttackBlockCallback.java"
+public interface net.fabricmc.fabric.api.event.player.AttackBlockCallback {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.AttackBlockCallback> EVENT;
+  public abstract net.minecraft.world.InteractionResult interact(net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.core.BlockPos, net.minecraft.core.Direction);
+  private static net.fabricmc.fabric.api.event.player.AttackBlockCallback lambda$static$0(net.fabricmc.fabric.api.event.player.AttackBlockCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$1(net.fabricmc.fabric.api.event.player.AttackBlockCallback[], net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.core.BlockPos, net.minecraft.core.Direction);
+  static {};
+}
+Compiled from "AttackEntityCallback.java"
+public interface net.fabricmc.fabric.api.event.player.AttackEntityCallback {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.AttackEntityCallback> EVENT;
+  public abstract net.minecraft.world.InteractionResult interact(net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.world.entity.Entity, net.minecraft.world.phys.EntityHitResult);
+  private static net.fabricmc.fabric.api.event.player.AttackEntityCallback lambda$static$0(net.fabricmc.fabric.api.event.player.AttackEntityCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$1(net.fabricmc.fabric.api.event.player.AttackEntityCallback[], net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.world.entity.Entity, net.minecraft.world.phys.EntityHitResult);
+  static {};
+}
+Compiled from "BlockEvents.java"
+public interface net.fabricmc.fabric.api.event.player.BlockEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.BlockEvents$UseItemOnCallback> USE_ITEM_ON;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.BlockEvents$UseWithoutItemCallback> USE_WITHOUT_ITEM;
+  private static net.fabricmc.fabric.api.event.player.BlockEvents$UseWithoutItemCallback lambda$static$2(net.fabricmc.fabric.api.event.player.BlockEvents$UseWithoutItemCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$3(net.fabricmc.fabric.api.event.player.BlockEvents$UseWithoutItemCallback[], net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.world.entity.player.Player, net.minecraft.world.phys.BlockHitResult);
+  private static net.fabricmc.fabric.api.event.player.BlockEvents$UseItemOnCallback lambda$static$0(net.fabricmc.fabric.api.event.player.BlockEvents$UseItemOnCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$1(net.fabricmc.fabric.api.event.player.BlockEvents$UseItemOnCallback[], net.minecraft.world.item.ItemStack, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.world.entity.player.Player, net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult);
+  static {};
+}
+Compiled from "BlockEvents.java"
+public interface net.fabricmc.fabric.api.event.player.BlockEvents$UseItemOnCallback {
+  public abstract net.minecraft.world.InteractionResult useItemOn(net.minecraft.world.item.ItemStack, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.world.entity.player.Player, net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult);
+}
+Compiled from "BlockEvents.java"
+public interface net.fabricmc.fabric.api.event.player.BlockEvents$UseWithoutItemCallback {
+  public abstract net.minecraft.world.InteractionResult useWithoutItem(net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.world.entity.player.Player, net.minecraft.world.phys.BlockHitResult);
+}
+Compiled from "ItemEvents.java"
+public interface net.fabricmc.fabric.api.event.player.ItemEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.ItemEvents$UseOnCallback> USE_ON;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.ItemEvents$UseCallback> USE;
+  private static net.fabricmc.fabric.api.event.player.ItemEvents$UseCallback lambda$static$2(net.fabricmc.fabric.api.event.player.ItemEvents$UseCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$3(net.fabricmc.fabric.api.event.player.ItemEvents$UseCallback[], net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.world.InteractionHand);
+  private static net.fabricmc.fabric.api.event.player.ItemEvents$UseOnCallback lambda$static$0(net.fabricmc.fabric.api.event.player.ItemEvents$UseOnCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$1(net.fabricmc.fabric.api.event.player.ItemEvents$UseOnCallback[], net.minecraft.world.item.context.UseOnContext);
+  static {};
+}
+Compiled from "ItemEvents.java"
+public interface net.fabricmc.fabric.api.event.player.ItemEvents$UseCallback {
+  public abstract net.minecraft.world.InteractionResult use(net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.world.InteractionHand);
+}
+Compiled from "ItemEvents.java"
+public interface net.fabricmc.fabric.api.event.player.ItemEvents$UseOnCallback {
+  public abstract net.minecraft.world.InteractionResult useOn(net.minecraft.world.item.context.UseOnContext);
+}
+Compiled from "PlayerBlockBreakEvents.java"
+public final class net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Before> BEFORE;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$After> AFTER;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Canceled> CANCELED;
+  private net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents();
+  private static net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Canceled lambda$static$4(net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Canceled[]);
+  private static void lambda$static$5(net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Canceled[], net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.entity.BlockEntity);
+  private static net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$After lambda$static$2(net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$After[]);
+  private static void lambda$static$3(net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$After[], net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.entity.BlockEntity);
+  private static net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Before lambda$static$0(net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Before[]);
+  private static boolean lambda$static$1(net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Before[], net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.entity.BlockEntity);
+  static {};
+}
+Compiled from "PlayerBlockBreakEvents.java"
+public interface net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$After {
+  public abstract void afterBlockBreak(net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.entity.BlockEntity);
+}
+Compiled from "PlayerBlockBreakEvents.java"
+public interface net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Before {
+  public abstract boolean beforeBlockBreak(net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.entity.BlockEntity);
+}
+Compiled from "PlayerBlockBreakEvents.java"
+public interface net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents$Canceled {
+  public abstract void onBlockBreakCanceled(net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.block.entity.BlockEntity);
+}
+Compiled from "PlayerPickItemEvents.java"
+public final class net.fabricmc.fabric.api.event.player.PlayerPickItemEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromBlock> BLOCK;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromEntity> ENTITY;
+  private net.fabricmc.fabric.api.event.player.PlayerPickItemEvents();
+  private static net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromEntity lambda$static$2(net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromEntity[]);
+  private static net.minecraft.world.item.ItemStack lambda$static$3(net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromEntity[], net.minecraft.server.level.ServerPlayer, net.minecraft.world.entity.Entity, boolean);
+  private static net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromBlock lambda$static$0(net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromBlock[]);
+  private static net.minecraft.world.item.ItemStack lambda$static$1(net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromBlock[], net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, boolean);
+  static {};
+}
+Compiled from "PlayerPickItemEvents.java"
+public interface net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromBlock {
+  public abstract net.minecraft.world.item.ItemStack onPickItemFromBlock(net.minecraft.server.level.ServerPlayer, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, boolean);
+}
+Compiled from "PlayerPickItemEvents.java"
+public interface net.fabricmc.fabric.api.event.player.PlayerPickItemEvents$PickItemFromEntity {
+  public abstract net.minecraft.world.item.ItemStack onPickItemFromEntity(net.minecraft.server.level.ServerPlayer, net.minecraft.world.entity.Entity, boolean);
+}
+Compiled from "UseBlockCallback.java"
+public interface net.fabricmc.fabric.api.event.player.UseBlockCallback {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.UseBlockCallback> EVENT;
+  public abstract net.minecraft.world.InteractionResult interact(net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult);
+  private static net.fabricmc.fabric.api.event.player.UseBlockCallback lambda$static$0(net.fabricmc.fabric.api.event.player.UseBlockCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$1(net.fabricmc.fabric.api.event.player.UseBlockCallback[], net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.world.phys.BlockHitResult);
+  static {};
+}
+Compiled from "UseEntityCallback.java"
+public interface net.fabricmc.fabric.api.event.player.UseEntityCallback {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.UseEntityCallback> EVENT;
+  public abstract net.minecraft.world.InteractionResult interact(net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.world.entity.Entity, net.minecraft.world.phys.EntityHitResult);
+  private static net.fabricmc.fabric.api.event.player.UseEntityCallback lambda$static$0(net.fabricmc.fabric.api.event.player.UseEntityCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$1(net.fabricmc.fabric.api.event.player.UseEntityCallback[], net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand, net.minecraft.world.entity.Entity, net.minecraft.world.phys.EntityHitResult);
+  static {};
+}
+Compiled from "UseItemCallback.java"
+public interface net.fabricmc.fabric.api.event.player.UseItemCallback {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.event.player.UseItemCallback> EVENT;
+  public abstract net.minecraft.world.InteractionResult interact(net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand);
+  private static net.fabricmc.fabric.api.event.player.UseItemCallback lambda$static$0(net.fabricmc.fabric.api.event.player.UseItemCallback[]);
+  private static net.minecraft.world.InteractionResult lambda$static$1(net.fabricmc.fabric.api.event.player.UseItemCallback[], net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.world.InteractionHand);
+  static {};
+}

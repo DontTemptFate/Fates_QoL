@@ -1,0 +1,332 @@
+Compiled from "AbstractSoundInstance.java"
+public abstract class net.minecraft.client.resources.sounds.AbstractSoundInstance implements net.minecraft.client.resources.sounds.SoundInstance {
+  protected net.minecraft.client.resources.sounds.Sound sound;
+  protected net.minecraft.client.sounds.WeighedSoundEvents soundEvent;
+  protected final net.minecraft.sounds.SoundSource source;
+  protected final net.minecraft.resources.Identifier identifier;
+  protected float volume;
+  protected float pitch;
+  protected double x;
+  protected double y;
+  protected double z;
+  protected boolean looping;
+  protected int delay;
+  protected net.minecraft.client.resources.sounds.SoundInstance$Attenuation attenuation;
+  protected boolean relative;
+  protected final net.minecraft.util.RandomSource random;
+  protected net.minecraft.client.resources.sounds.AbstractSoundInstance(net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, net.minecraft.util.RandomSource);
+  protected net.minecraft.client.resources.sounds.AbstractSoundInstance(net.minecraft.resources.Identifier, net.minecraft.sounds.SoundSource, net.minecraft.util.RandomSource);
+  public net.minecraft.resources.Identifier getIdentifier();
+  public net.minecraft.client.sounds.WeighedSoundEvents getOrResolve(net.minecraft.client.sounds.SoundManager);
+  public net.minecraft.client.resources.sounds.Sound getSound();
+  public net.minecraft.client.sounds.WeighedSoundEvents getSoundEvent();
+  public net.minecraft.sounds.SoundSource getSource();
+  public boolean isLooping();
+  public int getDelay();
+  public float getVolume();
+  public float getPitch();
+  public double getX();
+  public double getY();
+  public double getZ();
+  public net.minecraft.client.resources.sounds.SoundInstance$Attenuation getAttenuation();
+  public boolean isRelative();
+  public java.lang.String toString();
+}
+Compiled from "AbstractTickableSoundInstance.java"
+public abstract class net.minecraft.client.resources.sounds.AbstractTickableSoundInstance extends net.minecraft.client.resources.sounds.AbstractSoundInstance implements net.minecraft.client.resources.sounds.TickableSoundInstance {
+  private boolean stopped;
+  protected net.minecraft.client.resources.sounds.AbstractTickableSoundInstance(net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, net.minecraft.util.RandomSource);
+  public boolean isStopped();
+  protected final void stop();
+}
+Compiled from "AmbientSoundHandler.java"
+public interface net.minecraft.client.resources.sounds.AmbientSoundHandler {
+  public abstract void tick();
+}
+Compiled from "BeeAggressiveSoundInstance.java"
+public class net.minecraft.client.resources.sounds.BeeAggressiveSoundInstance extends net.minecraft.client.resources.sounds.BeeSoundInstance {
+  public net.minecraft.client.resources.sounds.BeeAggressiveSoundInstance(net.minecraft.world.entity.animal.bee.Bee);
+  protected net.minecraft.client.resources.sounds.AbstractTickableSoundInstance getAlternativeSoundInstance();
+  protected boolean shouldSwitchSounds();
+}
+Compiled from "BeeFlyingSoundInstance.java"
+public class net.minecraft.client.resources.sounds.BeeFlyingSoundInstance extends net.minecraft.client.resources.sounds.BeeSoundInstance {
+  public net.minecraft.client.resources.sounds.BeeFlyingSoundInstance(net.minecraft.world.entity.animal.bee.Bee);
+  protected net.minecraft.client.resources.sounds.AbstractTickableSoundInstance getAlternativeSoundInstance();
+  protected boolean shouldSwitchSounds();
+}
+Compiled from "BeeSoundInstance.java"
+public abstract class net.minecraft.client.resources.sounds.BeeSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private static final float VOLUME_MIN;
+  private static final float VOLUME_MAX;
+  private static final float PITCH_MIN;
+  protected final net.minecraft.world.entity.animal.bee.Bee bee;
+  private boolean hasSwitched;
+  public net.minecraft.client.resources.sounds.BeeSoundInstance(net.minecraft.world.entity.animal.bee.Bee, net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource);
+  public void tick();
+  private float getMinPitch();
+  private float getMaxPitch();
+  public boolean canStartSilent();
+  public boolean canPlaySound();
+  protected abstract net.minecraft.client.resources.sounds.AbstractTickableSoundInstance getAlternativeSoundInstance();
+  protected abstract boolean shouldSwitchSounds();
+}
+Compiled from "BiomeAmbientSoundsHandler.java"
+public class net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler implements net.minecraft.client.resources.sounds.AmbientSoundHandler {
+  private static final int LOOP_SOUND_CROSS_FADE_TIME;
+  private static final float SKY_MOOD_RECOVERY_RATE;
+  private final net.minecraft.client.player.LocalPlayer player;
+  private final net.minecraft.client.sounds.SoundManager soundManager;
+  private final net.minecraft.util.RandomSource random;
+  private final it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap<net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent>, net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler$LoopSoundInstance> loopSounds;
+  private float moodiness;
+  private net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> previousLoopSound;
+  public net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler(net.minecraft.client.player.LocalPlayer, net.minecraft.client.sounds.SoundManager);
+  public float getMoodiness();
+  public void tick();
+  private void lambda$tick$1(net.minecraft.world.level.Level, net.minecraft.world.attribute.AmbientMoodSettings);
+  private net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler$LoopSoundInstance lambda$tick$0(net.minecraft.core.Holder, net.minecraft.core.Holder, net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler$LoopSoundInstance);
+}
+Compiled from "BiomeAmbientSoundsHandler.java"
+public class net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler$LoopSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private int fadeDirection;
+  private int fade;
+  public net.minecraft.client.resources.sounds.BiomeAmbientSoundsHandler$LoopSoundInstance(net.minecraft.sounds.SoundEvent);
+  public void tick();
+  public void fadeOut();
+  public void fadeIn();
+}
+Compiled from "BubbleColumnAmbientSoundHandler.java"
+public class net.minecraft.client.resources.sounds.BubbleColumnAmbientSoundHandler implements net.minecraft.client.resources.sounds.AmbientSoundHandler {
+  private final net.minecraft.client.player.LocalPlayer player;
+  private boolean wasInBubbleColumn;
+  private boolean firstTick;
+  public net.minecraft.client.resources.sounds.BubbleColumnAmbientSoundHandler(net.minecraft.client.player.LocalPlayer);
+  public void tick();
+  private static boolean lambda$tick$0(net.minecraft.world.level.block.state.BlockState);
+}
+Compiled from "DirectionalSoundInstance.java"
+public class net.minecraft.client.resources.sounds.DirectionalSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private final net.minecraft.client.Camera camera;
+  private final float xAngle;
+  private final float yAngle;
+  public net.minecraft.client.resources.sounds.DirectionalSoundInstance(net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, net.minecraft.util.RandomSource, net.minecraft.client.Camera, float, float);
+  private void setPosition();
+  public void tick();
+}
+Compiled from "ElytraOnPlayerSoundInstance.java"
+public class net.minecraft.client.resources.sounds.ElytraOnPlayerSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  public static final int DELAY;
+  private final net.minecraft.client.player.LocalPlayer player;
+  private int time;
+  public net.minecraft.client.resources.sounds.ElytraOnPlayerSoundInstance(net.minecraft.client.player.LocalPlayer);
+  public void tick();
+}
+Compiled from "EntityBoundSoundInstance.java"
+public class net.minecraft.client.resources.sounds.EntityBoundSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private final net.minecraft.world.entity.Entity entity;
+  public net.minecraft.client.resources.sounds.EntityBoundSoundInstance(net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float, net.minecraft.world.entity.Entity, long);
+  public boolean canPlaySound();
+  public void tick();
+}
+Compiled from "GuardianAttackSoundInstance.java"
+public class net.minecraft.client.resources.sounds.GuardianAttackSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private static final float VOLUME_MIN;
+  private static final float VOLUME_SCALE;
+  private static final float PITCH_MIN;
+  private static final float PITCH_SCALE;
+  private final net.minecraft.world.entity.monster.Guardian guardian;
+  public net.minecraft.client.resources.sounds.GuardianAttackSoundInstance(net.minecraft.world.entity.monster.Guardian);
+  public boolean canPlaySound();
+  public void tick();
+}
+Compiled from "MinecartSoundInstance.java"
+public class net.minecraft.client.resources.sounds.MinecartSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private static final float VOLUME_MIN;
+  private static final float VOLUME_MAX;
+  private static final float PITCH_MIN;
+  private static final float PITCH_MAX;
+  private static final float PITCH_DELTA;
+  private final net.minecraft.world.entity.vehicle.minecart.AbstractMinecart minecart;
+  private float pitch;
+  public net.minecraft.client.resources.sounds.MinecartSoundInstance(net.minecraft.world.entity.vehicle.minecart.AbstractMinecart);
+  public boolean canPlaySound();
+  public boolean canStartSilent();
+  public void tick();
+}
+Compiled from "RidingEntitySoundInstance.java"
+public class net.minecraft.client.resources.sounds.RidingEntitySoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private final net.minecraft.world.entity.player.Player player;
+  private final net.minecraft.world.entity.Entity entity;
+  private final boolean underwaterSound;
+  private final float volumeMin;
+  private final float volumeMax;
+  private final float volumeAmplifier;
+  public net.minecraft.client.resources.sounds.RidingEntitySoundInstance(net.minecraft.world.entity.player.Player, net.minecraft.world.entity.Entity, boolean, net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float, float);
+  public boolean canPlaySound();
+  public boolean canStartSilent();
+  protected boolean shouldNotPlayUnderwaterSound();
+  protected float getEntitySpeed();
+  protected boolean shoudlPlaySound();
+  public void tick();
+}
+Compiled from "RidingMinecartSoundInstance.java"
+public class net.minecraft.client.resources.sounds.RidingMinecartSoundInstance extends net.minecraft.client.resources.sounds.RidingEntitySoundInstance {
+  private final net.minecraft.world.entity.player.Player player;
+  private final net.minecraft.world.entity.vehicle.minecart.AbstractMinecart minecart;
+  private final boolean underwaterSound;
+  public net.minecraft.client.resources.sounds.RidingMinecartSoundInstance(net.minecraft.world.entity.player.Player, net.minecraft.world.entity.vehicle.minecart.AbstractMinecart, boolean, net.minecraft.sounds.SoundEvent, float, float, float);
+  protected boolean shouldNotPlayUnderwaterSound();
+  protected float getEntitySpeed();
+  protected boolean shoudlPlaySound();
+}
+Compiled from "SimpleSoundInstance.java"
+public class net.minecraft.client.resources.sounds.SimpleSoundInstance extends net.minecraft.client.resources.sounds.AbstractSoundInstance {
+  public net.minecraft.client.resources.sounds.SimpleSoundInstance(net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float, net.minecraft.util.RandomSource, net.minecraft.core.BlockPos);
+  public static net.minecraft.client.resources.sounds.SimpleSoundInstance forUI(net.minecraft.sounds.SoundEvent, float);
+  public static net.minecraft.client.resources.sounds.SimpleSoundInstance forUI(net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent>, float);
+  public static net.minecraft.client.resources.sounds.SimpleSoundInstance forUI(net.minecraft.sounds.SoundEvent, float, float);
+  public static net.minecraft.client.resources.sounds.SimpleSoundInstance forMusic(net.minecraft.sounds.SoundEvent);
+  public static net.minecraft.client.resources.sounds.SimpleSoundInstance forJukeboxSong(net.minecraft.sounds.SoundEvent, net.minecraft.world.phys.Vec3);
+  public static net.minecraft.client.resources.sounds.SimpleSoundInstance forLocalAmbience(net.minecraft.sounds.SoundEvent, float, float);
+  public static net.minecraft.client.resources.sounds.SimpleSoundInstance forAmbientAddition(net.minecraft.sounds.SoundEvent);
+  public static net.minecraft.client.resources.sounds.SimpleSoundInstance forAmbientMood(net.minecraft.sounds.SoundEvent, net.minecraft.util.RandomSource, double, double, double);
+  public net.minecraft.client.resources.sounds.SimpleSoundInstance(net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float, net.minecraft.util.RandomSource, double, double, double);
+  private net.minecraft.client.resources.sounds.SimpleSoundInstance(net.minecraft.sounds.SoundEvent, net.minecraft.sounds.SoundSource, float, float, net.minecraft.util.RandomSource, boolean, int, net.minecraft.client.resources.sounds.SoundInstance$Attenuation, double, double, double);
+  public net.minecraft.client.resources.sounds.SimpleSoundInstance(net.minecraft.resources.Identifier, net.minecraft.sounds.SoundSource, float, float, net.minecraft.util.RandomSource, boolean, int, net.minecraft.client.resources.sounds.SoundInstance$Attenuation, double, double, double, boolean);
+}
+Compiled from "SnifferSoundInstance.java"
+public class net.minecraft.client.resources.sounds.SnifferSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private static final float VOLUME;
+  private static final float PITCH;
+  private final net.minecraft.world.entity.animal.sniffer.Sniffer sniffer;
+  public net.minecraft.client.resources.sounds.SnifferSoundInstance(net.minecraft.world.entity.animal.sniffer.Sniffer);
+  public boolean canPlaySound();
+  public void tick();
+}
+Compiled from "Sound.java"
+public class net.minecraft.client.resources.sounds.Sound implements net.minecraft.client.sounds.Weighted<net.minecraft.client.resources.sounds.Sound> {
+  public static final net.minecraft.resources.FileToIdConverter SOUND_LISTER;
+  private final net.minecraft.resources.Identifier location;
+  private final net.minecraft.util.valueproviders.SampledFloat volume;
+  private final net.minecraft.util.valueproviders.SampledFloat pitch;
+  private final int weight;
+  private final net.minecraft.client.resources.sounds.Sound$Type type;
+  private final boolean stream;
+  private final boolean preload;
+  private final int attenuationDistance;
+  public net.minecraft.client.resources.sounds.Sound(net.minecraft.resources.Identifier, net.minecraft.util.valueproviders.SampledFloat, net.minecraft.util.valueproviders.SampledFloat, int, net.minecraft.client.resources.sounds.Sound$Type, boolean, boolean, int);
+  public net.minecraft.resources.Identifier getLocation();
+  public net.minecraft.resources.Identifier getPath();
+  public net.minecraft.util.valueproviders.SampledFloat getVolume();
+  public net.minecraft.util.valueproviders.SampledFloat getPitch();
+  public int getWeight();
+  public net.minecraft.client.resources.sounds.Sound getSound(net.minecraft.util.RandomSource);
+  public void preloadIfRequired(net.minecraft.client.sounds.SoundEngine);
+  public net.minecraft.client.resources.sounds.Sound$Type getType();
+  public boolean shouldStream();
+  public boolean shouldPreload();
+  public int getAttenuationDistance();
+  public float getAttenuationDistance(float);
+  public java.lang.String toString();
+  public java.lang.Object getSound(net.minecraft.util.RandomSource);
+  static {};
+}
+Compiled from "Sound.java"
+public final class net.minecraft.client.resources.sounds.Sound$Type extends java.lang.Enum<net.minecraft.client.resources.sounds.Sound$Type> {
+  public static final net.minecraft.client.resources.sounds.Sound$Type FILE;
+  public static final net.minecraft.client.resources.sounds.Sound$Type SOUND_EVENT;
+  private final java.lang.String name;
+  private static final net.minecraft.client.resources.sounds.Sound$Type[] $VALUES;
+  public static net.minecraft.client.resources.sounds.Sound$Type[] values();
+  public static net.minecraft.client.resources.sounds.Sound$Type valueOf(java.lang.String);
+  private net.minecraft.client.resources.sounds.Sound$Type(java.lang.String);
+  public static net.minecraft.client.resources.sounds.Sound$Type getByName(java.lang.String);
+  private static net.minecraft.client.resources.sounds.Sound$Type[] $values();
+  static {};
+}
+Compiled from "SoundEventRegistration.java"
+public class net.minecraft.client.resources.sounds.SoundEventRegistration {
+  private final java.util.List<net.minecraft.client.resources.sounds.Sound> sounds;
+  private final boolean replace;
+  private final java.lang.String subtitle;
+  public net.minecraft.client.resources.sounds.SoundEventRegistration(java.util.List<net.minecraft.client.resources.sounds.Sound>, boolean, java.lang.String);
+  public java.util.List<net.minecraft.client.resources.sounds.Sound> getSounds();
+  public boolean isReplace();
+  public java.lang.String getSubtitle();
+}
+Compiled from "SoundEventRegistrationSerializer.java"
+public class net.minecraft.client.resources.sounds.SoundEventRegistrationSerializer implements com.google.gson.JsonDeserializer<net.minecraft.client.resources.sounds.SoundEventRegistration> {
+  private static final net.minecraft.util.valueproviders.FloatProvider DEFAULT_FLOAT;
+  public net.minecraft.client.resources.sounds.SoundEventRegistrationSerializer();
+  public net.minecraft.client.resources.sounds.SoundEventRegistration deserialize(com.google.gson.JsonElement, java.lang.reflect.Type, com.google.gson.JsonDeserializationContext) throws com.google.gson.JsonParseException;
+  private java.util.List<net.minecraft.client.resources.sounds.Sound> getSounds(com.google.gson.JsonObject);
+  private net.minecraft.client.resources.sounds.Sound getSound(com.google.gson.JsonObject);
+  private net.minecraft.client.resources.sounds.Sound$Type getType(com.google.gson.JsonObject, net.minecraft.client.resources.sounds.Sound$Type);
+  public java.lang.Object deserialize(com.google.gson.JsonElement, java.lang.reflect.Type, com.google.gson.JsonDeserializationContext) throws com.google.gson.JsonParseException;
+  static {};
+}
+Compiled from "SoundInstance.java"
+public interface net.minecraft.client.resources.sounds.SoundInstance {
+  public abstract net.minecraft.resources.Identifier getIdentifier();
+  public abstract net.minecraft.client.sounds.WeighedSoundEvents getOrResolve(net.minecraft.client.sounds.SoundManager);
+  public abstract net.minecraft.client.resources.sounds.Sound getSound();
+  public abstract net.minecraft.client.sounds.WeighedSoundEvents getSoundEvent();
+  public abstract net.minecraft.sounds.SoundSource getSource();
+  public abstract boolean isLooping();
+  public abstract boolean isRelative();
+  public abstract int getDelay();
+  public abstract float getVolume();
+  public abstract float getPitch();
+  public abstract double getX();
+  public abstract double getY();
+  public abstract double getZ();
+  public abstract net.minecraft.client.resources.sounds.SoundInstance$Attenuation getAttenuation();
+  public default boolean canStartSilent();
+  public default boolean canPlaySound();
+  public static net.minecraft.util.RandomSource createUnseededRandom();
+}
+Compiled from "SoundInstance.java"
+public final class net.minecraft.client.resources.sounds.SoundInstance$Attenuation extends java.lang.Enum<net.minecraft.client.resources.sounds.SoundInstance$Attenuation> {
+  public static final net.minecraft.client.resources.sounds.SoundInstance$Attenuation NONE;
+  public static final net.minecraft.client.resources.sounds.SoundInstance$Attenuation LINEAR;
+  private static final net.minecraft.client.resources.sounds.SoundInstance$Attenuation[] $VALUES;
+  public static net.minecraft.client.resources.sounds.SoundInstance$Attenuation[] values();
+  public static net.minecraft.client.resources.sounds.SoundInstance$Attenuation valueOf(java.lang.String);
+  private net.minecraft.client.resources.sounds.SoundInstance$Attenuation();
+  private static net.minecraft.client.resources.sounds.SoundInstance$Attenuation[] $values();
+  static {};
+}
+Compiled from "TickableSoundInstance.java"
+public interface net.minecraft.client.resources.sounds.TickableSoundInstance extends net.minecraft.client.resources.sounds.SoundInstance {
+  public abstract boolean isStopped();
+  public abstract void tick();
+}
+Compiled from "UnderLiquidAmbientSoundInstance.java"
+public class net.minecraft.client.resources.sounds.UnderLiquidAmbientSoundInstance extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  public static final int FADE_DURATION;
+  private final net.minecraft.client.player.LocalPlayer player;
+  private final java.util.function.Predicate<net.minecraft.client.player.LocalPlayer> isUnderLiquid;
+  private int fade;
+  public net.minecraft.client.resources.sounds.UnderLiquidAmbientSoundInstance(net.minecraft.sounds.SoundEvent, net.minecraft.client.player.LocalPlayer, java.util.function.Predicate<net.minecraft.client.player.LocalPlayer>);
+  public static net.minecraft.client.resources.sounds.UnderLiquidAmbientSoundInstance underwater(net.minecraft.client.player.LocalPlayer);
+  public void tick();
+}
+Compiled from "UnderLiquidSubSound.java"
+public class net.minecraft.client.resources.sounds.UnderLiquidSubSound extends net.minecraft.client.resources.sounds.AbstractTickableSoundInstance {
+  private final net.minecraft.client.player.LocalPlayer player;
+  protected net.minecraft.client.resources.sounds.UnderLiquidSubSound(net.minecraft.client.player.LocalPlayer, net.minecraft.sounds.SoundEvent);
+  public void tick();
+}
+Compiled from "UnderwaterAmbientSoundHandler.java"
+public class net.minecraft.client.resources.sounds.UnderwaterAmbientSoundHandler implements net.minecraft.client.resources.sounds.AmbientSoundHandler {
+  public static final float CHANCE_PER_TICK;
+  public static final float RARE_CHANCE_PER_TICK;
+  public static final float ULTRA_RARE_CHANCE_PER_TICK;
+  private static final int MINIMUM_TICK_DELAY;
+  private final net.minecraft.client.player.LocalPlayer player;
+  private final net.minecraft.client.sounds.SoundManager soundManager;
+  private int tickDelay;
+  public net.minecraft.client.resources.sounds.UnderwaterAmbientSoundHandler(net.minecraft.client.player.LocalPlayer, net.minecraft.client.sounds.SoundManager);
+  public void tick();
+}

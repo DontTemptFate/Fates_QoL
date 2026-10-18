@@ -1,0 +1,121 @@
+Compiled from "ClientBlockEntityEvents.java"
+public final class net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Load> BLOCK_ENTITY_LOAD;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Unload> BLOCK_ENTITY_UNLOAD;
+  private net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents();
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Unload lambda$static$2(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Unload[]);
+  private static void lambda$static$3(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Unload[], net.minecraft.world.level.block.entity.BlockEntity, net.minecraft.client.multiplayer.ClientLevel);
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Load lambda$static$0(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Load[]);
+  private static void lambda$static$1(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Load[], net.minecraft.world.level.block.entity.BlockEntity, net.minecraft.client.multiplayer.ClientLevel);
+  static {};
+}
+Compiled from "ClientBlockEntityEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Load {
+  public abstract void onLoad(net.minecraft.world.level.block.entity.BlockEntity, net.minecraft.client.multiplayer.ClientLevel);
+}
+Compiled from "ClientBlockEntityEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents$Unload {
+  public abstract void onUnload(net.minecraft.world.level.block.entity.BlockEntity, net.minecraft.client.multiplayer.ClientLevel);
+}
+Compiled from "ClientChunkEvents.java"
+public final class net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Load> CHUNK_LOAD;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Unload> CHUNK_UNLOAD;
+  private net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents();
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Unload lambda$static$2(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Unload[]);
+  private static void lambda$static$3(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Unload[], net.minecraft.client.multiplayer.ClientLevel, net.minecraft.world.level.chunk.LevelChunk);
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Load lambda$static$0(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Load[]);
+  private static void lambda$static$1(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Load[], net.minecraft.client.multiplayer.ClientLevel, net.minecraft.world.level.chunk.LevelChunk);
+  static {};
+}
+Compiled from "ClientChunkEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Load {
+  public abstract void onChunkLoad(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.world.level.chunk.LevelChunk);
+}
+Compiled from "ClientChunkEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents$Unload {
+  public abstract void onChunkUnload(net.minecraft.client.multiplayer.ClientLevel, net.minecraft.world.level.chunk.LevelChunk);
+}
+Compiled from "ClientEntityEvents.java"
+public final class net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Load> ENTITY_LOAD;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Unload> ENTITY_UNLOAD;
+  private net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents();
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Unload lambda$static$2(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Unload[]);
+  private static void lambda$static$3(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Unload[], net.minecraft.world.entity.Entity, net.minecraft.client.multiplayer.ClientLevel);
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Load lambda$static$0(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Load[]);
+  private static void lambda$static$1(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Load[], net.minecraft.world.entity.Entity, net.minecraft.client.multiplayer.ClientLevel);
+  static {};
+}
+Compiled from "ClientEntityEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Load {
+  public abstract void onLoad(net.minecraft.world.entity.Entity, net.minecraft.client.multiplayer.ClientLevel);
+}
+Compiled from "ClientEntityEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents$Unload {
+  public abstract void onUnload(net.minecraft.world.entity.Entity, net.minecraft.client.multiplayer.ClientLevel);
+}
+Compiled from "ClientLevelEvents.java"
+public final class net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents$AfterClientLevelChange> AFTER_CLIENT_LEVEL_CHANGE;
+  private net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents();
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents$AfterClientLevelChange lambda$static$0(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents$AfterClientLevelChange[]);
+  private static void lambda$static$1(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents$AfterClientLevelChange[], net.minecraft.client.Minecraft, net.minecraft.client.multiplayer.ClientLevel);
+  static {};
+}
+Compiled from "ClientLevelEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents$AfterClientLevelChange {
+  public abstract void afterLevelChange(net.minecraft.client.Minecraft, net.minecraft.client.multiplayer.ClientLevel);
+}
+Compiled from "ClientLifecycleEvents.java"
+public final class net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStarted> CLIENT_STARTED;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStopping> CLIENT_STOPPING;
+  private net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents();
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStopping lambda$static$2(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStopping[]);
+  private static void lambda$static$3(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStopping[], net.minecraft.client.Minecraft);
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStarted lambda$static$0(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStarted[]);
+  private static void lambda$static$1(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStarted[], net.minecraft.client.Minecraft);
+  static {};
+}
+Compiled from "ClientLifecycleEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStarted {
+  public abstract void onClientStarted(net.minecraft.client.Minecraft);
+}
+Compiled from "ClientLifecycleEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents$ClientStopping {
+  public abstract void onClientStopping(net.minecraft.client.Minecraft);
+}
+Compiled from "ClientTickEvents.java"
+public final class net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents {
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartTick> START_CLIENT_TICK;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick> END_CLIENT_TICK;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartLevelTick> START_LEVEL_TICK;
+  public static final net.fabricmc.fabric.api.event.Event<net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndLevelTick> END_LEVEL_TICK;
+  private net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents();
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndLevelTick lambda$static$6(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndLevelTick[]);
+  private static void lambda$static$7(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndLevelTick[], net.minecraft.client.multiplayer.ClientLevel);
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartLevelTick lambda$static$4(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartLevelTick[]);
+  private static void lambda$static$5(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartLevelTick[], net.minecraft.client.multiplayer.ClientLevel);
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick lambda$static$2(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick[]);
+  private static void lambda$static$3(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick[], net.minecraft.client.Minecraft);
+  private static net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartTick lambda$static$0(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartTick[]);
+  private static void lambda$static$1(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartTick[], net.minecraft.client.Minecraft);
+  static {};
+}
+Compiled from "ClientTickEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndLevelTick {
+  public abstract void onEndTick(net.minecraft.client.multiplayer.ClientLevel);
+}
+Compiled from "ClientTickEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$EndTick {
+  public abstract void onEndTick(net.minecraft.client.Minecraft);
+}
+Compiled from "ClientTickEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartLevelTick {
+  public abstract void onStartTick(net.minecraft.client.multiplayer.ClientLevel);
+}
+Compiled from "ClientTickEvents.java"
+public interface net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartTick {
+  public abstract void onStartTick(net.minecraft.client.Minecraft);
+}

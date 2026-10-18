@@ -1,0 +1,1611 @@
+Compiled from "ByteArrayTag.java"
+public final class net.minecraft.nbt.ByteArrayTag implements net.minecraft.nbt.CollectionTag {
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.ByteArrayTag> TYPE;
+  private byte[] data;
+  public net.minecraft.nbt.ByteArrayTag(byte[]);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.ByteArrayTag> getType();
+  public java.lang.String toString();
+  public net.minecraft.nbt.Tag copy();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public byte[] getAsByteArray();
+  public int size();
+  public net.minecraft.nbt.ByteTag get(int);
+  public boolean setTag(int, net.minecraft.nbt.Tag);
+  public boolean addTag(int, net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.ByteTag remove(int);
+  public void clear();
+  public java.util.Optional<byte[]> asByteArray();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public net.minecraft.nbt.Tag get(int);
+  public net.minecraft.nbt.Tag remove(int);
+  static {};
+}
+Compiled from "ByteArrayTag.java"
+class net.minecraft.nbt.ByteArrayTag$1 implements net.minecraft.nbt.TagType$VariableSize<net.minecraft.nbt.ByteArrayTag> {
+  net.minecraft.nbt.ByteArrayTag$1();
+  public net.minecraft.nbt.ByteArrayTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static byte[] readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "ByteTag.java"
+public final class net.minecraft.nbt.ByteTag extends java.lang.Record implements net.minecraft.nbt.NumericTag {
+  private final byte value;
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.ByteTag> TYPE;
+  public static final net.minecraft.nbt.ByteTag ZERO;
+  public static final net.minecraft.nbt.ByteTag ONE;
+  public net.minecraft.nbt.ByteTag(byte);
+  public static net.minecraft.nbt.ByteTag valueOf(byte);
+  public static net.minecraft.nbt.ByteTag valueOf(boolean);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.ByteTag> getType();
+  public net.minecraft.nbt.ByteTag copy();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public long longValue();
+  public int intValue();
+  public short shortValue();
+  public byte byteValue();
+  public double doubleValue();
+  public float floatValue();
+  public java.lang.Number box();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public byte value();
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "ByteTag.java"
+class net.minecraft.nbt.ByteTag$1 implements net.minecraft.nbt.TagType$StaticSize<net.minecraft.nbt.ByteTag> {
+  net.minecraft.nbt.ByteTag$1();
+  public net.minecraft.nbt.ByteTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static byte readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public int size();
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "ByteTag.java"
+class net.minecraft.nbt.ByteTag$Cache {
+  private static final net.minecraft.nbt.ByteTag[] cache;
+  private net.minecraft.nbt.ByteTag$Cache();
+  static {};
+}
+Compiled from "CollectionTag.java"
+public interface net.minecraft.nbt.CollectionTag extends net.minecraft.nbt.Tag, java.lang.Iterable<net.minecraft.nbt.Tag> {
+  public abstract void clear();
+  public abstract boolean setTag(int, net.minecraft.nbt.Tag);
+  public abstract boolean addTag(int, net.minecraft.nbt.Tag);
+  public abstract net.minecraft.nbt.Tag remove(int);
+  public abstract net.minecraft.nbt.Tag get(int);
+  public abstract int size();
+  public default boolean isEmpty();
+  public default java.util.Iterator<net.minecraft.nbt.Tag> iterator();
+  public default java.util.stream.Stream<net.minecraft.nbt.Tag> stream();
+}
+Compiled from "CollectionTag.java"
+class net.minecraft.nbt.CollectionTag$1 implements java.util.Iterator<net.minecraft.nbt.Tag> {
+  private int index;
+  final net.minecraft.nbt.CollectionTag this$0;
+  net.minecraft.nbt.CollectionTag$1(net.minecraft.nbt.CollectionTag);
+  public boolean hasNext();
+  public net.minecraft.nbt.Tag next();
+  public java.lang.Object next();
+}
+Compiled from "CompoundTag.java"
+public final class net.minecraft.nbt.CompoundTag implements net.minecraft.nbt.Tag {
+  private static final org.slf4j.Logger LOGGER;
+  public static final com.mojang.serialization.Codec<net.minecraft.nbt.CompoundTag> CODEC;
+  private static final int SELF_SIZE_IN_BYTES;
+  private static final int MAP_ENTRY_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.CompoundTag> TYPE;
+  private final java.util.Map<java.lang.String, net.minecraft.nbt.Tag> tags;
+  net.minecraft.nbt.CompoundTag(java.util.Map<java.lang.String, net.minecraft.nbt.Tag>);
+  public net.minecraft.nbt.CompoundTag();
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public java.util.Set<java.lang.String> keySet();
+  public java.util.Set<java.util.Map$Entry<java.lang.String, net.minecraft.nbt.Tag>> entrySet();
+  public java.util.Collection<net.minecraft.nbt.Tag> values();
+  public void forEach(java.util.function.BiConsumer<java.lang.String, net.minecraft.nbt.Tag>);
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.CompoundTag> getType();
+  public int size();
+  public net.minecraft.nbt.Tag put(java.lang.String, net.minecraft.nbt.Tag);
+  public void putByte(java.lang.String, byte);
+  public void putShort(java.lang.String, short);
+  public void putInt(java.lang.String, int);
+  public void putLong(java.lang.String, long);
+  public void putFloat(java.lang.String, float);
+  public void putDouble(java.lang.String, double);
+  public void putString(java.lang.String, java.lang.String);
+  public void putByteArray(java.lang.String, byte[]);
+  public void putIntArray(java.lang.String, int[]);
+  public void putLongArray(java.lang.String, long[]);
+  public void putBoolean(java.lang.String, boolean);
+  public net.minecraft.nbt.Tag get(java.lang.String);
+  public boolean contains(java.lang.String);
+  private java.util.Optional<net.minecraft.nbt.Tag> getOptional(java.lang.String);
+  public java.util.Optional<java.lang.Byte> getByte(java.lang.String);
+  public byte getByteOr(java.lang.String, byte);
+  public java.util.Optional<java.lang.Short> getShort(java.lang.String);
+  public short getShortOr(java.lang.String, short);
+  public java.util.Optional<java.lang.Integer> getInt(java.lang.String);
+  public int getIntOr(java.lang.String, int);
+  public java.util.Optional<java.lang.Long> getLong(java.lang.String);
+  public long getLongOr(java.lang.String, long);
+  public java.util.Optional<java.lang.Float> getFloat(java.lang.String);
+  public float getFloatOr(java.lang.String, float);
+  public java.util.Optional<java.lang.Double> getDouble(java.lang.String);
+  public double getDoubleOr(java.lang.String, double);
+  public java.util.Optional<java.lang.String> getString(java.lang.String);
+  public java.lang.String getStringOr(java.lang.String, java.lang.String);
+  public java.util.Optional<byte[]> getByteArray(java.lang.String);
+  public java.util.Optional<int[]> getIntArray(java.lang.String);
+  public java.util.Optional<long[]> getLongArray(java.lang.String);
+  public java.util.Optional<net.minecraft.nbt.CompoundTag> getCompound(java.lang.String);
+  public net.minecraft.nbt.CompoundTag getCompoundOrEmpty(java.lang.String);
+  public java.util.Optional<net.minecraft.nbt.ListTag> getList(java.lang.String);
+  public net.minecraft.nbt.ListTag getListOrEmpty(java.lang.String);
+  public java.util.Optional<java.lang.Boolean> getBoolean(java.lang.String);
+  public boolean getBooleanOr(java.lang.String, boolean);
+  public net.minecraft.nbt.Tag remove(java.lang.String);
+  public java.lang.String toString();
+  public boolean isEmpty();
+  net.minecraft.nbt.CompoundTag shallowCopy();
+  public net.minecraft.nbt.CompoundTag copy();
+  public java.util.Optional<net.minecraft.nbt.CompoundTag> asCompound();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  private static void writeNamedTag(java.lang.String, net.minecraft.nbt.Tag, java.io.DataOutput) throws java.io.IOException;
+  private static net.minecraft.nbt.Tag readNamedTagData(net.minecraft.nbt.TagType<?>, java.lang.String, java.io.DataInput, net.minecraft.nbt.NbtAccounter);
+  public net.minecraft.nbt.CompoundTag merge(net.minecraft.nbt.CompoundTag);
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public <T> void store(java.lang.String, com.mojang.serialization.Codec<T>, T);
+  public <T> void storeNullable(java.lang.String, com.mojang.serialization.Codec<T>, T);
+  public <T> void store(java.lang.String, com.mojang.serialization.Codec<T>, com.mojang.serialization.DynamicOps<net.minecraft.nbt.Tag>, T);
+  public <T> void storeNullable(java.lang.String, com.mojang.serialization.Codec<T>, com.mojang.serialization.DynamicOps<net.minecraft.nbt.Tag>, T);
+  public <T> void store(com.mojang.serialization.MapCodec<T>, T);
+  public <T> void store(com.mojang.serialization.MapCodec<T>, com.mojang.serialization.DynamicOps<net.minecraft.nbt.Tag>, T);
+  public <T> java.util.Optional<T> read(java.lang.String, com.mojang.serialization.Codec<T>);
+  public <T> java.util.Optional<T> read(java.lang.String, com.mojang.serialization.Codec<T>, com.mojang.serialization.DynamicOps<net.minecraft.nbt.Tag>);
+  public <T> java.util.Optional<T> read(com.mojang.serialization.MapCodec<T>);
+  public <T> java.util.Optional<T> read(com.mojang.serialization.MapCodec<T>, com.mojang.serialization.DynamicOps<net.minecraft.nbt.Tag>);
+  public net.minecraft.nbt.Tag copy();
+  private void lambda$read$1(java.lang.String);
+  private static void lambda$read$0(java.lang.String, net.minecraft.nbt.Tag, java.lang.String);
+  private static void lambda$copy$0(java.util.HashMap, java.lang.String, net.minecraft.nbt.Tag);
+  private static com.mojang.serialization.Dynamic lambda$static$2(net.minecraft.nbt.CompoundTag);
+  private static com.mojang.serialization.DataResult lambda$static$0(com.mojang.serialization.Dynamic);
+  private static java.lang.String lambda$static$1(net.minecraft.nbt.Tag);
+  static {};
+}
+Compiled from "CompoundTag.java"
+class net.minecraft.nbt.CompoundTag$1 implements net.minecraft.nbt.TagType$VariableSize<net.minecraft.nbt.CompoundTag> {
+  net.minecraft.nbt.CompoundTag$1();
+  public net.minecraft.nbt.CompoundTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static net.minecraft.nbt.CompoundTag loadCompound(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static net.minecraft.nbt.StreamTagVisitor$ValueResult parseCompound(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static java.lang.String readString(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "CompoundTag.java"
+class net.minecraft.nbt.CompoundTag$2 {
+  static final int[] $SwitchMap$net$minecraft$nbt$StreamTagVisitor$EntryResult;
+  static final int[] $SwitchMap$net$minecraft$nbt$StreamTagVisitor$ValueResult;
+  static {};
+}
+Compiled from "DoubleTag.java"
+public final class net.minecraft.nbt.DoubleTag extends java.lang.Record implements net.minecraft.nbt.NumericTag {
+  private final double value;
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.DoubleTag ZERO;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.DoubleTag> TYPE;
+  public net.minecraft.nbt.DoubleTag(double);
+  public static net.minecraft.nbt.DoubleTag valueOf(double);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.DoubleTag> getType();
+  public net.minecraft.nbt.DoubleTag copy();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public long longValue();
+  public int intValue();
+  public short shortValue();
+  public byte byteValue();
+  public double doubleValue();
+  public float floatValue();
+  public java.lang.Number box();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public double value();
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "DoubleTag.java"
+class net.minecraft.nbt.DoubleTag$1 implements net.minecraft.nbt.TagType$StaticSize<net.minecraft.nbt.DoubleTag> {
+  net.minecraft.nbt.DoubleTag$1();
+  public net.minecraft.nbt.DoubleTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static double readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public int size();
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "EndTag.java"
+public final class net.minecraft.nbt.EndTag implements net.minecraft.nbt.Tag {
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.EndTag> TYPE;
+  public static final net.minecraft.nbt.EndTag INSTANCE;
+  private net.minecraft.nbt.EndTag();
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.EndTag> getType();
+  public java.lang.String toString();
+  public net.minecraft.nbt.EndTag copy();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "EndTag.java"
+class net.minecraft.nbt.EndTag$1 implements net.minecraft.nbt.TagType<net.minecraft.nbt.EndTag> {
+  net.minecraft.nbt.EndTag$1();
+  public net.minecraft.nbt.EndTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter);
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter);
+  public void skip(java.io.DataInput, int, net.minecraft.nbt.NbtAccounter);
+  public void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter);
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "FloatTag.java"
+public final class net.minecraft.nbt.FloatTag extends java.lang.Record implements net.minecraft.nbt.NumericTag {
+  private final float value;
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.FloatTag ZERO;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.FloatTag> TYPE;
+  public net.minecraft.nbt.FloatTag(float);
+  public static net.minecraft.nbt.FloatTag valueOf(float);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.FloatTag> getType();
+  public net.minecraft.nbt.FloatTag copy();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public long longValue();
+  public int intValue();
+  public short shortValue();
+  public byte byteValue();
+  public double doubleValue();
+  public float floatValue();
+  public java.lang.Number box();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public float value();
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "FloatTag.java"
+class net.minecraft.nbt.FloatTag$1 implements net.minecraft.nbt.TagType$StaticSize<net.minecraft.nbt.FloatTag> {
+  net.minecraft.nbt.FloatTag$1();
+  public net.minecraft.nbt.FloatTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static float readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public int size();
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "IntArrayTag.java"
+public final class net.minecraft.nbt.IntArrayTag implements net.minecraft.nbt.CollectionTag {
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.IntArrayTag> TYPE;
+  private int[] data;
+  public net.minecraft.nbt.IntArrayTag(int[]);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.IntArrayTag> getType();
+  public java.lang.String toString();
+  public net.minecraft.nbt.IntArrayTag copy();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public int[] getAsIntArray();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public int size();
+  public net.minecraft.nbt.IntTag get(int);
+  public boolean setTag(int, net.minecraft.nbt.Tag);
+  public boolean addTag(int, net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.IntTag remove(int);
+  public void clear();
+  public java.util.Optional<int[]> asIntArray();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public net.minecraft.nbt.Tag get(int);
+  public net.minecraft.nbt.Tag remove(int);
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "IntArrayTag.java"
+class net.minecraft.nbt.IntArrayTag$1 implements net.minecraft.nbt.TagType$VariableSize<net.minecraft.nbt.IntArrayTag> {
+  net.minecraft.nbt.IntArrayTag$1();
+  public net.minecraft.nbt.IntArrayTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static int[] readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "IntTag.java"
+public final class net.minecraft.nbt.IntTag extends java.lang.Record implements net.minecraft.nbt.NumericTag {
+  private final int value;
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.IntTag> TYPE;
+  public net.minecraft.nbt.IntTag(int);
+  public static net.minecraft.nbt.IntTag valueOf(int);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.IntTag> getType();
+  public net.minecraft.nbt.IntTag copy();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public long longValue();
+  public int intValue();
+  public short shortValue();
+  public byte byteValue();
+  public double doubleValue();
+  public float floatValue();
+  public java.lang.Number box();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int value();
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "IntTag.java"
+class net.minecraft.nbt.IntTag$1 implements net.minecraft.nbt.TagType$StaticSize<net.minecraft.nbt.IntTag> {
+  net.minecraft.nbt.IntTag$1();
+  public net.minecraft.nbt.IntTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static int readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public int size();
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "IntTag.java"
+class net.minecraft.nbt.IntTag$Cache {
+  private static final int HIGH;
+  private static final int LOW;
+  private static final net.minecraft.nbt.IntTag[] cache;
+  private net.minecraft.nbt.IntTag$Cache();
+  static {};
+}
+Compiled from "ListTag.java"
+public final class net.minecraft.nbt.ListTag extends java.util.AbstractList<net.minecraft.nbt.Tag> implements net.minecraft.nbt.CollectionTag {
+  private static final java.lang.String WRAPPER_MARKER;
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.ListTag> TYPE;
+  private final java.util.List<net.minecraft.nbt.Tag> list;
+  public net.minecraft.nbt.ListTag();
+  net.minecraft.nbt.ListTag(java.util.List<net.minecraft.nbt.Tag>);
+  private static net.minecraft.nbt.Tag tryUnwrap(net.minecraft.nbt.CompoundTag);
+  private static boolean isWrapper(net.minecraft.nbt.CompoundTag);
+  private static net.minecraft.nbt.Tag wrapIfNeeded(byte, net.minecraft.nbt.Tag);
+  private static net.minecraft.nbt.CompoundTag wrapElement(net.minecraft.nbt.Tag);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  byte identifyRawElementType();
+  public void addAndUnwrap(net.minecraft.nbt.Tag);
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.ListTag> getType();
+  public java.lang.String toString();
+  public net.minecraft.nbt.Tag remove(int);
+  public boolean isEmpty();
+  public java.util.Optional<net.minecraft.nbt.CompoundTag> getCompound(int);
+  public net.minecraft.nbt.CompoundTag getCompoundOrEmpty(int);
+  public java.util.Optional<net.minecraft.nbt.ListTag> getList(int);
+  public net.minecraft.nbt.ListTag getListOrEmpty(int);
+  public java.util.Optional<java.lang.Short> getShort(int);
+  public short getShortOr(int, short);
+  public java.util.Optional<java.lang.Integer> getInt(int);
+  public int getIntOr(int, int);
+  public java.util.Optional<int[]> getIntArray(int);
+  public java.util.Optional<long[]> getLongArray(int);
+  public java.util.Optional<java.lang.Double> getDouble(int);
+  public double getDoubleOr(int, double);
+  public java.util.Optional<java.lang.Float> getFloat(int);
+  public float getFloatOr(int, float);
+  public java.util.Optional<java.lang.String> getString(int);
+  public java.lang.String getStringOr(int, java.lang.String);
+  private net.minecraft.nbt.Tag getNullable(int);
+  private java.util.Optional<net.minecraft.nbt.Tag> getOptional(int);
+  public int size();
+  public net.minecraft.nbt.Tag get(int);
+  public net.minecraft.nbt.Tag set(int, net.minecraft.nbt.Tag);
+  public void add(int, net.minecraft.nbt.Tag);
+  public boolean setTag(int, net.minecraft.nbt.Tag);
+  public boolean addTag(int, net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.ListTag copy();
+  public java.util.Optional<net.minecraft.nbt.ListTag> asList();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public java.util.stream.Stream<net.minecraft.nbt.Tag> stream();
+  public java.util.stream.Stream<net.minecraft.nbt.CompoundTag> compoundStream();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public void clear();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public java.lang.Object remove(int);
+  public void add(int, java.lang.Object);
+  public java.lang.Object set(int, java.lang.Object);
+  public java.lang.Object get(int);
+  public net.minecraft.nbt.Tag copy();
+  private static void lambda$compoundStream$0(net.minecraft.nbt.Tag, java.util.function.Consumer);
+  static {};
+}
+Compiled from "ListTag.java"
+class net.minecraft.nbt.ListTag$1 implements net.minecraft.nbt.TagType$VariableSize<net.minecraft.nbt.ListTag> {
+  net.minecraft.nbt.ListTag$1();
+  public net.minecraft.nbt.ListTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static net.minecraft.nbt.ListTag loadList(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static net.minecraft.nbt.StreamTagVisitor$ValueResult parseList(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static int readListCount(java.io.DataInput) throws java.io.IOException;
+  public void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "ListTag.java"
+class net.minecraft.nbt.ListTag$2 {
+  static final int[] $SwitchMap$net$minecraft$nbt$StreamTagVisitor$ValueResult;
+  static final int[] $SwitchMap$net$minecraft$nbt$StreamTagVisitor$EntryResult;
+  static {};
+}
+Compiled from "LongArrayTag.java"
+public final class net.minecraft.nbt.LongArrayTag implements net.minecraft.nbt.CollectionTag {
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.LongArrayTag> TYPE;
+  private long[] data;
+  public net.minecraft.nbt.LongArrayTag(long[]);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.LongArrayTag> getType();
+  public java.lang.String toString();
+  public net.minecraft.nbt.LongArrayTag copy();
+  public boolean equals(java.lang.Object);
+  public int hashCode();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public long[] getAsLongArray();
+  public int size();
+  public net.minecraft.nbt.LongTag get(int);
+  public boolean setTag(int, net.minecraft.nbt.Tag);
+  public boolean addTag(int, net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.LongTag remove(int);
+  public void clear();
+  public java.util.Optional<long[]> asLongArray();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public net.minecraft.nbt.Tag get(int);
+  public net.minecraft.nbt.Tag remove(int);
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "LongArrayTag.java"
+class net.minecraft.nbt.LongArrayTag$1 implements net.minecraft.nbt.TagType$VariableSize<net.minecraft.nbt.LongArrayTag> {
+  net.minecraft.nbt.LongArrayTag$1();
+  public net.minecraft.nbt.LongArrayTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static long[] readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "LongTag.java"
+public final class net.minecraft.nbt.LongTag extends java.lang.Record implements net.minecraft.nbt.NumericTag {
+  private final long value;
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.LongTag> TYPE;
+  public net.minecraft.nbt.LongTag(long);
+  public static net.minecraft.nbt.LongTag valueOf(long);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.LongTag> getType();
+  public net.minecraft.nbt.LongTag copy();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public long longValue();
+  public int intValue();
+  public short shortValue();
+  public byte byteValue();
+  public double doubleValue();
+  public float floatValue();
+  public java.lang.Number box();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public long value();
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "LongTag.java"
+class net.minecraft.nbt.LongTag$1 implements net.minecraft.nbt.TagType$StaticSize<net.minecraft.nbt.LongTag> {
+  net.minecraft.nbt.LongTag$1();
+  public net.minecraft.nbt.LongTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static long readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public int size();
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "LongTag.java"
+class net.minecraft.nbt.LongTag$Cache {
+  private static final int HIGH;
+  private static final int LOW;
+  private static final net.minecraft.nbt.LongTag[] cache;
+  private net.minecraft.nbt.LongTag$Cache();
+  static {};
+}
+Compiled from "NbtAccounter.java"
+public class net.minecraft.nbt.NbtAccounter {
+  public static final int DEFAULT_NBT_QUOTA;
+  public static final int UNCOMPRESSED_NBT_QUOTA;
+  private static final int MAX_STACK_DEPTH;
+  private final long quota;
+  private long usage;
+  private final int maxDepth;
+  private int depth;
+  public net.minecraft.nbt.NbtAccounter(long, int);
+  public static net.minecraft.nbt.NbtAccounter create(long);
+  public static net.minecraft.nbt.NbtAccounter defaultQuota();
+  public static net.minecraft.nbt.NbtAccounter uncompressedQuota();
+  public static net.minecraft.nbt.NbtAccounter unlimitedHeap();
+  public void accountBytes(long, long);
+  public void accountBytes(long);
+  public void pushDepth();
+  public void popDepth();
+  public long getUsage();
+  public int getDepth();
+}
+Compiled from "NbtAccounterException.java"
+public class net.minecraft.nbt.NbtAccounterException extends net.minecraft.nbt.NbtException {
+  public net.minecraft.nbt.NbtAccounterException(java.lang.String);
+}
+Compiled from "NbtException.java"
+public class net.minecraft.nbt.NbtException extends java.lang.RuntimeException {
+  public net.minecraft.nbt.NbtException(java.lang.String);
+}
+Compiled from "NbtFormatException.java"
+public class net.minecraft.nbt.NbtFormatException extends net.minecraft.nbt.NbtException {
+  public net.minecraft.nbt.NbtFormatException(java.lang.String);
+}
+Compiled from "NbtIo.java"
+public class net.minecraft.nbt.NbtIo {
+  private static final java.nio.file.OpenOption[] SYNC_OUTPUT_OPTIONS;
+  public net.minecraft.nbt.NbtIo();
+  public static net.minecraft.nbt.CompoundTag readCompressed(java.nio.file.Path, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static java.io.DataInputStream createDecompressorStream(java.io.InputStream) throws java.io.IOException;
+  private static java.io.DataOutputStream createCompressorStream(java.io.OutputStream) throws java.io.IOException;
+  public static net.minecraft.nbt.CompoundTag readCompressed(java.io.InputStream, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public static void parseCompressed(java.nio.file.Path, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public static void parseCompressed(java.io.InputStream, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public static void writeCompressed(net.minecraft.nbt.CompoundTag, java.nio.file.Path) throws java.io.IOException;
+  public static void writeCompressed(net.minecraft.nbt.CompoundTag, java.io.OutputStream) throws java.io.IOException;
+  public static void write(net.minecraft.nbt.CompoundTag, java.nio.file.Path) throws java.io.IOException;
+  public static net.minecraft.nbt.CompoundTag read(java.nio.file.Path) throws java.io.IOException;
+  public static net.minecraft.nbt.CompoundTag read(java.io.DataInput) throws java.io.IOException;
+  public static net.minecraft.nbt.CompoundTag read(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public static void write(net.minecraft.nbt.CompoundTag, java.io.DataOutput) throws java.io.IOException;
+  public static void parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public static net.minecraft.nbt.Tag readAnyTag(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public static void writeAnyTag(net.minecraft.nbt.Tag, java.io.DataOutput) throws java.io.IOException;
+  public static void writeUnnamedTag(net.minecraft.nbt.Tag, java.io.DataOutput) throws java.io.IOException;
+  public static void writeUnnamedTagWithFallback(net.minecraft.nbt.Tag, java.io.DataOutput) throws java.io.IOException;
+  public static net.minecraft.nbt.Tag readUnnamedTag(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static net.minecraft.nbt.Tag readTagSafe(java.io.DataInput, net.minecraft.nbt.NbtAccounter, byte);
+  static {};
+}
+Compiled from "NbtIo.java"
+class net.minecraft.nbt.NbtIo$1 {
+  static final int[] $SwitchMap$net$minecraft$nbt$StreamTagVisitor$ValueResult;
+  static {};
+}
+Compiled from "NbtIo.java"
+public class net.minecraft.nbt.NbtIo$StringFallbackDataOutput extends net.minecraft.util.DelegateDataOutput {
+  public net.minecraft.nbt.NbtIo$StringFallbackDataOutput(java.io.DataOutput);
+  public void writeUTF(java.lang.String) throws java.io.IOException;
+}
+Compiled from "NbtOps.java"
+public class net.minecraft.nbt.NbtOps implements com.mojang.serialization.DynamicOps<net.minecraft.nbt.Tag> {
+  public static final net.minecraft.nbt.NbtOps INSTANCE;
+  private net.minecraft.nbt.NbtOps();
+  public net.minecraft.nbt.Tag empty();
+  public net.minecraft.nbt.Tag emptyList();
+  public net.minecraft.nbt.Tag emptyMap();
+  public <U> U convertTo(com.mojang.serialization.DynamicOps<U>, net.minecraft.nbt.Tag);
+  public com.mojang.serialization.DataResult<java.lang.Number> getNumberValue(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag createNumeric(java.lang.Number);
+  public net.minecraft.nbt.Tag createByte(byte);
+  public net.minecraft.nbt.Tag createShort(short);
+  public net.minecraft.nbt.Tag createInt(int);
+  public net.minecraft.nbt.Tag createLong(long);
+  public net.minecraft.nbt.Tag createFloat(float);
+  public net.minecraft.nbt.Tag createDouble(double);
+  public com.mojang.serialization.DataResult<java.lang.Boolean> getBooleanValue(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag createBoolean(boolean);
+  public com.mojang.serialization.DataResult<java.lang.String> getStringValue(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag createString(java.lang.String);
+  public com.mojang.serialization.DataResult<net.minecraft.nbt.Tag> mergeToList(net.minecraft.nbt.Tag, net.minecraft.nbt.Tag);
+  public com.mojang.serialization.DataResult<net.minecraft.nbt.Tag> mergeToList(net.minecraft.nbt.Tag, java.util.List<net.minecraft.nbt.Tag>);
+  public com.mojang.serialization.DataResult<net.minecraft.nbt.Tag> mergeToMap(net.minecraft.nbt.Tag, net.minecraft.nbt.Tag, net.minecraft.nbt.Tag);
+  public com.mojang.serialization.DataResult<net.minecraft.nbt.Tag> mergeToMap(net.minecraft.nbt.Tag, com.mojang.serialization.MapLike<net.minecraft.nbt.Tag>);
+  public com.mojang.serialization.DataResult<net.minecraft.nbt.Tag> mergeToMap(net.minecraft.nbt.Tag, java.util.Map<net.minecraft.nbt.Tag, net.minecraft.nbt.Tag>);
+  public com.mojang.serialization.DataResult<java.util.stream.Stream<com.mojang.datafixers.util.Pair<net.minecraft.nbt.Tag, net.minecraft.nbt.Tag>>> getMapValues(net.minecraft.nbt.Tag);
+  public com.mojang.serialization.DataResult<java.util.function.Consumer<java.util.function.BiConsumer<net.minecraft.nbt.Tag, net.minecraft.nbt.Tag>>> getMapEntries(net.minecraft.nbt.Tag);
+  public com.mojang.serialization.DataResult<com.mojang.serialization.MapLike<net.minecraft.nbt.Tag>> getMap(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag createMap(java.util.stream.Stream<com.mojang.datafixers.util.Pair<net.minecraft.nbt.Tag, net.minecraft.nbt.Tag>>);
+  public com.mojang.serialization.DataResult<java.util.stream.Stream<net.minecraft.nbt.Tag>> getStream(net.minecraft.nbt.Tag);
+  public com.mojang.serialization.DataResult<java.util.function.Consumer<java.util.function.Consumer<net.minecraft.nbt.Tag>>> getList(net.minecraft.nbt.Tag);
+  public com.mojang.serialization.DataResult<java.nio.ByteBuffer> getByteBuffer(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag createByteList(java.nio.ByteBuffer);
+  public com.mojang.serialization.DataResult<java.util.stream.IntStream> getIntStream(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag createIntList(java.util.stream.IntStream);
+  public com.mojang.serialization.DataResult<java.util.stream.LongStream> getLongStream(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag createLongList(java.util.stream.LongStream);
+  public net.minecraft.nbt.Tag createList(java.util.stream.Stream<net.minecraft.nbt.Tag>);
+  public net.minecraft.nbt.Tag remove(net.minecraft.nbt.Tag, java.lang.String);
+  public java.lang.String toString();
+  public com.mojang.serialization.RecordBuilder<net.minecraft.nbt.Tag> mapBuilder();
+  private static java.util.Optional<net.minecraft.nbt.NbtOps$ListCollector> createCollector(net.minecraft.nbt.Tag);
+  public java.lang.Object remove(java.lang.Object, java.lang.String);
+  public java.lang.Object createLongList(java.util.stream.LongStream);
+  public com.mojang.serialization.DataResult getLongStream(java.lang.Object);
+  public java.lang.Object createIntList(java.util.stream.IntStream);
+  public com.mojang.serialization.DataResult getIntStream(java.lang.Object);
+  public java.lang.Object createByteList(java.nio.ByteBuffer);
+  public com.mojang.serialization.DataResult getByteBuffer(java.lang.Object);
+  public java.lang.Object createList(java.util.stream.Stream);
+  public com.mojang.serialization.DataResult getList(java.lang.Object);
+  public com.mojang.serialization.DataResult getStream(java.lang.Object);
+  public com.mojang.serialization.DataResult getMap(java.lang.Object);
+  public java.lang.Object createMap(java.util.stream.Stream);
+  public com.mojang.serialization.DataResult getMapEntries(java.lang.Object);
+  public com.mojang.serialization.DataResult getMapValues(java.lang.Object);
+  public com.mojang.serialization.DataResult mergeToMap(java.lang.Object, com.mojang.serialization.MapLike);
+  public com.mojang.serialization.DataResult mergeToMap(java.lang.Object, java.util.Map);
+  public com.mojang.serialization.DataResult mergeToMap(java.lang.Object, java.lang.Object, java.lang.Object);
+  public com.mojang.serialization.DataResult mergeToList(java.lang.Object, java.util.List);
+  public com.mojang.serialization.DataResult mergeToList(java.lang.Object, java.lang.Object);
+  public java.lang.Object createString(java.lang.String);
+  public com.mojang.serialization.DataResult getStringValue(java.lang.Object);
+  public java.lang.Object createBoolean(boolean);
+  public com.mojang.serialization.DataResult getBooleanValue(java.lang.Object);
+  public java.lang.Object createDouble(double);
+  public java.lang.Object createFloat(float);
+  public java.lang.Object createLong(long);
+  public java.lang.Object createInt(int);
+  public java.lang.Object createShort(short);
+  public java.lang.Object createByte(byte);
+  public java.lang.Object createNumeric(java.lang.Number);
+  public com.mojang.serialization.DataResult getNumberValue(java.lang.Object);
+  public java.lang.Object convertTo(com.mojang.serialization.DynamicOps, java.lang.Object);
+  public java.lang.Object emptyList();
+  public java.lang.Object emptyMap();
+  public java.lang.Object empty();
+  private static java.lang.String lambda$getList$0(net.minecraft.nbt.Tag);
+  private static java.lang.String lambda$getStream$0();
+  private static void lambda$createMap$0(net.minecraft.nbt.CompoundTag, com.mojang.datafixers.util.Pair);
+  private static java.lang.String lambda$getMap$0(net.minecraft.nbt.Tag);
+  private static java.lang.String lambda$getMapEntries$1(net.minecraft.nbt.Tag);
+  private void lambda$getMapEntries$0(net.minecraft.nbt.CompoundTag, java.util.function.BiConsumer);
+  private static java.lang.String lambda$getMapValues$1(net.minecraft.nbt.Tag);
+  private com.mojang.datafixers.util.Pair lambda$getMapValues$0(java.util.Map$Entry);
+  private static java.lang.String lambda$mergeToMap$6(java.util.List);
+  private static java.lang.String lambda$mergeToMap$5(net.minecraft.nbt.Tag);
+  private static java.lang.String lambda$mergeToMap$4(java.util.List);
+  private static void lambda$mergeToMap$3(java.util.List, net.minecraft.nbt.CompoundTag, com.mojang.datafixers.util.Pair);
+  private static java.lang.String lambda$mergeToMap$2(net.minecraft.nbt.Tag);
+  private static java.lang.String lambda$mergeToMap$1(net.minecraft.nbt.Tag);
+  private static java.lang.String lambda$mergeToMap$0(net.minecraft.nbt.Tag);
+  private static com.mojang.serialization.DataResult lambda$mergeToList$4(net.minecraft.nbt.Tag);
+  private static java.lang.String lambda$mergeToList$5(net.minecraft.nbt.Tag);
+  private static com.mojang.serialization.DataResult lambda$mergeToList$3(java.util.List, net.minecraft.nbt.NbtOps$ListCollector);
+  private static com.mojang.serialization.DataResult lambda$mergeToList$1(net.minecraft.nbt.Tag);
+  private static java.lang.String lambda$mergeToList$2(net.minecraft.nbt.Tag);
+  private static com.mojang.serialization.DataResult lambda$mergeToList$0(net.minecraft.nbt.Tag, net.minecraft.nbt.NbtOps$ListCollector);
+  private static java.lang.String lambda$getStringValue$0();
+  private static java.lang.Boolean lambda$getBooleanValue$0(java.lang.Number);
+  private static com.mojang.serialization.DataResult lambda$getNumberValue$0();
+  private static java.lang.String lambda$getNumberValue$1();
+  static {};
+}
+Compiled from "NbtOps.java"
+class net.minecraft.nbt.NbtOps$1 implements com.mojang.serialization.MapLike<net.minecraft.nbt.Tag> {
+  final net.minecraft.nbt.CompoundTag val$tag;
+  final net.minecraft.nbt.NbtOps this$0;
+  net.minecraft.nbt.NbtOps$1(net.minecraft.nbt.NbtOps, net.minecraft.nbt.CompoundTag);
+  public net.minecraft.nbt.Tag get(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag get(java.lang.String);
+  public java.util.stream.Stream<com.mojang.datafixers.util.Pair<net.minecraft.nbt.Tag, net.minecraft.nbt.Tag>> entries();
+  public java.lang.String toString();
+  public java.lang.Object get(java.lang.String);
+  public java.lang.Object get(java.lang.Object);
+  private com.mojang.datafixers.util.Pair lambda$entries$0(java.util.Map$Entry);
+}
+Compiled from "NbtOps.java"
+class net.minecraft.nbt.NbtOps$ByteListCollector implements net.minecraft.nbt.NbtOps$ListCollector {
+  private final it.unimi.dsi.fastutil.bytes.ByteArrayList values;
+  public net.minecraft.nbt.NbtOps$ByteListCollector(byte[]);
+  public net.minecraft.nbt.NbtOps$ListCollector accept(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag result();
+}
+Compiled from "NbtOps.java"
+class net.minecraft.nbt.NbtOps$GenericListCollector implements net.minecraft.nbt.NbtOps$ListCollector {
+  private final net.minecraft.nbt.ListTag result;
+  private net.minecraft.nbt.NbtOps$GenericListCollector();
+  private net.minecraft.nbt.NbtOps$GenericListCollector(net.minecraft.nbt.ListTag);
+  public net.minecraft.nbt.NbtOps$GenericListCollector(it.unimi.dsi.fastutil.ints.IntArrayList);
+  public net.minecraft.nbt.NbtOps$GenericListCollector(it.unimi.dsi.fastutil.bytes.ByteArrayList);
+  public net.minecraft.nbt.NbtOps$GenericListCollector(it.unimi.dsi.fastutil.longs.LongArrayList);
+  public net.minecraft.nbt.NbtOps$ListCollector accept(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag result();
+  private void lambda$new$2(long);
+  private void lambda$new$1(byte);
+  private void lambda$new$0(int);
+}
+Compiled from "NbtOps.java"
+class net.minecraft.nbt.NbtOps$IntListCollector implements net.minecraft.nbt.NbtOps$ListCollector {
+  private final it.unimi.dsi.fastutil.ints.IntArrayList values;
+  public net.minecraft.nbt.NbtOps$IntListCollector(int[]);
+  public net.minecraft.nbt.NbtOps$ListCollector accept(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag result();
+}
+Compiled from "NbtOps.java"
+interface net.minecraft.nbt.NbtOps$ListCollector {
+  public abstract net.minecraft.nbt.NbtOps$ListCollector accept(net.minecraft.nbt.Tag);
+  public default net.minecraft.nbt.NbtOps$ListCollector acceptAll(java.lang.Iterable<net.minecraft.nbt.Tag>);
+  public abstract net.minecraft.nbt.Tag result();
+}
+Compiled from "NbtOps.java"
+class net.minecraft.nbt.NbtOps$LongListCollector implements net.minecraft.nbt.NbtOps$ListCollector {
+  private final it.unimi.dsi.fastutil.longs.LongArrayList values;
+  public net.minecraft.nbt.NbtOps$LongListCollector(long[]);
+  public net.minecraft.nbt.NbtOps$ListCollector accept(net.minecraft.nbt.Tag);
+  public net.minecraft.nbt.Tag result();
+}
+Compiled from "NbtOps.java"
+class net.minecraft.nbt.NbtOps$NbtRecordBuilder extends com.mojang.serialization.RecordBuilder$AbstractStringBuilder<net.minecraft.nbt.Tag, net.minecraft.nbt.CompoundTag> {
+  protected net.minecraft.nbt.NbtOps$NbtRecordBuilder(net.minecraft.nbt.NbtOps);
+  protected net.minecraft.nbt.CompoundTag initBuilder();
+  protected net.minecraft.nbt.CompoundTag append(java.lang.String, net.minecraft.nbt.Tag, net.minecraft.nbt.CompoundTag);
+  protected com.mojang.serialization.DataResult<net.minecraft.nbt.Tag> build(net.minecraft.nbt.CompoundTag, net.minecraft.nbt.Tag);
+  protected java.lang.Object append(java.lang.String, java.lang.Object, java.lang.Object);
+  protected com.mojang.serialization.DataResult build(java.lang.Object, java.lang.Object);
+  protected java.lang.Object initBuilder();
+  private static java.lang.String lambda$build$0(net.minecraft.nbt.Tag);
+}
+Compiled from "NbtUtils.java"
+public final class net.minecraft.nbt.NbtUtils {
+  private static final java.util.Comparator<net.minecraft.nbt.ListTag> YXZ_LISTTAG_INT_COMPARATOR;
+  private static final java.util.Comparator<net.minecraft.nbt.ListTag> YXZ_LISTTAG_DOUBLE_COMPARATOR;
+  private static final com.mojang.serialization.Codec<net.minecraft.resources.ResourceKey<net.minecraft.world.level.block.Block>> BLOCK_NAME_CODEC;
+  public static final java.lang.String SNBT_DATA_TAG;
+  private static final char PROPERTIES_START;
+  private static final char PROPERTIES_END;
+  private static final java.lang.String ELEMENT_SEPARATOR;
+  private static final char KEY_VALUE_SEPARATOR;
+  private static final com.google.common.base.Splitter COMMA_SPLITTER;
+  private static final com.google.common.base.Splitter COLON_SPLITTER;
+  private static final org.slf4j.Logger LOGGER;
+  private static final int NOT_FOUND;
+  private static final int BLOCK_STATE_ID_PROPERTIES_RENAME_VERSION;
+  public static final java.lang.String LEGACY_BLOCK_STATE_ID_TAG;
+  public static final java.lang.String LEGACY_BLOCKSTATE_PROPERTY_TAG;
+  private net.minecraft.nbt.NbtUtils();
+  public static boolean compareNbt(net.minecraft.nbt.Tag, net.minecraft.nbt.Tag, boolean);
+  public static net.minecraft.world.level.block.state.BlockState readBlockState(net.minecraft.core.HolderGetter<net.minecraft.world.level.block.Block>, net.minecraft.nbt.CompoundTag);
+  private static <S extends net.minecraft.world.level.block.state.StateHolder<?, S>, T extends java.lang.Comparable<T>> S setValueHelper(S, net.minecraft.world.level.block.state.properties.Property<T>, java.lang.String, net.minecraft.nbt.CompoundTag, net.minecraft.nbt.CompoundTag);
+  private static void writeStateProperties(net.minecraft.world.level.block.state.StateHolder<?, ?>, net.minecraft.nbt.CompoundTag);
+  public static net.minecraft.nbt.CompoundTag writeBlockState(net.minecraft.world.level.block.state.BlockState);
+  public static net.minecraft.network.chat.Component toPrettyComponent(net.minecraft.nbt.Tag);
+  public static java.lang.String structureToSnbt(net.minecraft.nbt.CompoundTag);
+  public static net.minecraft.nbt.CompoundTag snbtToStructure(java.lang.String) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  static net.minecraft.nbt.CompoundTag packStructureTemplate(net.minecraft.nbt.CompoundTag);
+  static net.minecraft.nbt.CompoundTag unpackStructureTemplate(net.minecraft.nbt.CompoundTag);
+  static java.lang.String packBlockState(net.minecraft.nbt.CompoundTag, int);
+  static net.minecraft.nbt.CompoundTag unpackBlockState(java.lang.String, int);
+  public static net.minecraft.nbt.CompoundTag addCurrentDataVersion(net.minecraft.nbt.CompoundTag);
+  public static net.minecraft.nbt.CompoundTag addDataVersion(net.minecraft.nbt.CompoundTag, int);
+  public static <T> com.mojang.serialization.Dynamic<T> addDataVersion(com.mojang.serialization.Dynamic<T>, int);
+  public static void addCurrentDataVersion(net.minecraft.world.level.storage.ValueOutput);
+  public static void addDataVersion(net.minecraft.world.level.storage.ValueOutput, int);
+  public static int getDataVersion(net.minecraft.nbt.CompoundTag);
+  public static int getDataVersion(net.minecraft.nbt.CompoundTag, int);
+  public static int getDataVersion(com.mojang.serialization.Dynamic<?>);
+  public static int getDataVersion(com.mojang.serialization.Dynamic<?>, int);
+  private static void lambda$unpackBlockState$0(net.minecraft.nbt.CompoundTag, java.lang.String, java.lang.String);
+  private static void lambda$packBlockState$0(java.lang.StringBuilder, net.minecraft.nbt.CompoundTag);
+  private static java.lang.String lambda$packBlockState$1(java.util.Map$Entry);
+  private static net.minecraft.nbt.ListTag lambda$unpackStructureTemplate$2(java.util.Map, int, net.minecraft.nbt.CompoundTag);
+  private static net.minecraft.nbt.CompoundTag lambda$unpackStructureTemplate$4(int, java.lang.String);
+  private static java.lang.String lambda$unpackStructureTemplate$3(net.minecraft.nbt.CompoundTag, java.lang.String);
+  private static net.minecraft.nbt.Tag lambda$unpackStructureTemplate$1(int, java.lang.String);
+  private static java.util.stream.Stream lambda$unpackStructureTemplate$0(net.minecraft.nbt.Tag);
+  private static void lambda$packStructureTemplate$5(net.minecraft.nbt.ListTag, net.minecraft.nbt.CompoundTag);
+  private static java.util.Optional lambda$packStructureTemplate$4(net.minecraft.nbt.CompoundTag);
+  private static java.util.Optional lambda$packStructureTemplate$3(net.minecraft.nbt.CompoundTag);
+  private static void lambda$packStructureTemplate$2(net.minecraft.nbt.ListTag, int, net.minecraft.nbt.ListTag, net.minecraft.nbt.ListTag);
+  private static java.util.stream.Stream lambda$packStructureTemplate$1(net.minecraft.nbt.Tag);
+  private static java.lang.String lambda$packStructureTemplate$0(int, net.minecraft.nbt.CompoundTag);
+  private static void lambda$writeStateProperties$0(net.minecraft.nbt.CompoundTag, net.minecraft.world.level.block.state.properties.Property$Value);
+  private static double lambda$static$5(net.minecraft.nbt.ListTag);
+  private static double lambda$static$4(net.minecraft.nbt.ListTag);
+  private static double lambda$static$3(net.minecraft.nbt.ListTag);
+  private static int lambda$static$2(net.minecraft.nbt.ListTag);
+  private static int lambda$static$1(net.minecraft.nbt.ListTag);
+  private static int lambda$static$0(net.minecraft.nbt.ListTag);
+  static {};
+}
+Compiled from "NumericTag.java"
+public interface net.minecraft.nbt.NumericTag extends net.minecraft.nbt.PrimitiveTag {
+  public abstract byte byteValue();
+  public abstract short shortValue();
+  public abstract int intValue();
+  public abstract long longValue();
+  public abstract float floatValue();
+  public abstract double doubleValue();
+  public abstract java.lang.Number box();
+  public default java.util.Optional<java.lang.Number> asNumber();
+  public default java.util.Optional<java.lang.Byte> asByte();
+  public default java.util.Optional<java.lang.Short> asShort();
+  public default java.util.Optional<java.lang.Integer> asInt();
+  public default java.util.Optional<java.lang.Long> asLong();
+  public default java.util.Optional<java.lang.Float> asFloat();
+  public default java.util.Optional<java.lang.Double> asDouble();
+  public default java.util.Optional<java.lang.Boolean> asBoolean();
+}
+Compiled from "PrimitiveTag.java"
+public interface net.minecraft.nbt.PrimitiveTag extends net.minecraft.nbt.Tag {
+  public default net.minecraft.nbt.Tag copy();
+}
+Compiled from "ReportedNbtException.java"
+public class net.minecraft.nbt.ReportedNbtException extends net.minecraft.ReportedException {
+  public net.minecraft.nbt.ReportedNbtException(net.minecraft.CrashReport);
+}
+Compiled from "ShortTag.java"
+public final class net.minecraft.nbt.ShortTag extends java.lang.Record implements net.minecraft.nbt.NumericTag {
+  private final short value;
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.ShortTag> TYPE;
+  public net.minecraft.nbt.ShortTag(short);
+  public static net.minecraft.nbt.ShortTag valueOf(short);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.ShortTag> getType();
+  public net.minecraft.nbt.ShortTag copy();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public long longValue();
+  public int intValue();
+  public short shortValue();
+  public byte byteValue();
+  public double doubleValue();
+  public float floatValue();
+  public java.lang.Number box();
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public short value();
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "ShortTag.java"
+class net.minecraft.nbt.ShortTag$1 implements net.minecraft.nbt.TagType$StaticSize<net.minecraft.nbt.ShortTag> {
+  net.minecraft.nbt.ShortTag$1();
+  public net.minecraft.nbt.ShortTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static short readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public int size();
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "ShortTag.java"
+class net.minecraft.nbt.ShortTag$Cache {
+  private static final int HIGH;
+  private static final int LOW;
+  private static final net.minecraft.nbt.ShortTag[] cache;
+  private net.minecraft.nbt.ShortTag$Cache();
+  static {};
+}
+Compiled from "SnbtGrammar.java"
+public class net.minecraft.nbt.SnbtGrammar {
+  private static final com.mojang.brigadier.exceptions.DynamicCommandExceptionType ERROR_NUMBER_PARSE_FAILURE;
+  private static final com.mojang.brigadier.exceptions.DynamicCommandExceptionType ERROR_EXPECTED_HEX_ESCAPE;
+  private static final com.mojang.brigadier.exceptions.DynamicCommandExceptionType ERROR_INVALID_CODEPOINT;
+  private static final com.mojang.brigadier.exceptions.DynamicCommandExceptionType ERROR_NO_SUCH_OPERATION;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_INTEGER_TYPE;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_FLOAT_TYPE;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_NON_NEGATIVE_NUMBER;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_INVALID_CHARACTER_NAME;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_INVALID_ARRAY_ELEMENT_TYPE;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_INVALID_UNQUOTED_START;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_UNQUOTED_STRING;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_INVALID_STRING_CONTENTS;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_BINARY_NUMERAL;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_UNDESCORE_NOT_ALLOWED;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_DECIMAL_NUMERAL;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_HEX_NUMERAL;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EMPTY_KEY;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_LEADING_ZERO_NOT_ALLOWED;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_INFINITY_NOT_ALLOWED;
+  private static final java.util.HexFormat HEX_ESCAPE;
+  private static final net.minecraft.util.parsing.packrat.commands.NumberRunParseRule BINARY_NUMERAL;
+  private static final net.minecraft.util.parsing.packrat.commands.NumberRunParseRule DECIMAL_NUMERAL;
+  private static final net.minecraft.util.parsing.packrat.commands.NumberRunParseRule HEX_NUMERAL;
+  private static final net.minecraft.util.parsing.packrat.commands.GreedyPredicateParseRule PLAIN_STRING_CHUNK;
+  private static final net.minecraft.util.parsing.packrat.commands.StringReaderTerms$TerminalCharacters NUMBER_LOOKEAHEAD;
+  private static final java.util.regex.Pattern UNICODE_NAME;
+  public net.minecraft.nbt.SnbtGrammar();
+  private static net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> createNumberParseError(java.lang.NumberFormatException);
+  public static java.lang.String escapeControlCharacters(char);
+  private static boolean isAllowedToStartUnquotedString(char);
+  private static boolean canStartNumber(char);
+  private static boolean needsUnderscoreRemoval(java.lang.String);
+  private static void cleanAndAppend(java.lang.StringBuilder, java.lang.String);
+  private static void cleanAndAppend(java.lang.StringBuilder, java.lang.String, boolean);
+  private static short parseUnsignedShort(java.lang.String, int);
+  private static <T> T createFloat(com.mojang.serialization.DynamicOps<T>, net.minecraft.nbt.SnbtGrammar$Sign, java.lang.String, java.lang.String, net.minecraft.nbt.SnbtGrammar$Signed<java.lang.String>, net.minecraft.nbt.SnbtGrammar$TypeSuffix, net.minecraft.util.parsing.packrat.ParseState<?>);
+  private static <T> T convertFloat(com.mojang.serialization.DynamicOps<T>, net.minecraft.util.parsing.packrat.ParseState<?>, java.lang.String);
+  private static <T> T convertDouble(com.mojang.serialization.DynamicOps<T>, net.minecraft.util.parsing.packrat.ParseState<?>, java.lang.String);
+  private static java.lang.String joinList(java.util.List<java.lang.String>);
+  public static <T> net.minecraft.util.parsing.packrat.commands.Grammar<T> createParser(com.mojang.serialization.DynamicOps<T>);
+  private static java.lang.Object lambda$createParser$22(net.minecraft.util.parsing.packrat.Atom, com.mojang.serialization.DynamicOps, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.ParseState);
+  private static java.lang.Object lambda$createParser$21(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, com.mojang.serialization.DynamicOps, net.minecraft.util.parsing.packrat.Atom, java.lang.Object, net.minecraft.util.parsing.packrat.ParseState);
+  private static java.util.List lambda$createParser$20(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static net.minecraft.nbt.SnbtGrammar$ArrayPrefix lambda$createParser$19(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.util.List lambda$createParser$18(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.lang.Object lambda$createParser$17(net.minecraft.util.parsing.packrat.Atom, java.lang.Object, com.mojang.serialization.DynamicOps, net.minecraft.util.parsing.packrat.Scope);
+  private static java.util.List lambda$createParser$16(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.util.Map$Entry lambda$createParser$15(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.ParseState);
+  private static java.lang.String lambda$createParser$14(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.lang.Object lambda$createParser$13(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, com.mojang.serialization.DynamicOps, java.lang.Object, java.lang.Object, net.minecraft.util.parsing.packrat.ParseState);
+  private static java.util.List lambda$createParser$12(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.lang.String lambda$createParser$11(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.lang.String lambda$createParser$10(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.lang.String lambda$createParser$9(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.lang.String lambda$createParser$8(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.lang.String lambda$createParser$7(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static java.lang.String lambda$createParser$6(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.ParseState);
+  private static java.lang.Object lambda$createParser$5(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, com.mojang.serialization.DynamicOps, net.minecraft.util.parsing.packrat.ParseState);
+  private static net.minecraft.nbt.SnbtGrammar$Signed lambda$createParser$4(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static net.minecraft.nbt.SnbtGrammar$TypeSuffix lambda$createParser$3(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static net.minecraft.nbt.SnbtGrammar$IntegerLiteral lambda$createParser$2(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static net.minecraft.nbt.SnbtGrammar$IntegerSuffix lambda$createParser$1(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static net.minecraft.nbt.SnbtGrammar$Sign lambda$createParser$0(net.minecraft.util.parsing.packrat.Atom, net.minecraft.util.parsing.packrat.Scope);
+  private static com.mojang.brigadier.Message lambda$static$3(java.lang.Object);
+  private static com.mojang.brigadier.Message lambda$static$2(java.lang.Object);
+  private static com.mojang.brigadier.Message lambda$static$1(java.lang.Object);
+  private static com.mojang.brigadier.Message lambda$static$0(java.lang.Object);
+  static {};
+}
+Compiled from "SnbtGrammar.java"
+class net.minecraft.nbt.SnbtGrammar$1 extends net.minecraft.util.parsing.packrat.commands.NumberRunParseRule {
+  net.minecraft.nbt.SnbtGrammar$1(net.minecraft.util.parsing.packrat.DelayedException, net.minecraft.util.parsing.packrat.DelayedException);
+  protected boolean isAccepted(char);
+}
+Compiled from "SnbtGrammar.java"
+class net.minecraft.nbt.SnbtGrammar$2 extends net.minecraft.util.parsing.packrat.commands.NumberRunParseRule {
+  net.minecraft.nbt.SnbtGrammar$2(net.minecraft.util.parsing.packrat.DelayedException, net.minecraft.util.parsing.packrat.DelayedException);
+  protected boolean isAccepted(char);
+}
+Compiled from "SnbtGrammar.java"
+class net.minecraft.nbt.SnbtGrammar$3 extends net.minecraft.util.parsing.packrat.commands.NumberRunParseRule {
+  net.minecraft.nbt.SnbtGrammar$3(net.minecraft.util.parsing.packrat.DelayedException, net.minecraft.util.parsing.packrat.DelayedException);
+  protected boolean isAccepted(char);
+}
+Compiled from "SnbtGrammar.java"
+class net.minecraft.nbt.SnbtGrammar$4 extends net.minecraft.util.parsing.packrat.commands.GreedyPredicateParseRule {
+  net.minecraft.nbt.SnbtGrammar$4(int, net.minecraft.util.parsing.packrat.DelayedException);
+  protected boolean isAccepted(char);
+}
+Compiled from "SnbtGrammar.java"
+class net.minecraft.nbt.SnbtGrammar$5 extends net.minecraft.util.parsing.packrat.commands.StringReaderTerms$TerminalCharacters {
+  net.minecraft.nbt.SnbtGrammar$5(it.unimi.dsi.fastutil.chars.CharList);
+  protected boolean isAccepted(char);
+}
+Compiled from "SnbtGrammar.java"
+abstract class net.minecraft.nbt.SnbtGrammar$ArrayPrefix extends java.lang.Enum<net.minecraft.nbt.SnbtGrammar$ArrayPrefix> {
+  public static final net.minecraft.nbt.SnbtGrammar$ArrayPrefix BYTE;
+  public static final net.minecraft.nbt.SnbtGrammar$ArrayPrefix INT;
+  public static final net.minecraft.nbt.SnbtGrammar$ArrayPrefix LONG;
+  private final net.minecraft.nbt.SnbtGrammar$TypeSuffix defaultType;
+  private final java.util.Set<net.minecraft.nbt.SnbtGrammar$TypeSuffix> additionalTypes;
+  private static final net.minecraft.nbt.SnbtGrammar$ArrayPrefix[] $VALUES;
+  public static net.minecraft.nbt.SnbtGrammar$ArrayPrefix[] values();
+  public static net.minecraft.nbt.SnbtGrammar$ArrayPrefix valueOf(java.lang.String);
+  private net.minecraft.nbt.SnbtGrammar$ArrayPrefix(net.minecraft.nbt.SnbtGrammar$TypeSuffix, net.minecraft.nbt.SnbtGrammar$TypeSuffix...);
+  public boolean isAllowed(net.minecraft.nbt.SnbtGrammar$TypeSuffix);
+  public abstract <T> T create(com.mojang.serialization.DynamicOps<T>);
+  public abstract <T> T create(com.mojang.serialization.DynamicOps<T>, java.util.List<net.minecraft.nbt.SnbtGrammar$IntegerLiteral>, net.minecraft.util.parsing.packrat.ParseState<?>);
+  protected java.lang.Number buildNumber(net.minecraft.nbt.SnbtGrammar$IntegerLiteral, net.minecraft.util.parsing.packrat.ParseState<?>);
+  private net.minecraft.nbt.SnbtGrammar$TypeSuffix computeType(net.minecraft.nbt.SnbtGrammar$IntegerSuffix);
+  private static net.minecraft.nbt.SnbtGrammar$ArrayPrefix[] $values();
+  static {};
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$ArrayPrefix$1 extends net.minecraft.nbt.SnbtGrammar$ArrayPrefix {
+  private static final java.nio.ByteBuffer EMPTY_BUFFER;
+  private net.minecraft.nbt.SnbtGrammar$ArrayPrefix$1(java.lang.String, int, net.minecraft.nbt.SnbtGrammar$TypeSuffix, net.minecraft.nbt.SnbtGrammar$TypeSuffix...);
+  public <T> T create(com.mojang.serialization.DynamicOps<T>);
+  public <T> T create(com.mojang.serialization.DynamicOps<T>, java.util.List<net.minecraft.nbt.SnbtGrammar$IntegerLiteral>, net.minecraft.util.parsing.packrat.ParseState<?>);
+  static {};
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$ArrayPrefix$2 extends net.minecraft.nbt.SnbtGrammar$ArrayPrefix {
+  private net.minecraft.nbt.SnbtGrammar$ArrayPrefix$2(java.lang.String, int, net.minecraft.nbt.SnbtGrammar$TypeSuffix, net.minecraft.nbt.SnbtGrammar$TypeSuffix...);
+  public <T> T create(com.mojang.serialization.DynamicOps<T>);
+  public <T> T create(com.mojang.serialization.DynamicOps<T>, java.util.List<net.minecraft.nbt.SnbtGrammar$IntegerLiteral>, net.minecraft.util.parsing.packrat.ParseState<?>);
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$ArrayPrefix$3 extends net.minecraft.nbt.SnbtGrammar$ArrayPrefix {
+  private net.minecraft.nbt.SnbtGrammar$ArrayPrefix$3(java.lang.String, int, net.minecraft.nbt.SnbtGrammar$TypeSuffix, net.minecraft.nbt.SnbtGrammar$TypeSuffix...);
+  public <T> T create(com.mojang.serialization.DynamicOps<T>);
+  public <T> T create(com.mojang.serialization.DynamicOps<T>, java.util.List<net.minecraft.nbt.SnbtGrammar$IntegerLiteral>, net.minecraft.util.parsing.packrat.ParseState<?>);
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$Base extends java.lang.Enum<net.minecraft.nbt.SnbtGrammar$Base> {
+  public static final net.minecraft.nbt.SnbtGrammar$Base BINARY;
+  public static final net.minecraft.nbt.SnbtGrammar$Base DECIMAL;
+  public static final net.minecraft.nbt.SnbtGrammar$Base HEX;
+  private static final net.minecraft.nbt.SnbtGrammar$Base[] $VALUES;
+  public static net.minecraft.nbt.SnbtGrammar$Base[] values();
+  public static net.minecraft.nbt.SnbtGrammar$Base valueOf(java.lang.String);
+  private net.minecraft.nbt.SnbtGrammar$Base();
+  private static net.minecraft.nbt.SnbtGrammar$Base[] $values();
+  static {};
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$IntegerLiteral extends java.lang.Record {
+  private final net.minecraft.nbt.SnbtGrammar$Sign sign;
+  private final net.minecraft.nbt.SnbtGrammar$Base base;
+  private final java.lang.String digits;
+  private final net.minecraft.nbt.SnbtGrammar$IntegerSuffix suffix;
+  private net.minecraft.nbt.SnbtGrammar$IntegerLiteral(net.minecraft.nbt.SnbtGrammar$Sign, net.minecraft.nbt.SnbtGrammar$Base, java.lang.String, net.minecraft.nbt.SnbtGrammar$IntegerSuffix);
+  private net.minecraft.nbt.SnbtGrammar$SignedPrefix signedOrDefault();
+  private java.lang.String cleanupDigits(net.minecraft.nbt.SnbtGrammar$Sign);
+  public <T> T create(com.mojang.serialization.DynamicOps<T>, net.minecraft.util.parsing.packrat.ParseState<?>);
+  public <T> T create(com.mojang.serialization.DynamicOps<T>, net.minecraft.nbt.SnbtGrammar$TypeSuffix, net.minecraft.util.parsing.packrat.ParseState<?>);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.nbt.SnbtGrammar$Sign sign();
+  public net.minecraft.nbt.SnbtGrammar$Base base();
+  public java.lang.String digits();
+  public net.minecraft.nbt.SnbtGrammar$IntegerSuffix suffix();
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$IntegerSuffix extends java.lang.Record {
+  private final net.minecraft.nbt.SnbtGrammar$SignedPrefix signed;
+  private final net.minecraft.nbt.SnbtGrammar$TypeSuffix type;
+  public static final net.minecraft.nbt.SnbtGrammar$IntegerSuffix EMPTY;
+  private net.minecraft.nbt.SnbtGrammar$IntegerSuffix(net.minecraft.nbt.SnbtGrammar$SignedPrefix, net.minecraft.nbt.SnbtGrammar$TypeSuffix);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.nbt.SnbtGrammar$SignedPrefix signed();
+  public net.minecraft.nbt.SnbtGrammar$TypeSuffix type();
+  static {};
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$Sign extends java.lang.Enum<net.minecraft.nbt.SnbtGrammar$Sign> {
+  public static final net.minecraft.nbt.SnbtGrammar$Sign PLUS;
+  public static final net.minecraft.nbt.SnbtGrammar$Sign MINUS;
+  private static final net.minecraft.nbt.SnbtGrammar$Sign[] $VALUES;
+  public static net.minecraft.nbt.SnbtGrammar$Sign[] values();
+  public static net.minecraft.nbt.SnbtGrammar$Sign valueOf(java.lang.String);
+  private net.minecraft.nbt.SnbtGrammar$Sign();
+  public void append(java.lang.StringBuilder);
+  private static net.minecraft.nbt.SnbtGrammar$Sign[] $values();
+  static {};
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$Signed<T> extends java.lang.Record {
+  private final net.minecraft.nbt.SnbtGrammar$Sign sign;
+  private final T value;
+  private net.minecraft.nbt.SnbtGrammar$Signed(net.minecraft.nbt.SnbtGrammar$Sign, T);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.nbt.SnbtGrammar$Sign sign();
+  public T value();
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$SignedPrefix extends java.lang.Enum<net.minecraft.nbt.SnbtGrammar$SignedPrefix> {
+  public static final net.minecraft.nbt.SnbtGrammar$SignedPrefix SIGNED;
+  public static final net.minecraft.nbt.SnbtGrammar$SignedPrefix UNSIGNED;
+  private static final net.minecraft.nbt.SnbtGrammar$SignedPrefix[] $VALUES;
+  public static net.minecraft.nbt.SnbtGrammar$SignedPrefix[] values();
+  public static net.minecraft.nbt.SnbtGrammar$SignedPrefix valueOf(java.lang.String);
+  private net.minecraft.nbt.SnbtGrammar$SignedPrefix();
+  private static net.minecraft.nbt.SnbtGrammar$SignedPrefix[] $values();
+  static {};
+}
+Compiled from "SnbtGrammar.java"
+class net.minecraft.nbt.SnbtGrammar$SimpleHexLiteralParseRule extends net.minecraft.util.parsing.packrat.commands.GreedyPredicateParseRule {
+  public net.minecraft.nbt.SnbtGrammar$SimpleHexLiteralParseRule(int);
+  protected boolean isAccepted(char);
+}
+Compiled from "SnbtGrammar.java"
+final class net.minecraft.nbt.SnbtGrammar$TypeSuffix extends java.lang.Enum<net.minecraft.nbt.SnbtGrammar$TypeSuffix> {
+  public static final net.minecraft.nbt.SnbtGrammar$TypeSuffix FLOAT;
+  public static final net.minecraft.nbt.SnbtGrammar$TypeSuffix DOUBLE;
+  public static final net.minecraft.nbt.SnbtGrammar$TypeSuffix BYTE;
+  public static final net.minecraft.nbt.SnbtGrammar$TypeSuffix SHORT;
+  public static final net.minecraft.nbt.SnbtGrammar$TypeSuffix INT;
+  public static final net.minecraft.nbt.SnbtGrammar$TypeSuffix LONG;
+  private static final net.minecraft.nbt.SnbtGrammar$TypeSuffix[] $VALUES;
+  public static net.minecraft.nbt.SnbtGrammar$TypeSuffix[] values();
+  public static net.minecraft.nbt.SnbtGrammar$TypeSuffix valueOf(java.lang.String);
+  private net.minecraft.nbt.SnbtGrammar$TypeSuffix();
+  private static net.minecraft.nbt.SnbtGrammar$TypeSuffix[] $values();
+  static {};
+}
+Compiled from "SnbtOperations.java"
+public class net.minecraft.nbt.SnbtOperations {
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_STRING_UUID;
+  private static final net.minecraft.util.parsing.packrat.DelayedException<com.mojang.brigadier.exceptions.CommandSyntaxException> ERROR_EXPECTED_NUMBER_OR_BOOLEAN;
+  public static final java.lang.String BUILTIN_TRUE;
+  public static final java.lang.String BUILTIN_FALSE;
+  public static final java.util.Map<net.minecraft.nbt.SnbtOperations$BuiltinKey, net.minecraft.nbt.SnbtOperations$BuiltinOperation> BUILTIN_OPERATIONS;
+  public static final net.minecraft.util.parsing.packrat.SuggestionSupplier<com.mojang.brigadier.StringReader> BUILTIN_IDS;
+  public net.minecraft.nbt.SnbtOperations();
+  static {};
+}
+Compiled from "SnbtOperations.java"
+class net.minecraft.nbt.SnbtOperations$1 implements net.minecraft.nbt.SnbtOperations$BuiltinOperation {
+  net.minecraft.nbt.SnbtOperations$1();
+  public <T> T run(com.mojang.serialization.DynamicOps<T>, java.util.List<T>, net.minecraft.util.parsing.packrat.ParseState<com.mojang.brigadier.StringReader>);
+  private static <T> java.lang.Boolean convert(com.mojang.serialization.DynamicOps<T>, T);
+}
+Compiled from "SnbtOperations.java"
+class net.minecraft.nbt.SnbtOperations$2 implements net.minecraft.nbt.SnbtOperations$BuiltinOperation {
+  net.minecraft.nbt.SnbtOperations$2();
+  public <T> T run(com.mojang.serialization.DynamicOps<T>, java.util.List<T>, net.minecraft.util.parsing.packrat.ParseState<com.mojang.brigadier.StringReader>);
+}
+Compiled from "SnbtOperations.java"
+class net.minecraft.nbt.SnbtOperations$3 implements net.minecraft.util.parsing.packrat.SuggestionSupplier<com.mojang.brigadier.StringReader> {
+  private final java.util.Set<java.lang.String> keys;
+  net.minecraft.nbt.SnbtOperations$3();
+  public java.util.stream.Stream<java.lang.String> possibleValues(net.minecraft.util.parsing.packrat.ParseState<com.mojang.brigadier.StringReader>);
+}
+Compiled from "SnbtOperations.java"
+public final class net.minecraft.nbt.SnbtOperations$BuiltinKey extends java.lang.Record {
+  private final java.lang.String id;
+  private final int argCount;
+  public net.minecraft.nbt.SnbtOperations$BuiltinKey(java.lang.String, int);
+  public java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public java.lang.String id();
+  public int argCount();
+}
+Compiled from "SnbtOperations.java"
+public interface net.minecraft.nbt.SnbtOperations$BuiltinOperation {
+  public abstract <T> T run(com.mojang.serialization.DynamicOps<T>, java.util.List<T>, net.minecraft.util.parsing.packrat.ParseState<com.mojang.brigadier.StringReader>);
+}
+Compiled from "SnbtPrinterTagVisitor.java"
+public class net.minecraft.nbt.SnbtPrinterTagVisitor implements net.minecraft.nbt.TagVisitor {
+  private static final java.util.Map<java.lang.String, java.util.List<java.lang.String>> KEY_ORDER;
+  private static final java.util.Set<java.lang.String> NO_INDENTATION;
+  private static final java.util.regex.Pattern SIMPLE_VALUE;
+  private static final java.lang.String NAME_VALUE_SEPARATOR;
+  private static final java.lang.String ELEMENT_SEPARATOR;
+  private static final java.lang.String LIST_OPEN;
+  private static final java.lang.String LIST_CLOSE;
+  private static final java.lang.String LIST_TYPE_SEPARATOR;
+  private static final java.lang.String ELEMENT_SPACING;
+  private static final java.lang.String STRUCT_OPEN;
+  private static final java.lang.String STRUCT_CLOSE;
+  private static final java.lang.String NEWLINE;
+  private final java.lang.String indentation;
+  private final int depth;
+  private final java.util.List<java.lang.String> path;
+  private java.lang.String result;
+  public net.minecraft.nbt.SnbtPrinterTagVisitor();
+  public net.minecraft.nbt.SnbtPrinterTagVisitor(java.lang.String, int, java.util.List<java.lang.String>);
+  public java.lang.String visit(net.minecraft.nbt.Tag);
+  public void visitString(net.minecraft.nbt.StringTag);
+  public void visitByte(net.minecraft.nbt.ByteTag);
+  public void visitShort(net.minecraft.nbt.ShortTag);
+  public void visitInt(net.minecraft.nbt.IntTag);
+  public void visitLong(net.minecraft.nbt.LongTag);
+  public void visitFloat(net.minecraft.nbt.FloatTag);
+  public void visitDouble(net.minecraft.nbt.DoubleTag);
+  public void visitByteArray(net.minecraft.nbt.ByteArrayTag);
+  public void visitIntArray(net.minecraft.nbt.IntArrayTag);
+  public void visitLongArray(net.minecraft.nbt.LongArrayTag);
+  public void visitList(net.minecraft.nbt.ListTag);
+  public void visitCompound(net.minecraft.nbt.CompoundTag);
+  private void popPath();
+  private void pushPath(java.lang.String);
+  protected java.util.List<java.lang.String> getKeys(net.minecraft.nbt.CompoundTag);
+  public java.lang.String pathString();
+  protected static java.lang.String handleEscapePretty(java.lang.String);
+  public void visitEnd(net.minecraft.nbt.EndTag);
+  private static void lambda$static$0(java.util.HashMap);
+  static {};
+}
+Compiled from "StreamTagVisitor.java"
+public interface net.minecraft.nbt.StreamTagVisitor {
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visitEnd();
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(java.lang.String);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(byte);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(short);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(int);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(long);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(float);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(double);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(byte[]);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(int[]);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visit(long[]);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visitList(net.minecraft.nbt.TagType<?>, int);
+  public abstract net.minecraft.nbt.StreamTagVisitor$EntryResult visitEntry(net.minecraft.nbt.TagType<?>);
+  public abstract net.minecraft.nbt.StreamTagVisitor$EntryResult visitEntry(net.minecraft.nbt.TagType<?>, java.lang.String);
+  public abstract net.minecraft.nbt.StreamTagVisitor$EntryResult visitElement(net.minecraft.nbt.TagType<?>, int);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visitContainerEnd();
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult visitRootEntry(net.minecraft.nbt.TagType<?>);
+}
+Compiled from "StreamTagVisitor.java"
+public final class net.minecraft.nbt.StreamTagVisitor$EntryResult extends java.lang.Enum<net.minecraft.nbt.StreamTagVisitor$EntryResult> {
+  public static final net.minecraft.nbt.StreamTagVisitor$EntryResult ENTER;
+  public static final net.minecraft.nbt.StreamTagVisitor$EntryResult SKIP;
+  public static final net.minecraft.nbt.StreamTagVisitor$EntryResult BREAK;
+  public static final net.minecraft.nbt.StreamTagVisitor$EntryResult HALT;
+  private static final net.minecraft.nbt.StreamTagVisitor$EntryResult[] $VALUES;
+  public static net.minecraft.nbt.StreamTagVisitor$EntryResult[] values();
+  public static net.minecraft.nbt.StreamTagVisitor$EntryResult valueOf(java.lang.String);
+  private net.minecraft.nbt.StreamTagVisitor$EntryResult();
+  private static net.minecraft.nbt.StreamTagVisitor$EntryResult[] $values();
+  static {};
+}
+Compiled from "StreamTagVisitor.java"
+public final class net.minecraft.nbt.StreamTagVisitor$ValueResult extends java.lang.Enum<net.minecraft.nbt.StreamTagVisitor$ValueResult> {
+  public static final net.minecraft.nbt.StreamTagVisitor$ValueResult CONTINUE;
+  public static final net.minecraft.nbt.StreamTagVisitor$ValueResult BREAK;
+  public static final net.minecraft.nbt.StreamTagVisitor$ValueResult HALT;
+  private static final net.minecraft.nbt.StreamTagVisitor$ValueResult[] $VALUES;
+  public static net.minecraft.nbt.StreamTagVisitor$ValueResult[] values();
+  public static net.minecraft.nbt.StreamTagVisitor$ValueResult valueOf(java.lang.String);
+  private net.minecraft.nbt.StreamTagVisitor$ValueResult();
+  private static net.minecraft.nbt.StreamTagVisitor$ValueResult[] $values();
+  static {};
+}
+Compiled from "StringTag.java"
+public final class net.minecraft.nbt.StringTag extends java.lang.Record implements net.minecraft.nbt.PrimitiveTag {
+  private final java.lang.String value;
+  private static final int SELF_SIZE_IN_BYTES;
+  public static final net.minecraft.nbt.TagType<net.minecraft.nbt.StringTag> TYPE;
+  private static final net.minecraft.nbt.StringTag EMPTY;
+  private static final char DOUBLE_QUOTE;
+  private static final char SINGLE_QUOTE;
+  private static final char ESCAPE;
+  private static final char NOT_SET;
+  public net.minecraft.nbt.StringTag(java.lang.String);
+  public static void skipString(java.io.DataInput) throws java.io.IOException;
+  public static net.minecraft.nbt.StringTag valueOf(java.lang.String);
+  public void write(java.io.DataOutput) throws java.io.IOException;
+  public int sizeInBytes();
+  public byte getId();
+  public net.minecraft.nbt.TagType<net.minecraft.nbt.StringTag> getType();
+  public java.lang.String toString();
+  public net.minecraft.nbt.StringTag copy();
+  public java.util.Optional<java.lang.String> asString();
+  public void accept(net.minecraft.nbt.TagVisitor);
+  public static java.lang.String quoteAndEscape(java.lang.String);
+  public static void quoteAndEscape(java.lang.String, java.lang.StringBuilder);
+  public static java.lang.String escapeWithoutQuotes(java.lang.String);
+  public static void escapeWithoutQuotes(java.lang.String, java.lang.StringBuilder);
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public java.lang.String value();
+  public net.minecraft.nbt.Tag copy();
+  static {};
+}
+Compiled from "StringTag.java"
+class net.minecraft.nbt.StringTag$1 implements net.minecraft.nbt.TagType$VariableSize<net.minecraft.nbt.StringTag> {
+  net.minecraft.nbt.StringTag$1();
+  public net.minecraft.nbt.StringTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  private static java.lang.String readAccounted(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "StringTagVisitor.java"
+public class net.minecraft.nbt.StringTagVisitor implements net.minecraft.nbt.TagVisitor {
+  private static final java.util.regex.Pattern UNQUOTED_KEY_MATCH;
+  private final java.lang.StringBuilder builder;
+  public net.minecraft.nbt.StringTagVisitor();
+  public java.lang.String build();
+  public void visitString(net.minecraft.nbt.StringTag);
+  public void visitByte(net.minecraft.nbt.ByteTag);
+  public void visitShort(net.minecraft.nbt.ShortTag);
+  public void visitInt(net.minecraft.nbt.IntTag);
+  public void visitLong(net.minecraft.nbt.LongTag);
+  public void visitFloat(net.minecraft.nbt.FloatTag);
+  public void visitDouble(net.minecraft.nbt.DoubleTag);
+  public void visitByteArray(net.minecraft.nbt.ByteArrayTag);
+  public void visitIntArray(net.minecraft.nbt.IntArrayTag);
+  public void visitLongArray(net.minecraft.nbt.LongArrayTag);
+  public void visitList(net.minecraft.nbt.ListTag);
+  public void visitCompound(net.minecraft.nbt.CompoundTag);
+  private void handleKeyEscape(java.lang.String);
+  public void visitEnd(net.minecraft.nbt.EndTag);
+  static {};
+}
+Compiled from "Tag.java"
+public interface net.minecraft.nbt.Tag {
+  public static final int OBJECT_HEADER;
+  public static final int ARRAY_HEADER;
+  public static final int OBJECT_REFERENCE;
+  public static final int STRING_SIZE;
+  public static final byte TAG_END;
+  public static final byte TAG_BYTE;
+  public static final byte TAG_SHORT;
+  public static final byte TAG_INT;
+  public static final byte TAG_LONG;
+  public static final byte TAG_FLOAT;
+  public static final byte TAG_DOUBLE;
+  public static final byte TAG_BYTE_ARRAY;
+  public static final byte TAG_STRING;
+  public static final byte TAG_LIST;
+  public static final byte TAG_COMPOUND;
+  public static final byte TAG_INT_ARRAY;
+  public static final byte TAG_LONG_ARRAY;
+  public static final int MAX_DEPTH;
+  public abstract void write(java.io.DataOutput) throws java.io.IOException;
+  public abstract java.lang.String toString();
+  public abstract byte getId();
+  public abstract net.minecraft.nbt.TagType<?> getType();
+  public abstract net.minecraft.nbt.Tag copy();
+  public abstract int sizeInBytes();
+  public abstract void accept(net.minecraft.nbt.TagVisitor);
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult accept(net.minecraft.nbt.StreamTagVisitor);
+  public default void acceptAsRoot(net.minecraft.nbt.StreamTagVisitor);
+  public default java.util.Optional<java.lang.String> asString();
+  public default java.util.Optional<java.lang.Number> asNumber();
+  public default java.util.Optional<java.lang.Byte> asByte();
+  public default java.util.Optional<java.lang.Short> asShort();
+  public default java.util.Optional<java.lang.Integer> asInt();
+  public default java.util.Optional<java.lang.Long> asLong();
+  public default java.util.Optional<java.lang.Float> asFloat();
+  public default java.util.Optional<java.lang.Double> asDouble();
+  public default java.util.Optional<java.lang.Boolean> asBoolean();
+  public default java.util.Optional<byte[]> asByteArray();
+  public default java.util.Optional<int[]> asIntArray();
+  public default java.util.Optional<long[]> asLongArray();
+  public default java.util.Optional<net.minecraft.nbt.CompoundTag> asCompound();
+  public default java.util.Optional<net.minecraft.nbt.ListTag> asList();
+  private static java.lang.Boolean lambda$asBoolean$0(java.lang.Byte);
+}
+Compiled from "TagParser.java"
+public class net.minecraft.nbt.TagParser<T> {
+  public static final com.mojang.brigadier.exceptions.SimpleCommandExceptionType ERROR_TRAILING_DATA;
+  public static final com.mojang.brigadier.exceptions.SimpleCommandExceptionType ERROR_EXPECTED_COMPOUND;
+  public static final char ELEMENT_SEPARATOR;
+  public static final char NAME_VALUE_SEPARATOR;
+  private static final net.minecraft.nbt.TagParser<net.minecraft.nbt.Tag> NBT_OPS_PARSER;
+  public static final com.mojang.serialization.Codec<net.minecraft.nbt.CompoundTag> FLATTENED_CODEC;
+  public static final com.mojang.serialization.Codec<net.minecraft.nbt.CompoundTag> LENIENT_CODEC;
+  private final com.mojang.serialization.DynamicOps<T> ops;
+  private final net.minecraft.util.parsing.packrat.commands.Grammar<T> grammar;
+  private net.minecraft.nbt.TagParser(com.mojang.serialization.DynamicOps<T>, net.minecraft.util.parsing.packrat.commands.Grammar<T>);
+  public com.mojang.serialization.DynamicOps<T> getOps();
+  public static <T> net.minecraft.nbt.TagParser<T> create(com.mojang.serialization.DynamicOps<T>);
+  private static net.minecraft.nbt.CompoundTag castToCompoundOrThrow(com.mojang.brigadier.StringReader, net.minecraft.nbt.Tag) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  public static net.minecraft.nbt.CompoundTag parseCompoundFully(java.lang.String) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  public T parseFully(java.lang.String) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  public T parseFully(com.mojang.brigadier.StringReader) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  public T parseAsArgument(com.mojang.brigadier.StringReader) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  public static net.minecraft.nbt.CompoundTag parseCompoundAsArgument(com.mojang.brigadier.StringReader) throws com.mojang.brigadier.exceptions.CommandSyntaxException;
+  private static com.mojang.serialization.DataResult lambda$static$0(java.lang.String);
+  private static java.lang.String lambda$static$1(net.minecraft.nbt.Tag);
+  static {};
+}
+Compiled from "TagType.java"
+public interface net.minecraft.nbt.TagType<T extends net.minecraft.nbt.Tag> {
+  public abstract T load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public abstract net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public default void parseRoot(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public abstract void skip(java.io.DataInput, int, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public abstract void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public abstract java.lang.String getName();
+  public abstract java.lang.String getPrettyName();
+  public static net.minecraft.nbt.TagType<net.minecraft.nbt.EndTag> createInvalid(int);
+}
+Compiled from "TagType.java"
+class net.minecraft.nbt.TagType$1 implements net.minecraft.nbt.TagType<net.minecraft.nbt.EndTag> {
+  final int val$id;
+  net.minecraft.nbt.TagType$1(int);
+  private java.io.IOException createException();
+  public net.minecraft.nbt.EndTag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public net.minecraft.nbt.StreamTagVisitor$ValueResult parse(java.io.DataInput, net.minecraft.nbt.StreamTagVisitor, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public void skip(java.io.DataInput, int, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public java.lang.String getName();
+  public java.lang.String getPrettyName();
+  public net.minecraft.nbt.Tag load(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "TagType.java"
+class net.minecraft.nbt.TagType$2 {
+  static final int[] $SwitchMap$net$minecraft$nbt$StreamTagVisitor$ValueResult;
+  static {};
+}
+Compiled from "TagType.java"
+public interface net.minecraft.nbt.TagType$StaticSize<T extends net.minecraft.nbt.Tag> extends net.minecraft.nbt.TagType<T> {
+  public default void skip(java.io.DataInput, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public default void skip(java.io.DataInput, int, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+  public abstract int size();
+}
+Compiled from "TagType.java"
+public interface net.minecraft.nbt.TagType$VariableSize<T extends net.minecraft.nbt.Tag> extends net.minecraft.nbt.TagType<T> {
+  public default void skip(java.io.DataInput, int, net.minecraft.nbt.NbtAccounter) throws java.io.IOException;
+}
+Compiled from "TagTypes.java"
+public class net.minecraft.nbt.TagTypes {
+  private static final net.minecraft.nbt.TagType<?>[] TYPES;
+  public net.minecraft.nbt.TagTypes();
+  public static net.minecraft.nbt.TagType<?> getType(int);
+  static {};
+}
+Compiled from "TagVisitor.java"
+public interface net.minecraft.nbt.TagVisitor {
+  public abstract void visitString(net.minecraft.nbt.StringTag);
+  public abstract void visitByte(net.minecraft.nbt.ByteTag);
+  public abstract void visitShort(net.minecraft.nbt.ShortTag);
+  public abstract void visitInt(net.minecraft.nbt.IntTag);
+  public abstract void visitLong(net.minecraft.nbt.LongTag);
+  public abstract void visitFloat(net.minecraft.nbt.FloatTag);
+  public abstract void visitDouble(net.minecraft.nbt.DoubleTag);
+  public abstract void visitByteArray(net.minecraft.nbt.ByteArrayTag);
+  public abstract void visitIntArray(net.minecraft.nbt.IntArrayTag);
+  public abstract void visitLongArray(net.minecraft.nbt.LongArrayTag);
+  public abstract void visitList(net.minecraft.nbt.ListTag);
+  public abstract void visitCompound(net.minecraft.nbt.CompoundTag);
+  public abstract void visitEnd(net.minecraft.nbt.EndTag);
+}
+Compiled from "TextComponentTagVisitor.java"
+public class net.minecraft.nbt.TextComponentTagVisitor implements net.minecraft.nbt.TagVisitor {
+  private static final org.slf4j.Logger LOGGER;
+  private static final int INLINE_LIST_THRESHOLD;
+  private static final int MAX_DEPTH;
+  private static final int MAX_LENGTH;
+  private static final java.util.regex.Pattern SIMPLE_VALUE;
+  private static final net.minecraft.network.chat.Component NEWLINE;
+  private static final net.minecraft.network.chat.Component ELEMENT_SPACING;
+  private final java.lang.String indentation;
+  private final net.minecraft.nbt.TextComponentTagVisitor$Styling styling;
+  private final boolean sortKeys;
+  private int indentDepth;
+  private int depth;
+  private final net.minecraft.network.chat.MutableComponent result;
+  public net.minecraft.nbt.TextComponentTagVisitor(java.lang.String);
+  public net.minecraft.nbt.TextComponentTagVisitor(java.lang.String, net.minecraft.nbt.TextComponentTagVisitor$Styling);
+  public net.minecraft.nbt.TextComponentTagVisitor(java.lang.String, net.minecraft.nbt.TextComponentTagVisitor$Styling, boolean);
+  public net.minecraft.network.chat.Component visit(net.minecraft.nbt.Tag);
+  private net.minecraft.nbt.TextComponentTagVisitor append(java.lang.String, net.minecraft.network.chat.Style);
+  private net.minecraft.nbt.TextComponentTagVisitor append(net.minecraft.network.chat.Component);
+  private net.minecraft.nbt.TextComponentTagVisitor append(net.minecraft.nbt.TextComponentTagVisitor$Token);
+  public void visitString(net.minecraft.nbt.StringTag);
+  public void visitByte(net.minecraft.nbt.ByteTag);
+  public void visitShort(net.minecraft.nbt.ShortTag);
+  public void visitInt(net.minecraft.nbt.IntTag);
+  public void visitLong(net.minecraft.nbt.LongTag);
+  public void visitFloat(net.minecraft.nbt.FloatTag);
+  public void visitDouble(net.minecraft.nbt.DoubleTag);
+  public void visitByteArray(net.minecraft.nbt.ByteArrayTag);
+  public void visitIntArray(net.minecraft.nbt.IntArrayTag);
+  public void visitLongArray(net.minecraft.nbt.LongArrayTag);
+  private static boolean shouldWrapListElements(net.minecraft.nbt.ListTag);
+  public void visitList(net.minecraft.nbt.ListTag);
+  public void visitCompound(net.minecraft.nbt.CompoundTag);
+  private void appendSubTag(net.minecraft.nbt.Tag, boolean);
+  private net.minecraft.network.chat.Component handleEscapePretty(java.lang.String);
+  public void visitEnd(net.minecraft.nbt.EndTag);
+  static {};
+}
+Compiled from "TextComponentTagVisitor.java"
+public class net.minecraft.nbt.TextComponentTagVisitor$PlainStyling implements net.minecraft.nbt.TextComponentTagVisitor$Styling {
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Styling INSTANCE;
+  private final java.util.Map<net.minecraft.nbt.TextComponentTagVisitor$Token, net.minecraft.network.chat.Component> tokens;
+  private net.minecraft.nbt.TextComponentTagVisitor$PlainStyling();
+  public net.minecraft.network.chat.Style keyStyle();
+  public net.minecraft.network.chat.Style stringStyle();
+  public net.minecraft.network.chat.Style numberStyle();
+  public net.minecraft.network.chat.Component token(net.minecraft.nbt.TextComponentTagVisitor$Token);
+  static {};
+}
+Compiled from "TextComponentTagVisitor.java"
+public class net.minecraft.nbt.TextComponentTagVisitor$RichStyling implements net.minecraft.nbt.TextComponentTagVisitor$Styling {
+  private static final net.minecraft.network.chat.Style SYNTAX_HIGHLIGHTING_NUMBER_TYPE;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Styling INSTANCE;
+  private final java.util.Map<net.minecraft.nbt.TextComponentTagVisitor$Token, net.minecraft.network.chat.Component> tokens;
+  private static final net.minecraft.network.chat.Style SYNTAX_HIGHLIGHTING_KEY;
+  private static final net.minecraft.network.chat.Style SYNTAX_HIGHLIGHTING_STRING;
+  private static final net.minecraft.network.chat.Style SYNTAX_HIGHLIGHTING_NUMBER;
+  private net.minecraft.nbt.TextComponentTagVisitor$RichStyling();
+  private void overrideToken(net.minecraft.nbt.TextComponentTagVisitor$Token, net.minecraft.network.chat.Style);
+  public net.minecraft.network.chat.Style keyStyle();
+  public net.minecraft.network.chat.Style stringStyle();
+  public net.minecraft.network.chat.Style numberStyle();
+  public net.minecraft.network.chat.Component token(net.minecraft.nbt.TextComponentTagVisitor$Token);
+  static {};
+}
+Compiled from "TextComponentTagVisitor.java"
+public interface net.minecraft.nbt.TextComponentTagVisitor$Styling {
+  public abstract net.minecraft.network.chat.Style keyStyle();
+  public abstract net.minecraft.network.chat.Style stringStyle();
+  public abstract net.minecraft.network.chat.Style numberStyle();
+  public abstract net.minecraft.network.chat.Component token(net.minecraft.nbt.TextComponentTagVisitor$Token);
+}
+Compiled from "TextComponentTagVisitor.java"
+public final class net.minecraft.nbt.TextComponentTagVisitor$Token extends java.lang.Enum<net.minecraft.nbt.TextComponentTagVisitor$Token> {
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token FOLDED;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token ELEMENT_SEPARATOR;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token LIST_CLOSE;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token LIST_OPEN;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token LIST_TYPE_SEPARATOR;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token STRUCT_CLOSE;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token STRUCT_OPEN;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token NAME_VALUE_SEPARATOR;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token BYTE_SUFFIX;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token BYTE_ARRAY_PREFIX;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token SHORT_SUFFIX;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token INT_ARRAY_PREFIX;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token LONG_SUFFIX;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token LONG_ARRAY_PREFIX;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token FLOAT_SUFFIX;
+  public static final net.minecraft.nbt.TextComponentTagVisitor$Token DOUBLE_SUFFIX;
+  public final java.lang.String text;
+  private static final net.minecraft.nbt.TextComponentTagVisitor$Token[] $VALUES;
+  public static net.minecraft.nbt.TextComponentTagVisitor$Token[] values();
+  public static net.minecraft.nbt.TextComponentTagVisitor$Token valueOf(java.lang.String);
+  private net.minecraft.nbt.TextComponentTagVisitor$Token(java.lang.String);
+  private static net.minecraft.nbt.TextComponentTagVisitor$Token[] $values();
+  static {};
+}

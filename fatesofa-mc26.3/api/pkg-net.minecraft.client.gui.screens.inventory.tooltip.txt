@@ -1,0 +1,134 @@
+Compiled from "BelowOrAboveWidgetTooltipPositioner.java"
+public class net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner implements net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner {
+  private final net.minecraft.client.gui.navigation.ScreenRectangle screenRectangle;
+  public net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner(net.minecraft.client.gui.navigation.ScreenRectangle);
+  public org.joml.Vector2ic positionTooltip(int, int, int, int, int, int);
+}
+Compiled from "ClientActivePlayersTooltip.java"
+public class net.minecraft.client.gui.screens.inventory.tooltip.ClientActivePlayersTooltip implements net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent {
+  private static final int SKIN_SIZE;
+  private static final int PADDING;
+  private final java.util.List<net.minecraft.client.renderer.PlayerSkinRenderCache$RenderInfo> activePlayers;
+  public net.minecraft.client.gui.screens.inventory.tooltip.ClientActivePlayersTooltip(net.minecraft.client.gui.screens.inventory.tooltip.ClientActivePlayersTooltip$ActivePlayersTooltip);
+  public int getHeight(net.minecraft.client.gui.Font);
+  private static java.lang.String getName(net.minecraft.client.renderer.PlayerSkinRenderCache$RenderInfo);
+  public int getWidth(net.minecraft.client.gui.Font);
+  public void extractImage(net.minecraft.client.gui.Font, int, int, int, int, net.minecraft.client.gui.GuiGraphicsExtractor);
+}
+Compiled from "ClientActivePlayersTooltip.java"
+public final class net.minecraft.client.gui.screens.inventory.tooltip.ClientActivePlayersTooltip$ActivePlayersTooltip extends java.lang.Record implements net.minecraft.world.inventory.tooltip.TooltipComponent {
+  private final java.util.List<net.minecraft.client.renderer.PlayerSkinRenderCache$RenderInfo> profiles;
+  public net.minecraft.client.gui.screens.inventory.tooltip.ClientActivePlayersTooltip$ActivePlayersTooltip(java.util.List<net.minecraft.client.renderer.PlayerSkinRenderCache$RenderInfo>);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public java.util.List<net.minecraft.client.renderer.PlayerSkinRenderCache$RenderInfo> profiles();
+}
+Compiled from "ClientBundleTooltip.java"
+public class net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip implements net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent {
+  private static final net.minecraft.resources.Identifier PROGRESSBAR_BORDER_SPRITE;
+  private static final net.minecraft.resources.Identifier PROGRESSBAR_FILL_SPRITE;
+  private static final net.minecraft.resources.Identifier PROGRESSBAR_FULL_SPRITE;
+  private static final net.minecraft.resources.Identifier SLOT_HIGHLIGHT_BACK_SPRITE;
+  private static final net.minecraft.resources.Identifier SLOT_HIGHLIGHT_FRONT_SPRITE;
+  private static final net.minecraft.resources.Identifier SLOT_BACKGROUND_SPRITE;
+  private static final int SLOT_MARGIN;
+  private static final int SLOT_SIZE;
+  private static final int GRID_WIDTH;
+  private static final int PROGRESSBAR_HEIGHT;
+  private static final int PROGRESSBAR_WIDTH;
+  private static final int PROGRESSBAR_BORDER;
+  private static final int PROGRESSBAR_FILL_MAX;
+  private static final int PROGRESSBAR_MARGIN_Y;
+  private static final net.minecraft.network.chat.Component BUNDLE_FULL_TEXT;
+  private static final net.minecraft.network.chat.Component BUNDLE_EMPTY_TEXT;
+  private static final net.minecraft.network.chat.Component BUNDLE_EMPTY_DESCRIPTION;
+  private final net.minecraft.world.item.component.BundleContents contents;
+  public net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip(net.minecraft.world.item.component.BundleContents);
+  public int getHeight(net.minecraft.client.gui.Font);
+  public int getWidth(net.minecraft.client.gui.Font);
+  public boolean showTooltipWithItemInHand();
+  private static int getEmptyBundleBackgroundHeight(net.minecraft.client.gui.Font);
+  private int backgroundHeight();
+  private int itemGridHeight();
+  private static int getContentXOffset(int);
+  private int gridSizeY();
+  private int slotCount();
+  public void extractImage(net.minecraft.client.gui.Font, int, int, int, int, net.minecraft.client.gui.GuiGraphicsExtractor);
+  private static void extractEmptyBundleTooltip(net.minecraft.client.gui.Font, int, int, int, int, net.minecraft.client.gui.GuiGraphicsExtractor);
+  private void extractBundleWithItemsTooltip(net.minecraft.client.gui.Font, int, int, int, int, net.minecraft.client.gui.GuiGraphicsExtractor, org.apache.commons.lang3.math.Fraction);
+  private java.util.List<net.minecraft.world.item.ItemStackTemplate> getShownItems(int);
+  private static boolean shouldRenderSurplusText(boolean, int, int);
+  private static boolean shouldRenderItemSlot(java.util.List<? extends net.minecraft.world.item.ItemInstance>, int);
+  private int getAmountOfHiddenItems(java.util.List<net.minecraft.world.item.ItemStackTemplate>);
+  private void extractSlot(int, int, int, java.util.List<net.minecraft.world.item.ItemStackTemplate>, int, net.minecraft.client.gui.Font, net.minecraft.client.gui.GuiGraphicsExtractor);
+  private static void extractCount(int, int, int, net.minecraft.client.gui.Font, net.minecraft.client.gui.GuiGraphicsExtractor);
+  private void extractSelectedItemTooltip(net.minecraft.client.gui.Font, net.minecraft.client.gui.GuiGraphicsExtractor, int, int, int);
+  private static void extractProgressbar(int, int, net.minecraft.client.gui.Font, net.minecraft.client.gui.GuiGraphicsExtractor, org.apache.commons.lang3.math.Fraction);
+  private static void extractEmptyBundleDescriptionText(int, int, net.minecraft.client.gui.Font, net.minecraft.client.gui.GuiGraphicsExtractor);
+  private static int getEmptyBundleDescriptionTextHeight(net.minecraft.client.gui.Font);
+  private static int getProgressBarFill(org.apache.commons.lang3.math.Fraction);
+  private static net.minecraft.resources.Identifier getProgressBarTexture(org.apache.commons.lang3.math.Fraction);
+  private static net.minecraft.network.chat.Component getProgressBarFillText(org.apache.commons.lang3.math.Fraction);
+  static {};
+}
+Compiled from "ClientTextTooltip.java"
+public class net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip implements net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent {
+  private final net.minecraft.util.FormattedCharSequence text;
+  public net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip(net.minecraft.util.FormattedCharSequence);
+  public int getWidth(net.minecraft.client.gui.Font);
+  public int getHeight(net.minecraft.client.gui.Font);
+  public void extractText(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.gui.Font, int, int);
+}
+Compiled from "ClientTooltipComponent.java"
+public interface net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent {
+  public static net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent create(net.minecraft.util.FormattedCharSequence);
+  public static net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent create(net.minecraft.world.inventory.tooltip.TooltipComponent);
+  public abstract int getHeight(net.minecraft.client.gui.Font);
+  public abstract int getWidth(net.minecraft.client.gui.Font);
+  public default boolean showTooltipWithItemInHand();
+  public default void extractText(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.gui.Font, int, int);
+  public default void extractImage(net.minecraft.client.gui.Font, int, int, int, int, net.minecraft.client.gui.GuiGraphicsExtractor);
+}
+Compiled from "ClientTooltipPositioner.java"
+public interface net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner {
+  public abstract org.joml.Vector2ic positionTooltip(int, int, int, int, int, int);
+}
+Compiled from "DefaultTooltipPositioner.java"
+public class net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner implements net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner {
+  public static final net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner INSTANCE;
+  private net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner();
+  public org.joml.Vector2ic positionTooltip(int, int, int, int, int, int);
+  private void positionTooltip(int, int, org.joml.Vector2i, int, int);
+  static {};
+}
+Compiled from "MenuTooltipPositioner.java"
+public class net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner implements net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner {
+  private static final int MARGIN;
+  private static final int MOUSE_OFFSET_X;
+  public static final int MAX_OVERLAP_WITH_WIDGET;
+  public static final int MAX_DISTANCE_TO_WIDGET;
+  private final net.minecraft.client.gui.navigation.ScreenRectangle screenRectangle;
+  public net.minecraft.client.gui.screens.inventory.tooltip.MenuTooltipPositioner(net.minecraft.client.gui.navigation.ScreenRectangle);
+  public org.joml.Vector2ic positionTooltip(int, int, int, int, int, int);
+  private static int getOffset(int, int, int);
+}
+Compiled from "TooltipRenderUtil.java"
+public class net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil {
+  private static final net.minecraft.resources.Identifier BACKGROUND_SPRITE;
+  private static final net.minecraft.resources.Identifier FRAME_SPRITE;
+  public static final int MOUSE_OFFSET;
+  private static final int PADDING;
+  public static final int PADDING_LEFT;
+  public static final int PADDING_RIGHT;
+  public static final int PADDING_TOP;
+  public static final int PADDING_BOTTOM;
+  private static final int MARGIN;
+  public net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil();
+  public static void extractTooltipBackground(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, int, int, net.minecraft.resources.Identifier);
+  private static net.minecraft.resources.Identifier getBackgroundSprite(net.minecraft.resources.Identifier);
+  private static net.minecraft.resources.Identifier getFrameSprite(net.minecraft.resources.Identifier);
+  private static java.lang.String lambda$getFrameSprite$0(java.lang.String);
+  private static java.lang.String lambda$getBackgroundSprite$0(java.lang.String);
+  static {};
+}

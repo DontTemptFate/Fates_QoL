@@ -1,0 +1,699 @@
+Compiled from "ActiveTextCollector.java"
+public interface net.minecraft.client.gui.ActiveTextCollector {
+  public static final double PERIOD_PER_SCROLLED_PIXEL;
+  public static final double MIN_SCROLL_PERIOD;
+  public abstract net.minecraft.client.gui.ActiveTextCollector$Parameters defaultParameters();
+  public abstract void defaultParameters(net.minecraft.client.gui.ActiveTextCollector$Parameters);
+  public default void accept(int, int, net.minecraft.util.FormattedCharSequence);
+  public default void accept(int, int, net.minecraft.network.chat.Component);
+  public default void accept(net.minecraft.client.gui.TextAlignment, int, int, net.minecraft.client.gui.ActiveTextCollector$Parameters, net.minecraft.network.chat.Component);
+  public abstract void accept(net.minecraft.client.gui.TextAlignment, int, int, net.minecraft.client.gui.ActiveTextCollector$Parameters, net.minecraft.util.FormattedCharSequence);
+  public default void accept(net.minecraft.client.gui.TextAlignment, int, int, net.minecraft.network.chat.Component);
+  public default void accept(net.minecraft.client.gui.TextAlignment, int, int, net.minecraft.util.FormattedCharSequence);
+  public abstract void acceptScrolling(net.minecraft.network.chat.Component, int, int, int, int, int, net.minecraft.client.gui.ActiveTextCollector$Parameters);
+  public default void acceptScrolling(net.minecraft.network.chat.Component, int, int, int, int, int);
+  public default void acceptScrollingWithDefaultCenter(net.minecraft.network.chat.Component, int, int, int, int);
+  public default void defaultScrollingHelper(net.minecraft.network.chat.Component, int, int, int, int, int, int, int, net.minecraft.client.gui.ActiveTextCollector$Parameters);
+  public static void findElementUnderCursor(net.minecraft.client.renderer.state.gui.GuiTextRenderState, float, float, java.util.function.Consumer<net.minecraft.network.chat.Style>);
+  public static boolean isPointInRectangle(float, float, float, float, float, float);
+}
+Compiled from "ActiveTextCollector.java"
+class net.minecraft.client.gui.ActiveTextCollector$1 implements net.minecraft.client.gui.Font$GlyphVisitor {
+  final float val$localMouseX;
+  final float val$localMouseY;
+  final java.util.function.Consumer val$output;
+  net.minecraft.client.gui.ActiveTextCollector$1();
+  public void acceptGlyph(net.minecraft.client.gui.font.TextRenderable$Styled);
+  public void acceptEmptyArea(net.minecraft.client.gui.font.EmptyArea);
+  private void acceptActiveArea(net.minecraft.client.gui.font.ActiveArea);
+}
+Compiled from "ActiveTextCollector.java"
+public class net.minecraft.client.gui.ActiveTextCollector$ClickableStyleFinder implements net.minecraft.client.gui.ActiveTextCollector {
+  private static final net.minecraft.client.gui.ActiveTextCollector$Parameters INITIAL;
+  private final net.minecraft.client.gui.Font font;
+  private final int testX;
+  private final int testY;
+  private net.minecraft.client.gui.ActiveTextCollector$Parameters defaultParameters;
+  private boolean includeInsertions;
+  private net.minecraft.network.chat.Style result;
+  private final java.util.function.Consumer<net.minecraft.network.chat.Style> styleScanner;
+  public net.minecraft.client.gui.ActiveTextCollector$ClickableStyleFinder(net.minecraft.client.gui.Font, int, int);
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters defaultParameters();
+  public void defaultParameters(net.minecraft.client.gui.ActiveTextCollector$Parameters);
+  public void accept(net.minecraft.client.gui.TextAlignment, int, int, net.minecraft.client.gui.ActiveTextCollector$Parameters, net.minecraft.util.FormattedCharSequence);
+  public void acceptScrolling(net.minecraft.network.chat.Component, int, int, int, int, int, net.minecraft.client.gui.ActiveTextCollector$Parameters);
+  public net.minecraft.client.gui.ActiveTextCollector$ClickableStyleFinder includeInsertions(boolean);
+  public net.minecraft.network.chat.Style result();
+  private void lambda$new$0(net.minecraft.network.chat.Style);
+  static {};
+}
+Compiled from "ActiveTextCollector.java"
+public final class net.minecraft.client.gui.ActiveTextCollector$Parameters extends java.lang.Record {
+  private final org.joml.Matrix3x2fc pose;
+  private final float opacity;
+  private final net.minecraft.client.gui.navigation.ScreenRectangle scissor;
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters(org.joml.Matrix3x2fc);
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters(org.joml.Matrix3x2fc, float, net.minecraft.client.gui.navigation.ScreenRectangle);
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters withPose(org.joml.Matrix3x2fc);
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters withScale(float);
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters withOpacity(float);
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters withScissor(net.minecraft.client.gui.navigation.ScreenRectangle);
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters withScissor(int, int, int, int);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public org.joml.Matrix3x2fc pose();
+  public float opacity();
+  public net.minecraft.client.gui.navigation.ScreenRectangle scissor();
+}
+Compiled from "BundleMouseActions.java"
+public class net.minecraft.client.gui.BundleMouseActions implements net.minecraft.client.gui.ItemSlotMouseAction {
+  private final net.minecraft.client.Minecraft minecraft;
+  private final net.minecraft.client.ScrollWheelHandler scrollWheelHandler;
+  public net.minecraft.client.gui.BundleMouseActions(net.minecraft.client.Minecraft);
+  public boolean matches(net.minecraft.world.inventory.Slot);
+  public boolean onMouseScrolled(double, double, int, net.minecraft.world.item.ItemStack);
+  public void onStopHovering(net.minecraft.world.inventory.Slot);
+  public void onSlotClicked(net.minecraft.world.inventory.Slot, net.minecraft.world.inventory.ContainerInput);
+  private void toggleSelectedBundleItem(net.minecraft.world.item.ItemStack, int, int);
+  public void unselectedBundleItem(net.minecraft.world.item.ItemStack, int);
+}
+Compiled from "ComponentPath.java"
+public interface net.minecraft.client.gui.ComponentPath {
+  public static net.minecraft.client.gui.ComponentPath leaf(net.minecraft.client.gui.components.events.GuiEventListener);
+  public static net.minecraft.client.gui.ComponentPath path(net.minecraft.client.gui.components.events.ContainerEventHandler, net.minecraft.client.gui.ComponentPath);
+  public static net.minecraft.client.gui.ComponentPath path(net.minecraft.client.gui.components.events.GuiEventListener, net.minecraft.client.gui.components.events.ContainerEventHandler...);
+  public abstract net.minecraft.client.gui.components.events.GuiEventListener component();
+  public abstract void applyFocus(boolean);
+  public abstract net.minecraft.client.gui.components.events.GuiEventListener leafComponent();
+}
+Compiled from "ComponentPath.java"
+public final class net.minecraft.client.gui.ComponentPath$Leaf extends java.lang.Record implements net.minecraft.client.gui.ComponentPath {
+  private final net.minecraft.client.gui.components.events.GuiEventListener component;
+  public net.minecraft.client.gui.ComponentPath$Leaf(net.minecraft.client.gui.components.events.GuiEventListener);
+  public void applyFocus(boolean);
+  public net.minecraft.client.gui.components.events.GuiEventListener leafComponent();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.client.gui.components.events.GuiEventListener component();
+}
+Compiled from "ComponentPath.java"
+public final class net.minecraft.client.gui.ComponentPath$Path extends java.lang.Record implements net.minecraft.client.gui.ComponentPath {
+  private final net.minecraft.client.gui.components.events.ContainerEventHandler component;
+  private final net.minecraft.client.gui.ComponentPath childPath;
+  public net.minecraft.client.gui.ComponentPath$Path(net.minecraft.client.gui.components.events.ContainerEventHandler, net.minecraft.client.gui.ComponentPath);
+  public void applyFocus(boolean);
+  public net.minecraft.client.gui.components.events.GuiEventListener leafComponent();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.client.gui.components.events.ContainerEventHandler component();
+  public net.minecraft.client.gui.ComponentPath childPath();
+  public net.minecraft.client.gui.components.events.GuiEventListener component();
+}
+Compiled from "Font.java"
+public class net.minecraft.client.gui.Font {
+  private static final float EFFECT_DEPTH;
+  private static final float OVER_EFFECT_DEPTH;
+  private static final float UNDER_EFFECT_DEPTH;
+  public static final float SHADOW_DEPTH;
+  public final int lineHeight;
+  private final net.minecraft.util.RandomSource random;
+  private final net.minecraft.client.gui.Font$Provider provider;
+  private final net.minecraft.client.StringSplitter splitter;
+  public net.minecraft.client.gui.Font(net.minecraft.client.gui.Font$Provider);
+  private net.minecraft.client.gui.GlyphSource getGlyphSource(net.minecraft.network.chat.FontDescription);
+  public java.lang.String bidirectionalShaping(java.lang.String);
+  public net.minecraft.client.gui.Font$PreparedText prepare8xTextOutline(net.minecraft.util.FormattedCharSequence, float, float, int);
+  public net.minecraft.client.gui.font.TextRenderable prepareBackground(float, float, float, float, int);
+  private net.minecraft.client.gui.font.glyphs.BakedGlyph getGlyph(int, net.minecraft.network.chat.Style);
+  public net.minecraft.client.gui.Font$PreparedText prepareText(java.lang.String, float, float, int, boolean, int);
+  public net.minecraft.client.gui.Font$PreparedText prepareText(net.minecraft.util.FormattedCharSequence, float, float, int, boolean, boolean, int);
+  public int width(java.lang.String);
+  public int width(net.minecraft.network.chat.FormattedText);
+  public int width(net.minecraft.util.FormattedCharSequence);
+  public java.lang.String plainSubstrByWidth(java.lang.String, int, boolean);
+  public java.lang.String plainSubstrByWidth(java.lang.String, int);
+  public net.minecraft.network.chat.FormattedText substrByWidth(net.minecraft.network.chat.FormattedText, int);
+  public int wordWrapHeight(net.minecraft.network.chat.FormattedText, int);
+  public java.util.List<net.minecraft.util.FormattedCharSequence> split(net.minecraft.network.chat.FormattedText, int);
+  public java.util.List<net.minecraft.network.chat.FormattedText> splitIgnoringLanguage(net.minecraft.network.chat.FormattedText, int);
+  public boolean isBidirectional();
+  public net.minecraft.client.StringSplitter getSplitter();
+  private boolean lambda$prepare8xTextOutline$0(net.minecraft.client.gui.Font$PreparedTextBuilder, float[], int, float, int, int, int, net.minecraft.network.chat.Style, int);
+  private float lambda$new$0(int, net.minecraft.network.chat.Style);
+}
+Compiled from "Font.java"
+public final class net.minecraft.client.gui.Font$DisplayMode extends java.lang.Enum<net.minecraft.client.gui.Font$DisplayMode> {
+  public static final net.minecraft.client.gui.Font$DisplayMode NORMAL;
+  public static final net.minecraft.client.gui.Font$DisplayMode SEE_THROUGH;
+  public static final net.minecraft.client.gui.Font$DisplayMode POLYGON_OFFSET;
+  private static final net.minecraft.client.gui.Font$DisplayMode[] $VALUES;
+  public static net.minecraft.client.gui.Font$DisplayMode[] values();
+  public static net.minecraft.client.gui.Font$DisplayMode valueOf(java.lang.String);
+  private net.minecraft.client.gui.Font$DisplayMode();
+  private static net.minecraft.client.gui.Font$DisplayMode[] $values();
+  static {};
+}
+Compiled from "Font.java"
+public interface net.minecraft.client.gui.Font$GlyphVisitor {
+  public default void acceptGlyph(net.minecraft.client.gui.font.TextRenderable$Styled);
+  public default void acceptEffect(net.minecraft.client.gui.font.TextRenderable);
+  public default void acceptRenderable(net.minecraft.client.gui.font.TextRenderable);
+  public default void acceptEmptyArea(net.minecraft.client.gui.font.EmptyArea);
+}
+Compiled from "Font.java"
+public interface net.minecraft.client.gui.Font$PreparedText {
+  public abstract void visit(net.minecraft.client.gui.Font$GlyphVisitor);
+  public abstract net.minecraft.client.gui.navigation.ScreenRectangle bounds();
+}
+Compiled from "Font.java"
+class net.minecraft.client.gui.Font$PreparedTextBuilder implements net.minecraft.client.gui.Font$PreparedText,net.minecraft.util.FormattedCharSink {
+  private final boolean drawShadow;
+  private final int color;
+  private final int backgroundColor;
+  private final boolean includeEmpty;
+  private float x;
+  private float y;
+  private float left;
+  private float top;
+  private float right;
+  private float bottom;
+  private float backgroundLeft;
+  private float backgroundTop;
+  private float backgroundRight;
+  private float backgroundBottom;
+  private final java.util.List<net.minecraft.client.gui.font.TextRenderable$Styled> glyphs;
+  private java.util.List<net.minecraft.client.gui.font.TextRenderable> effects;
+  private java.util.List<net.minecraft.client.gui.font.EmptyArea> emptyAreas;
+  final net.minecraft.client.gui.Font this$0;
+  public net.minecraft.client.gui.Font$PreparedTextBuilder(net.minecraft.client.gui.Font, float, float, int, boolean, boolean);
+  public net.minecraft.client.gui.Font$PreparedTextBuilder(net.minecraft.client.gui.Font, float, float, int, int, boolean, boolean);
+  private void markSize(float, float, float, float);
+  private void markBackground(float, float, float);
+  private void addGlyph(net.minecraft.client.gui.font.TextRenderable$Styled);
+  private void addEffect(net.minecraft.client.gui.font.TextRenderable);
+  private void addEmptyGlyph(net.minecraft.client.gui.font.EmptyArea);
+  public boolean accept(int, net.minecraft.network.chat.Style, int);
+  public boolean accept(int, net.minecraft.network.chat.Style, net.minecraft.client.gui.font.glyphs.BakedGlyph);
+  public void visit(net.minecraft.client.gui.Font$GlyphVisitor);
+  public void discardEffects();
+  private int getTextColor(net.minecraft.network.chat.TextColor);
+  private int getShadowColor(net.minecraft.network.chat.Style, int);
+  public net.minecraft.client.gui.navigation.ScreenRectangle bounds();
+}
+Compiled from "Font.java"
+public interface net.minecraft.client.gui.Font$Provider {
+  public abstract net.minecraft.client.gui.GlyphSource glyphs(net.minecraft.network.chat.FontDescription);
+  public abstract net.minecraft.client.gui.font.glyphs.EffectGlyph effect();
+}
+Compiled from "GlyphSource.java"
+public interface net.minecraft.client.gui.GlyphSource {
+  public abstract net.minecraft.client.gui.font.glyphs.BakedGlyph getGlyph(int);
+  public abstract net.minecraft.client.gui.font.glyphs.BakedGlyph getRandomGlyph(net.minecraft.util.RandomSource, int);
+}
+Compiled from "Gui.java"
+public class net.minecraft.client.gui.Gui {
+  private static final org.slf4j.Logger LOGGER;
+  private static final com.mojang.jtracy.SectionCategory TRACY_CURRENT_SCREEN;
+  private static final net.minecraft.network.chat.Component SOCIAL_INTERACTIONS_NOT_AVAILABLE;
+  public static final net.minecraft.network.chat.Component SAVING_LEVEL;
+  private final net.minecraft.client.Minecraft minecraft;
+  public final net.minecraft.client.gui.Hud hud;
+  private final net.minecraft.client.renderer.state.gui.GuiRenderState guiRenderState;
+  private com.mojang.jtracy.Section screenTracySection;
+  private net.minecraft.client.gui.screens.Screen screen;
+  private net.minecraft.client.gui.screens.Overlay overlay;
+  private boolean clientLevelTeardownInProgress;
+  private final net.minecraft.client.resources.SplashManager splashManager;
+  private final net.minecraft.client.gui.components.toasts.ToastManager toastManager;
+  private final net.minecraft.client.multiplayer.chat.ChatListener chatListener;
+  private net.minecraft.client.gui.components.toasts.TutorialToast socialInteractionsToast;
+  public net.minecraft.client.gui.Gui(net.minecraft.client.Minecraft, net.minecraft.client.gui.Hud, net.minecraft.client.renderer.state.gui.GuiRenderState);
+  public void registerReloadListeners(net.minecraft.server.packs.resources.ReloadableResourceManager);
+  public void tick();
+  public void update();
+  public void extractRenderState(net.minecraft.client.DeltaTracker, boolean, boolean);
+  public net.minecraft.client.gui.screens.Screen screen();
+  public void setScreen(net.minecraft.client.gui.screens.Screen);
+  public net.minecraft.client.gui.screens.Overlay overlay();
+  public void setOverlay(net.minecraft.client.gui.screens.Overlay);
+  public boolean isPausing();
+  public net.minecraft.client.resources.SplashManager splashManager();
+  public net.minecraft.client.gui.components.toasts.ToastManager toastManager();
+  public net.minecraft.client.multiplayer.chat.ChatListener chatListener();
+  public void addSocialInteractionsToast();
+  public void setPauseScreen(boolean, boolean);
+  public void handleKeybinds();
+  public void openChatScreen(net.minecraft.client.gui.components.ChatComponent$ChatMethod);
+  public void openChatAndAddText(net.minecraft.client.gui.components.ChatComponent$ChatMethod, java.lang.String);
+  public java.lang.Runnable buildInitialScreens(net.minecraft.client.GameLoadCookie);
+  private boolean addInitialScreens(java.util.List<java.util.function.Function<java.lang.Runnable, net.minecraft.client.gui.screens.Screen>>);
+  public boolean canInterruptScreen();
+  public void setClientLevelTeardownInProgress(boolean);
+  private void renderActiveTextDebug();
+  private void lambda$renderActiveTextDebug$0(net.minecraft.client.renderer.state.gui.GuiTextRenderState);
+  private static net.minecraft.client.gui.screens.Screen lambda$addInitialScreens$3(com.mojang.authlib.GameProfile, java.lang.Runnable);
+  private static net.minecraft.client.gui.screens.Screen lambda$addInitialScreens$1(com.mojang.authlib.minecraft.BanDetails, java.lang.Runnable);
+  private static void lambda$addInitialScreens$2(java.lang.Runnable, boolean);
+  private net.minecraft.client.gui.screens.Screen lambda$addInitialScreens$0(java.lang.Runnable);
+  private void lambda$buildInitialScreens$1(net.minecraft.client.gui.screens.Screen);
+  private void lambda$buildInitialScreens$0(net.minecraft.client.GameLoadCookie, boolean);
+  private java.lang.String lambda$extractRenderState$1() throws java.lang.Exception;
+  private java.lang.String lambda$extractRenderState$0() throws java.lang.Exception;
+  private java.lang.String lambda$update$0() throws java.lang.Exception;
+  static {};
+}
+Compiled from "Gui.java"
+class net.minecraft.client.gui.Gui$1 implements net.minecraft.client.gui.Font$GlyphVisitor {
+  private int index;
+  final net.minecraft.client.renderer.state.gui.GuiTextRenderState val$text;
+  final net.minecraft.client.gui.Gui this$0;
+  net.minecraft.client.gui.Gui$1();
+  public void acceptGlyph(net.minecraft.client.gui.font.TextRenderable$Styled);
+  public void acceptEmptyArea(net.minecraft.client.gui.font.EmptyArea);
+  private void renderDebugMarkers(net.minecraft.client.gui.font.ActiveArea, boolean);
+}
+Compiled from "GuiGraphicsExtractor.java"
+public class net.minecraft.client.gui.GuiGraphicsExtractor {
+  private static final int EXTRA_SPACE_AFTER_FIRST_TOOLTIP_LINE;
+  private final net.minecraft.client.Minecraft minecraft;
+  private final org.joml.Matrix3x2fStack pose;
+  private final net.minecraft.client.gui.GuiGraphicsExtractor$ScissorStack scissorStack;
+  private final net.minecraft.client.resources.model.sprite.SpriteGetter sprites;
+  private final net.minecraft.client.renderer.texture.TextureAtlas guiSprites;
+  private final net.minecraft.client.renderer.state.gui.GuiRenderState guiRenderState;
+  private com.mojang.blaze3d.platform.cursor.CursorType pendingCursor;
+  private final int mouseX;
+  private final int mouseY;
+  private java.lang.Runnable deferredTooltip;
+  private net.minecraft.network.chat.Style hoveredTextStyle;
+  private net.minecraft.network.chat.Style clickableTextStyle;
+  private net.minecraft.client.gui.components.Renderable preeditOverlay;
+  private net.minecraft.client.gui.GuiGraphicsExtractor(net.minecraft.client.Minecraft, org.joml.Matrix3x2fStack, net.minecraft.client.renderer.state.gui.GuiRenderState, int, int);
+  public net.minecraft.client.gui.GuiGraphicsExtractor(net.minecraft.client.Minecraft, net.minecraft.client.renderer.state.gui.GuiRenderState, int, int);
+  public void requestCursor(com.mojang.blaze3d.platform.cursor.CursorType);
+  public void applyCursor(com.mojang.blaze3d.platform.Window);
+  public int guiWidth();
+  public int guiHeight();
+  public org.joml.Matrix3x2fStack pose();
+  public void nextStratum();
+  public void blurBeforeThisStratum();
+  public void enableScissor(int, int, int, int);
+  public void disableScissor();
+  public boolean containsPointInScissor(int, int);
+  public void horizontalLine(int, int, int, int);
+  public void verticalLine(int, int, int, int);
+  public void fill(int, int, int, int, int);
+  public void fill(com.mojang.renderpearl.api.pipeline.RenderPipeline, int, int, int, int, int);
+  public void fillGradient(int, int, int, int, int, int);
+  public void fill(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.client.gui.render.TextureSetup, int, int, int, int);
+  public void outline(int, int, int, int, int);
+  private void innerFill(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.client.gui.render.TextureSetup, int, int, int, int, int, java.lang.Integer);
+  public void textHighlight(int, int, int, int, boolean);
+  public void text(net.minecraft.client.gui.Font, java.lang.String, int, int, int);
+  public void text(net.minecraft.client.gui.Font, java.lang.String, int, int, int, boolean);
+  public void text(net.minecraft.client.gui.Font, net.minecraft.util.FormattedCharSequence, int, int, int);
+  public void text(net.minecraft.client.gui.Font, net.minecraft.util.FormattedCharSequence, int, int, int, boolean);
+  public void text(net.minecraft.client.gui.Font, net.minecraft.network.chat.Component, int, int, int);
+  public void text(net.minecraft.client.gui.Font, net.minecraft.network.chat.Component, int, int, int, boolean);
+  public void centeredText(net.minecraft.client.gui.Font, java.lang.String, int, int, int);
+  public void centeredText(net.minecraft.client.gui.Font, net.minecraft.network.chat.Component, int, int, int);
+  public void centeredText(net.minecraft.client.gui.Font, net.minecraft.util.FormattedCharSequence, int, int, int);
+  public int textWithWordWrap(net.minecraft.client.gui.Font, net.minecraft.network.chat.FormattedText, int, int, int, int);
+  public int textWithWordWrap(net.minecraft.client.gui.Font, net.minecraft.network.chat.FormattedText, int, int, int, int, boolean);
+  public void textWithBackdrop(net.minecraft.client.gui.Font, net.minecraft.network.chat.Component, int, int, int, int);
+  public void blit(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, float, float, int, int, int, int, int);
+  public void blit(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, float, float, int, int, int, int);
+  public void blit(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, float, float, int, int, int, int, int, int);
+  public void blit(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, float, float, int, int, int, int, int, int, int);
+  public void blit(net.minecraft.resources.Identifier, int, int, int, int, float, float, float, float);
+  public void blit(com.mojang.renderpearl.api.textures.GpuTextureView, com.mojang.renderpearl.api.textures.GpuSampler, int, int, int, int, float, float, float, float);
+  public void blitSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, int, int);
+  public void blitSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, int, int, float);
+  public void blitSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, int, int, int);
+  public void blitSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, int, int, int, int, int, int);
+  public void blitSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, int, int, int, int, int, int, int);
+  public void blitSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.client.renderer.texture.TextureAtlasSprite, int, int, int, int);
+  public void blitSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.client.renderer.texture.TextureAtlasSprite, int, int, int, int, int);
+  private void blitSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.client.renderer.texture.TextureAtlasSprite, int, int, int, int, int, int, int, int, int);
+  private void blitNineSlicedSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.client.renderer.texture.TextureAtlasSprite, net.minecraft.client.resources.metadata.gui.GuiSpriteScaling$NineSlice, int, int, int, int, int);
+  private void blitNineSliceInnerSegment(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.client.resources.metadata.gui.GuiSpriteScaling$NineSlice, net.minecraft.client.renderer.texture.TextureAtlasSprite, int, int, int, int, int, int, int, int, int, int, int);
+  private void blitTiledSprite(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.client.renderer.texture.TextureAtlasSprite, int, int, int, int, int, int, int, int, int, int, int);
+  private void innerBlit(com.mojang.renderpearl.api.pipeline.RenderPipeline, net.minecraft.resources.Identifier, int, int, int, int, float, float, float, float, int);
+  private void innerBlit(com.mojang.renderpearl.api.pipeline.RenderPipeline, com.mojang.renderpearl.api.textures.GpuTextureView, com.mojang.renderpearl.api.textures.GpuSampler, int, int, int, int, float, float, float, float, int);
+  private void innerTiledBlit(com.mojang.renderpearl.api.pipeline.RenderPipeline, com.mojang.renderpearl.api.textures.GpuTextureView, com.mojang.renderpearl.api.textures.GpuSampler, int, int, int, int, int, int, float, float, float, float, int);
+  private static net.minecraft.client.resources.metadata.gui.GuiSpriteScaling getSpriteScaling(net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  public void item(net.minecraft.world.item.ItemStack, int, int);
+  public void item(net.minecraft.world.item.ItemStack, int, int, int);
+  public void item(net.minecraft.world.entity.LivingEntity, net.minecraft.world.item.ItemStack, int, int, int);
+  private void item(net.minecraft.world.entity.LivingEntity, net.minecraft.world.level.Level, net.minecraft.world.item.ItemStack, int, int, int);
+  public void fakeItem(net.minecraft.world.item.ItemStack, int, int);
+  public void fakeItem(net.minecraft.world.item.ItemStack, int, int, int);
+  public void itemDecorations(net.minecraft.client.gui.Font, net.minecraft.world.item.ItemStack, int, int);
+  public void itemDecorations(net.minecraft.client.gui.Font, net.minecraft.world.item.ItemStack, int, int, java.lang.String);
+  private void itemBar(net.minecraft.world.item.ItemStack, int, int);
+  private void itemCount(net.minecraft.client.gui.Font, net.minecraft.world.item.ItemStack, int, int, java.lang.String);
+  private void itemCooldown(net.minecraft.world.item.ItemStack, int, int);
+  public void map(net.minecraft.client.renderer.state.MapRenderState);
+  public void entity(net.minecraft.client.renderer.entity.state.EntityRenderState, float, org.joml.Vector3fc, org.joml.Quaternionfc, org.joml.Quaternionfc, int, int, int, int);
+  public void skin(net.minecraft.client.model.Model$Simple, net.minecraft.resources.Identifier, float, float, float, float, int, int, int, int);
+  public void book(net.minecraft.client.model.object.book.BookModel, net.minecraft.resources.Identifier, float, float, float, int, int, int, int);
+  public void bannerPattern(net.minecraft.client.model.object.banner.BannerFlagModel, net.minecraft.world.item.DyeColor, net.minecraft.world.level.block.entity.BannerPatternLayers, int, int, int, int);
+  public void profilerChart(java.util.List<net.minecraft.util.profiling.ResultField>, int, int, int, int);
+  public void setTooltipForNextFrame(net.minecraft.network.chat.Component, int, int);
+  public void setTooltipForNextFrame(java.util.List<net.minecraft.util.FormattedCharSequence>, int, int);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, net.minecraft.world.item.ItemStack, int, int);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<net.minecraft.network.chat.Component>, java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent>, int, int);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<net.minecraft.network.chat.Component>, java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent>, int, int, net.minecraft.resources.Identifier);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<net.minecraft.network.chat.Component>, java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent>, int, int, net.minecraft.resources.Identifier, boolean);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<net.minecraft.util.FormattedCharSequence>, java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent>, net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner, int, int, boolean, net.minecraft.resources.Identifier);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, net.minecraft.network.chat.Component, int, int);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, net.minecraft.network.chat.Component, int, int, net.minecraft.resources.Identifier);
+  public void setComponentTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<net.minecraft.network.chat.Component>, int, int);
+  public void setComponentTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<net.minecraft.network.chat.Component>, int, int, net.minecraft.resources.Identifier);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<? extends net.minecraft.util.FormattedCharSequence>, int, int);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<? extends net.minecraft.util.FormattedCharSequence>, int, int, net.minecraft.resources.Identifier);
+  public void setTooltipForNextFrame(net.minecraft.client.gui.Font, java.util.List<net.minecraft.util.FormattedCharSequence>, net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner, int, int, boolean);
+  private void setTooltipForNextFrameInternal(net.minecraft.client.gui.Font, java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent>, int, int, net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner, net.minecraft.resources.Identifier, boolean);
+  private void setTooltipForNextFrameInternal(net.minecraft.client.gui.Font, java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent>, int, int, net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner, net.minecraft.resources.Identifier, boolean, boolean);
+  public void tooltip(net.minecraft.client.gui.Font, java.util.List<net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent>, int, int, net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner, net.minecraft.resources.Identifier, boolean);
+  public void setPreeditOverlay(net.minecraft.client.gui.components.Renderable);
+  public void extractDeferredElements(int, int, float);
+  private void componentHoverEffect(net.minecraft.client.gui.Font, net.minecraft.network.chat.Style, int, int);
+  public net.minecraft.client.renderer.texture.TextureAtlasSprite getSprite(net.minecraft.client.resources.model.sprite.SpriteId);
+  public net.minecraft.client.gui.ActiveTextCollector textRendererForWidget(net.minecraft.client.gui.components.AbstractWidget, net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects);
+  public net.minecraft.client.gui.ActiveTextCollector textRenderer();
+  public net.minecraft.client.gui.ActiveTextCollector textRenderer(net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects);
+  public net.minecraft.client.gui.ActiveTextCollector textRenderer(net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects, java.util.function.Consumer<net.minecraft.network.chat.Style>);
+  private net.minecraft.client.gui.ActiveTextCollector$Parameters createDefaultTextParameters(float);
+  private void lambda$setTooltipForNextFrameInternal$0(net.minecraft.client.gui.Font, java.util.List, int, int, net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner, net.minecraft.resources.Identifier, boolean);
+  private static void lambda$setTooltipForNextFrame$1(java.util.List, net.minecraft.world.inventory.tooltip.TooltipComponent);
+  private static void lambda$setTooltipForNextFrame$0(java.util.List, net.minecraft.world.inventory.tooltip.TooltipComponent);
+  private static java.lang.String lambda$item$2(net.minecraft.world.item.ItemStack) throws java.lang.Exception;
+  private static java.lang.String lambda$item$1(net.minecraft.world.item.ItemStack) throws java.lang.Exception;
+  private static java.lang.String lambda$item$0(net.minecraft.world.item.ItemStack) throws java.lang.Exception;
+}
+Compiled from "GuiGraphicsExtractor.java"
+public final class net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects extends java.lang.Enum<net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects> {
+  public static final net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects NONE;
+  public static final net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects TOOLTIP_ONLY;
+  public static final net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects TOOLTIP_AND_CURSOR;
+  public final boolean allowTooltip;
+  public final boolean allowCursorChanges;
+  private static final net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects[] $VALUES;
+  public static net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects[] values();
+  public static net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects valueOf(java.lang.String);
+  private net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects(boolean, boolean);
+  public static net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects notClickable(boolean);
+  private static net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects[] $values();
+  static {};
+}
+Compiled from "GuiGraphicsExtractor.java"
+class net.minecraft.client.gui.GuiGraphicsExtractor$RenderingTextCollector implements net.minecraft.client.gui.ActiveTextCollector, java.util.function.Consumer<net.minecraft.network.chat.Style> {
+  private net.minecraft.client.gui.ActiveTextCollector$Parameters defaultParameters;
+  private final net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects hoveredTextEffects;
+  private final java.util.function.Consumer<net.minecraft.network.chat.Style> additionalConsumer;
+  final net.minecraft.client.gui.GuiGraphicsExtractor this$0;
+  private net.minecraft.client.gui.GuiGraphicsExtractor$RenderingTextCollector(net.minecraft.client.gui.ActiveTextCollector$Parameters, net.minecraft.client.gui.GuiGraphicsExtractor$HoveredTextEffects, java.util.function.Consumer<net.minecraft.network.chat.Style>);
+  public net.minecraft.client.gui.ActiveTextCollector$Parameters defaultParameters();
+  public void defaultParameters(net.minecraft.client.gui.ActiveTextCollector$Parameters);
+  public void accept(net.minecraft.network.chat.Style);
+  public void accept(net.minecraft.client.gui.TextAlignment, int, int, net.minecraft.client.gui.ActiveTextCollector$Parameters, net.minecraft.util.FormattedCharSequence);
+  public void acceptScrolling(net.minecraft.network.chat.Component, int, int, int, int, int, net.minecraft.client.gui.ActiveTextCollector$Parameters);
+  public void accept(java.lang.Object);
+}
+Compiled from "GuiGraphicsExtractor.java"
+class net.minecraft.client.gui.GuiGraphicsExtractor$ScissorStack {
+  private final net.minecraft.client.gui.navigation.ScreenRectangle screenSize;
+  private final java.util.Deque<net.minecraft.client.gui.navigation.ScreenRectangle> stack;
+  private net.minecraft.client.gui.GuiGraphicsExtractor$ScissorStack(net.minecraft.client.gui.navigation.ScreenRectangle);
+  public void push(net.minecraft.client.gui.navigation.ScreenRectangle);
+  public void pop();
+  public net.minecraft.client.gui.navigation.ScreenRectangle peek();
+  public boolean containsPoint(int, int);
+}
+Compiled from "Hud.java"
+public class net.minecraft.client.gui.Hud {
+  private static final net.minecraft.resources.Identifier CROSSHAIR_SPRITE;
+  private static final net.minecraft.resources.Identifier CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE;
+  private static final net.minecraft.resources.Identifier CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE;
+  private static final net.minecraft.resources.Identifier CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier EFFECT_BACKGROUND_AMBIENT_SPRITE;
+  private static final net.minecraft.resources.Identifier EFFECT_BACKGROUND_SPRITE;
+  private static final net.minecraft.resources.Identifier HOTBAR_SPRITE;
+  private static final net.minecraft.resources.Identifier HOTBAR_SELECTION_SPRITE;
+  private static final net.minecraft.resources.Identifier HOTBAR_OFFHAND_LEFT_SPRITE;
+  private static final net.minecraft.resources.Identifier HOTBAR_OFFHAND_RIGHT_SPRITE;
+  private static final net.minecraft.resources.Identifier HOTBAR_ATTACK_INDICATOR_BACKGROUND_SPRITE;
+  private static final net.minecraft.resources.Identifier HOTBAR_ATTACK_INDICATOR_PROGRESS_SPRITE;
+  private static final net.minecraft.resources.Identifier ARMOR_EMPTY_SPRITE;
+  private static final net.minecraft.resources.Identifier ARMOR_HALF_SPRITE;
+  private static final net.minecraft.resources.Identifier ARMOR_FULL_SPRITE;
+  private static final net.minecraft.resources.Identifier FOOD_EMPTY_HUNGER_SPRITE;
+  private static final net.minecraft.resources.Identifier FOOD_HALF_HUNGER_SPRITE;
+  private static final net.minecraft.resources.Identifier FOOD_FULL_HUNGER_SPRITE;
+  private static final net.minecraft.resources.Identifier FOOD_EMPTY_SPRITE;
+  private static final net.minecraft.resources.Identifier FOOD_HALF_SPRITE;
+  private static final net.minecraft.resources.Identifier FOOD_FULL_SPRITE;
+  private static final net.minecraft.resources.Identifier AIR_SPRITE;
+  private static final net.minecraft.resources.Identifier AIR_POPPING_SPRITE;
+  private static final net.minecraft.resources.Identifier AIR_EMPTY_SPRITE;
+  private static final net.minecraft.resources.Identifier HEART_VEHICLE_CONTAINER_SPRITE;
+  private static final net.minecraft.resources.Identifier HEART_VEHICLE_FULL_SPRITE;
+  private static final net.minecraft.resources.Identifier HEART_VEHICLE_HALF_SPRITE;
+  private static final net.minecraft.resources.Identifier VIGNETTE_LOCATION;
+  public static final net.minecraft.resources.Identifier NAUSEA_LOCATION;
+  private static final net.minecraft.resources.Identifier SPYGLASS_SCOPE_LOCATION;
+  private static final net.minecraft.resources.Identifier POWDER_SNOW_OUTLINE_LOCATION;
+  private static final java.util.Comparator<net.minecraft.world.scores.PlayerScoreEntry> SCORE_DISPLAY_ORDER;
+  private static final net.minecraft.network.chat.Component DEMO_EXPIRED_TEXT;
+  private static final net.minecraft.network.chat.Component SAVING_TEXT;
+  private static final float MIN_CROSSHAIR_ATTACK_SPEED;
+  private static final int EXPERIENCE_BAR_DISPLAY_TICKS;
+  private static final int NUM_HEARTS_PER_ROW;
+  private static final int LINE_HEIGHT;
+  private static final java.lang.String SPACER;
+  private static final float PORTAL_OVERLAY_ALPHA_MIN;
+  private static final int HEART_SIZE;
+  private static final int HEART_SEPARATION;
+  private static final int NUM_AIR_BUBBLES;
+  private static final int AIR_BUBBLE_SIZE;
+  private static final int AIR_BUBBLE_SEPERATION;
+  private static final int AIR_BUBBLE_POPPING_DURATION;
+  private static final int EMPTY_AIR_BUBBLE_DELAY_DURATION;
+  private static final float AIR_BUBBLE_POP_SOUND_VOLUME_BASE;
+  private static final float AIR_BUBBLE_POP_SOUND_VOLUME_INCREMENT;
+  private static final float AIR_BUBBLE_POP_SOUND_PITCH_BASE;
+  private static final float AIR_BUBBLE_POP_SOUND_PITCH_INCREMENT;
+  private static final int NUM_AIR_BUBBLE_POPPED_BEFORE_SOUND_VOLUME_INCREASE;
+  private static final int NUM_AIR_BUBBLE_POPPED_BEFORE_SOUND_PITCH_INCREASE;
+  private static final float AUTOSAVE_FADE_SPEED_FACTOR;
+  private static final int SAVING_INDICATOR_WIDTH_PADDING_RIGHT;
+  private static final int SAVING_INDICATOR_HEIGHT_PADDING_BOTTOM;
+  private final net.minecraft.util.RandomSource random;
+  private final net.minecraft.client.Minecraft minecraft;
+  private final net.minecraft.client.gui.components.ChatComponent chat;
+  private final net.minecraft.client.resources.WaypointStyleManager waypointStyles;
+  private boolean isHidden;
+  private int tickCount;
+  private net.minecraft.network.chat.Component overlayMessageString;
+  private int overlayMessageTime;
+  private boolean animateOverlayMessageColor;
+  public float vignetteBrightness;
+  private int toolHighlightTimer;
+  private net.minecraft.world.item.ItemStack lastToolHighlight;
+  private final net.minecraft.client.gui.components.DebugScreenOverlay debugOverlay;
+  private final net.minecraft.client.gui.components.SubtitleOverlay subtitleOverlay;
+  private final net.minecraft.client.gui.components.spectator.SpectatorGui spectatorGui;
+  private final net.minecraft.client.gui.components.PlayerTabOverlay tabList;
+  private final net.minecraft.client.gui.components.BossHealthOverlay bossOverlay;
+  private int titleTime;
+  private net.minecraft.network.chat.Component title;
+  private net.minecraft.network.chat.Component subtitle;
+  private int titleFadeInTime;
+  private int titleStayTime;
+  private int titleFadeOutTime;
+  private int lastHealth;
+  private int displayHealth;
+  private long lastHealthTime;
+  private long healthBlinkTime;
+  private int lastBubblePopSoundPlayed;
+  private java.lang.Runnable deferredSubtitles;
+  private float autosaveIndicatorValue;
+  private float lastAutosaveIndicatorValue;
+  private com.mojang.datafixers.util.Pair<net.minecraft.client.gui.Hud$ContextualInfo, net.minecraft.client.gui.contextualbar.ContextualBar> contextualInfoBar;
+  private final java.util.Map<net.minecraft.client.gui.Hud$ContextualInfo, java.util.function.Supplier<net.minecraft.client.gui.contextualbar.ContextualBar>> contextualInfoBars;
+  private float scopeScale;
+  public net.minecraft.client.gui.Hud(net.minecraft.client.Minecraft);
+  public void registerReloadListeners(net.minecraft.server.packs.resources.ReloadableResourceManager);
+  public void toggle();
+  public boolean isHidden();
+  public void resetTitleTimes();
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractBossOverlay(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  public void extractDebugOverlay(net.minecraft.client.gui.GuiGraphicsExtractor);
+  private void extractSubtitleOverlay(net.minecraft.client.gui.GuiGraphicsExtractor, boolean);
+  public void extractDeferredSubtitles();
+  private void extractCameraOverlays(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractSleepOverlay(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractOverlayMessage(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractTitle(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractChat(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractScoreboardSidebar(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractTabList(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractCrosshair(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private boolean canRenderCrosshairForSpectator(net.minecraft.world.phys.HitResult);
+  private void extractEffects(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  public static net.minecraft.resources.Identifier getMobEffectSprite(net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>);
+  private void extractHotbarAndDecorations(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractItemHotbar(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void extractSelectedItemName(net.minecraft.client.gui.GuiGraphicsExtractor);
+  private void extractDemoOverlay(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private void displayScoreboardSidebar(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.scores.Objective);
+  private net.minecraft.world.entity.player.Player getCameraPlayer();
+  private net.minecraft.world.entity.LivingEntity getPlayerVehicleWithHealth();
+  private int getVehicleMaxHearts(net.minecraft.world.entity.LivingEntity);
+  private int getVisibleVehicleHeartRows(int);
+  private void extractPlayerHealth(net.minecraft.client.gui.GuiGraphicsExtractor);
+  private static void extractArmor(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.entity.player.Player, int, int, int, int);
+  private void extractHearts(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.entity.player.Player, int, int, int, int, float, int, int, int, boolean);
+  private void extractHeart(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.gui.Hud$HeartType, int, int, boolean, boolean, boolean);
+  private void extractAirBubbles(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.entity.player.Player, int, int, int);
+  private int getAirBubbleYLine(int, int);
+  private static int getCurrentAirSupplyBubble(int, int, int);
+  private static int getEmptyBubbleDelayDuration(int, boolean);
+  private void playAirBubblePoppedSound(int, net.minecraft.world.entity.player.Player, int);
+  private void extractFood(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.entity.player.Player, int, int);
+  private void extractVehicleHealth(net.minecraft.client.gui.GuiGraphicsExtractor);
+  private void extractTextureOverlay(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.resources.Identifier, float);
+  private void extractSpyglassOverlay(net.minecraft.client.gui.GuiGraphicsExtractor, float);
+  private void updateVignetteBrightness(net.minecraft.world.entity.Entity);
+  private void extractVignette(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.world.entity.Entity);
+  private void extractPortalOverlay(net.minecraft.client.gui.GuiGraphicsExtractor, float);
+  private void extractConfusionOverlay(net.minecraft.client.gui.GuiGraphicsExtractor, float);
+  private void extractSlot(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, net.minecraft.client.DeltaTracker, net.minecraft.world.entity.player.Player, net.minecraft.world.item.ItemStack, int);
+  public void tick(boolean);
+  private void tick();
+  private void tickAutosaveIndicator();
+  public void setNowPlaying(net.minecraft.network.chat.Component);
+  public void setOverlayMessage(net.minecraft.network.chat.Component, boolean);
+  public void setTimes(int, int, int);
+  public void setSubtitle(net.minecraft.network.chat.Component);
+  public void setTitle(net.minecraft.network.chat.Component);
+  public void clearTitles();
+  public net.minecraft.client.gui.components.ChatComponent getChat();
+  public net.minecraft.client.resources.WaypointStyleManager getWaypointStyles();
+  public int getGuiTicks();
+  public net.minecraft.client.gui.Font getFont();
+  public net.minecraft.client.gui.components.spectator.SpectatorGui getSpectatorGui();
+  public net.minecraft.client.gui.components.PlayerTabOverlay getTabList();
+  public void onDisconnected();
+  public net.minecraft.client.gui.components.BossHealthOverlay getBossOverlay();
+  public net.minecraft.client.gui.components.DebugScreenOverlay getDebugOverlay();
+  public void clearCache();
+  public void extractSavingIndicator(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.DeltaTracker);
+  private boolean willPrioritizeExperienceInfo();
+  private boolean willPrioritizeJumpInfo();
+  private net.minecraft.client.gui.Hud$ContextualInfo nextContextualInfoState();
+  private static net.minecraft.client.gui.Hud$1DisplayEntry[] lambda$displayScoreboardSidebar$2(int);
+  private net.minecraft.client.gui.Hud$1DisplayEntry lambda$displayScoreboardSidebar$1(net.minecraft.world.scores.Scoreboard, net.minecraft.network.chat.numbers.NumberFormat, net.minecraft.world.scores.PlayerScoreEntry);
+  private static boolean lambda$displayScoreboardSidebar$0(net.minecraft.world.scores.PlayerScoreEntry);
+  private static net.minecraft.resources.Identifier lambda$getMobEffectSprite$0(net.minecraft.resources.Identifier);
+  private static java.lang.String lambda$extractCameraOverlays$0(java.lang.String);
+  private void lambda$extractSubtitleOverlay$0(net.minecraft.client.gui.GuiGraphicsExtractor);
+  private static net.minecraft.client.gui.contextualbar.ContextualBar lambda$new$3(net.minecraft.client.Minecraft);
+  private static net.minecraft.client.gui.contextualbar.ContextualBar lambda$new$2(net.minecraft.client.Minecraft);
+  private static net.minecraft.client.gui.contextualbar.ContextualBar lambda$new$1(net.minecraft.client.Minecraft);
+  private static net.minecraft.client.gui.contextualbar.ContextualBar lambda$new$0();
+  static {};
+}
+Compiled from "Hud.java"
+final class net.minecraft.client.gui.Hud$1DisplayEntry extends java.lang.Record {
+  private final net.minecraft.network.chat.Component name;
+  private final net.minecraft.network.chat.Component score;
+  private final int scoreWidth;
+  net.minecraft.client.gui.Hud$1DisplayEntry(net.minecraft.network.chat.Component, net.minecraft.network.chat.Component, int);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.network.chat.Component name();
+  public net.minecraft.network.chat.Component score();
+  public int scoreWidth();
+}
+Compiled from "Hud.java"
+final class net.minecraft.client.gui.Hud$ContextualInfo extends java.lang.Enum<net.minecraft.client.gui.Hud$ContextualInfo> {
+  public static final net.minecraft.client.gui.Hud$ContextualInfo EMPTY;
+  public static final net.minecraft.client.gui.Hud$ContextualInfo EXPERIENCE;
+  public static final net.minecraft.client.gui.Hud$ContextualInfo LOCATOR;
+  public static final net.minecraft.client.gui.Hud$ContextualInfo JUMPABLE_VEHICLE;
+  private static final net.minecraft.client.gui.Hud$ContextualInfo[] $VALUES;
+  public static net.minecraft.client.gui.Hud$ContextualInfo[] values();
+  public static net.minecraft.client.gui.Hud$ContextualInfo valueOf(java.lang.String);
+  private net.minecraft.client.gui.Hud$ContextualInfo();
+  private static net.minecraft.client.gui.Hud$ContextualInfo[] $values();
+  static {};
+}
+Compiled from "Hud.java"
+final class net.minecraft.client.gui.Hud$HeartType extends java.lang.Enum<net.minecraft.client.gui.Hud$HeartType> {
+  public static final net.minecraft.client.gui.Hud$HeartType CONTAINER;
+  public static final net.minecraft.client.gui.Hud$HeartType NORMAL;
+  public static final net.minecraft.client.gui.Hud$HeartType POISIONED;
+  public static final net.minecraft.client.gui.Hud$HeartType WITHERED;
+  public static final net.minecraft.client.gui.Hud$HeartType ABSORBING;
+  public static final net.minecraft.client.gui.Hud$HeartType FROZEN;
+  private final net.minecraft.resources.Identifier full;
+  private final net.minecraft.resources.Identifier fullBlinking;
+  private final net.minecraft.resources.Identifier half;
+  private final net.minecraft.resources.Identifier halfBlinking;
+  private final net.minecraft.resources.Identifier hardcoreFull;
+  private final net.minecraft.resources.Identifier hardcoreFullBlinking;
+  private final net.minecraft.resources.Identifier hardcoreHalf;
+  private final net.minecraft.resources.Identifier hardcoreHalfBlinking;
+  private static final net.minecraft.client.gui.Hud$HeartType[] $VALUES;
+  public static net.minecraft.client.gui.Hud$HeartType[] values();
+  public static net.minecraft.client.gui.Hud$HeartType valueOf(java.lang.String);
+  private net.minecraft.client.gui.Hud$HeartType(net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.minecraft.resources.Identifier, net.minecraft.resources.Identifier);
+  public net.minecraft.resources.Identifier getSprite(boolean, boolean, boolean);
+  private static net.minecraft.client.gui.Hud$HeartType forPlayer(net.minecraft.world.entity.player.Player);
+  private static net.minecraft.client.gui.Hud$HeartType[] $values();
+  static {};
+}
+Compiled from "ItemSlotMouseAction.java"
+public interface net.minecraft.client.gui.ItemSlotMouseAction {
+  public abstract boolean matches(net.minecraft.world.inventory.Slot);
+  public abstract boolean onMouseScrolled(double, double, int, net.minecraft.world.item.ItemStack);
+  public abstract void onStopHovering(net.minecraft.world.inventory.Slot);
+  public abstract void onSlotClicked(net.minecraft.world.inventory.Slot, net.minecraft.world.inventory.ContainerInput);
+}
+Compiled from "TextAlignment.java"
+public abstract class net.minecraft.client.gui.TextAlignment extends java.lang.Enum<net.minecraft.client.gui.TextAlignment> {
+  public static final net.minecraft.client.gui.TextAlignment LEFT;
+  public static final net.minecraft.client.gui.TextAlignment CENTER;
+  public static final net.minecraft.client.gui.TextAlignment RIGHT;
+  private static final net.minecraft.client.gui.TextAlignment[] $VALUES;
+  public static net.minecraft.client.gui.TextAlignment[] values();
+  public static net.minecraft.client.gui.TextAlignment valueOf(java.lang.String);
+  private net.minecraft.client.gui.TextAlignment();
+  public abstract int calculateLeft(int, int);
+  public int calculateLeft(int, net.minecraft.client.gui.Font, net.minecraft.util.FormattedCharSequence);
+  private static net.minecraft.client.gui.TextAlignment[] $values();
+  static {};
+}
+Compiled from "TextAlignment.java"
+final class net.minecraft.client.gui.TextAlignment$1 extends net.minecraft.client.gui.TextAlignment {
+  private net.minecraft.client.gui.TextAlignment$1(java.lang.String, int);
+  public int calculateLeft(int, int);
+  public int calculateLeft(int, net.minecraft.client.gui.Font, net.minecraft.util.FormattedCharSequence);
+}
+Compiled from "TextAlignment.java"
+final class net.minecraft.client.gui.TextAlignment$2 extends net.minecraft.client.gui.TextAlignment {
+  private net.minecraft.client.gui.TextAlignment$2(java.lang.String, int);
+  public int calculateLeft(int, int);
+}
+Compiled from "TextAlignment.java"
+final class net.minecraft.client.gui.TextAlignment$3 extends net.minecraft.client.gui.TextAlignment {
+  private net.minecraft.client.gui.TextAlignment$3(java.lang.String, int);
+  public int calculateLeft(int, int);
+}

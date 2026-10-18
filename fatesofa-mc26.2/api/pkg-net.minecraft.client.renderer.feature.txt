@@ -1,0 +1,582 @@
+Compiled from "BlockModelFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.BlockModelFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.BlockModelFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.BlockModelFeatureRenderer$Submit> TYPE;
+  private static final net.minecraft.core.Direction[] DIRECTIONS;
+  private final com.mojang.blaze3d.vertex.QuadInstance quadInstance;
+  public net.minecraft.client.renderer.feature.BlockModelFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.BlockModelFeatureRenderer$Submit>);
+  private static void putPartQuads(net.minecraft.client.renderer.block.dispatch.BlockStateModelPart, com.mojang.blaze3d.vertex.PoseStack$Pose, com.mojang.blaze3d.vertex.QuadInstance, int, int[], com.mojang.blaze3d.vertex.VertexConsumer);
+  private static void putQuad(com.mojang.blaze3d.vertex.PoseStack$Pose, net.minecraft.client.resources.model.geometry.BakedQuad, com.mojang.blaze3d.vertex.QuadInstance, int, int[], com.mojang.blaze3d.vertex.VertexConsumer);
+  static {};
+}
+Compiled from "BlockModelFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.BlockModelFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.TranslucentSubmit {
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose pose;
+  private final net.minecraft.client.renderer.rendertype.RenderType renderType;
+  private final java.util.List<net.minecraft.client.renderer.block.dispatch.BlockStateModelPart> modelParts;
+  private final int[] tintLayers;
+  private final int lightCoords;
+  private final int overlayCoords;
+  private final int tintColor;
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose sheetedDecalPose;
+  public net.minecraft.client.renderer.feature.BlockModelFeatureRenderer$Submit(com.mojang.blaze3d.vertex.PoseStack$Pose, net.minecraft.client.renderer.rendertype.RenderType, java.util.List<net.minecraft.client.renderer.block.dispatch.BlockStateModelPart>, int[], int, int, int, com.mojang.blaze3d.vertex.PoseStack$Pose);
+  public float distanceToCameraSq();
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.BlockModelFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public com.mojang.blaze3d.vertex.PoseStack$Pose pose();
+  public net.minecraft.client.renderer.rendertype.RenderType renderType();
+  public java.util.List<net.minecraft.client.renderer.block.dispatch.BlockStateModelPart> modelParts();
+  public int[] tintLayers();
+  public int lightCoords();
+  public int overlayCoords();
+  public int tintColor();
+  public com.mojang.blaze3d.vertex.PoseStack$Pose sheetedDecalPose();
+}
+Compiled from "CustomFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.CustomFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.CustomFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.CustomFeatureRenderer$Submit> TYPE;
+  public net.minecraft.client.renderer.feature.CustomFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.CustomFeatureRenderer$Submit>);
+  static {};
+}
+Compiled from "CustomFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.CustomFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.BatchableSubmit {
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose pose;
+  private final net.minecraft.client.renderer.rendertype.RenderType renderType;
+  private final net.minecraft.client.renderer.SubmitNodeCollector$CustomGeometryRenderer customGeometryRenderer;
+  public net.minecraft.client.renderer.feature.CustomFeatureRenderer$Submit(com.mojang.blaze3d.vertex.PoseStack$Pose, net.minecraft.client.renderer.rendertype.RenderType, net.minecraft.client.renderer.SubmitNodeCollector$CustomGeometryRenderer);
+  public java.lang.Object batchKey();
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.CustomFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public com.mojang.blaze3d.vertex.PoseStack$Pose pose();
+  public net.minecraft.client.renderer.rendertype.RenderType renderType();
+  public net.minecraft.client.renderer.SubmitNodeCollector$CustomGeometryRenderer customGeometryRenderer();
+}
+Compiled from "FeatureFrameContext.java"
+public final class net.minecraft.client.renderer.feature.FeatureFrameContext extends java.lang.Record {
+  private final net.minecraft.client.renderer.state.OptionsRenderState options;
+  private final net.minecraft.client.gui.Font font;
+  private final net.minecraft.client.renderer.block.BlockStateModelSet blockStateModelSet;
+  private final net.minecraft.client.color.block.BlockColors blockColors;
+  private final net.minecraft.client.renderer.texture.TextureManager textureManager;
+  private final net.minecraft.client.resources.model.sprite.AtlasManager atlasManager;
+  private final com.mojang.blaze3d.textures.GpuTextureView lightmap;
+  private final net.minecraft.client.renderer.StagedVertexBuffer stagedVertexBuffer;
+  public net.minecraft.client.renderer.feature.FeatureFrameContext(net.minecraft.client.renderer.state.OptionsRenderState, net.minecraft.client.gui.Font, net.minecraft.client.renderer.block.BlockStateModelSet, net.minecraft.client.color.block.BlockColors, net.minecraft.client.renderer.texture.TextureManager, net.minecraft.client.resources.model.sprite.AtlasManager, com.mojang.blaze3d.textures.GpuTextureView, net.minecraft.client.renderer.StagedVertexBuffer);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.client.renderer.state.OptionsRenderState options();
+  public net.minecraft.client.gui.Font font();
+  public net.minecraft.client.renderer.block.BlockStateModelSet blockStateModelSet();
+  public net.minecraft.client.color.block.BlockColors blockColors();
+  public net.minecraft.client.renderer.texture.TextureManager textureManager();
+  public net.minecraft.client.resources.model.sprite.AtlasManager atlasManager();
+  public com.mojang.blaze3d.textures.GpuTextureView lightmap();
+  public net.minecraft.client.renderer.StagedVertexBuffer stagedVertexBuffer();
+}
+Compiled from "FeatureRenderDispatcher.java"
+public class net.minecraft.client.renderer.feature.FeatureRenderDispatcher implements java.lang.AutoCloseable {
+  private final net.minecraft.client.resources.model.ModelManager modelManager;
+  private final net.minecraft.client.resources.model.sprite.AtlasManager atlasManager;
+  private final net.minecraft.client.gui.Font font;
+  private final net.minecraft.client.renderer.state.GameRenderState gameRenderState;
+  private final net.minecraft.client.renderer.StagedVertexBuffer stagedVertexBuffer;
+  private final net.minecraft.client.renderer.feature.FeatureRendererMap featureRenderers;
+  private final net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame preparedFrame;
+  public net.minecraft.client.renderer.feature.FeatureRenderDispatcher(net.minecraft.client.renderer.RenderBuffers, net.minecraft.client.resources.model.ModelManager, net.minecraft.client.resources.model.sprite.AtlasManager, net.minecraft.client.gui.Font, net.minecraft.client.renderer.state.GameRenderState);
+  public net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame prepareFrame(net.minecraft.client.renderer.SubmitNodeStorage);
+  private net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame prepareFrameWithContext(net.minecraft.client.renderer.feature.FeatureFrameContext, net.minecraft.client.renderer.SubmitNodeStorage);
+  public void renderAllFeatures(net.minecraft.client.renderer.SubmitNodeStorage);
+  public void close();
+  private static void lambda$prepareFrameWithContext$0(net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame, net.minecraft.client.renderer.feature.phase.FeatureRenderPhase);
+}
+Compiled from "FeatureRenderDispatcher.java"
+class net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PhaseSubmitGrouper implements net.minecraft.client.renderer.feature.phase.FeatureRenderPhase$Output {
+  private final net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame frame;
+  private final java.util.List<net.minecraft.client.renderer.feature.submit.SubmitNode> allSubmits;
+  private final java.util.List<net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedGroup<?>> phaseGroups;
+  private net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedGroup<?> lastGroup;
+  public net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PhaseSubmitGrouper(net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame, net.minecraft.client.renderer.feature.phase.FeatureRenderPhase<?>);
+  public void accept(net.minecraft.client.renderer.feature.submit.SubmitNode, boolean);
+  public <Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> void acceptFeatureGroup(net.minecraft.client.renderer.feature.FeatureRendererType<Submit>, java.util.Collection<Submit>, boolean);
+  private <Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> void addOrExtendGroup(net.minecraft.client.renderer.feature.FeatureRendererType<Submit>, boolean, int, int);
+  private static java.util.List lambda$addOrExtendGroup$0(net.minecraft.client.renderer.feature.FeatureRendererType);
+  private static java.util.List lambda$new$0(net.minecraft.client.renderer.feature.phase.FeatureRenderPhase);
+}
+Compiled from "FeatureRenderDispatcher.java"
+public class net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame implements java.lang.AutoCloseable {
+  private net.minecraft.client.renderer.feature.FeatureFrameContext context;
+  private net.minecraft.client.renderer.SubmitNodeStorage submitNodeStorage;
+  private final java.util.List<net.minecraft.client.renderer.feature.submit.SubmitNode> allSubmits;
+  private final java.util.Map<net.minecraft.client.renderer.feature.phase.FeatureRenderPhase<?>, java.util.List<net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedGroup<?>>> groupsByPhase;
+  private final java.util.Map<net.minecraft.client.renderer.feature.FeatureRendererType<?>, java.util.List<net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedGroup<?>>> groupsByFeature;
+  final net.minecraft.client.renderer.feature.FeatureRenderDispatcher this$0;
+  public net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame(net.minecraft.client.renderer.feature.FeatureRenderDispatcher);
+  private net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame begin(net.minecraft.client.renderer.feature.FeatureFrameContext, net.minecraft.client.renderer.SubmitNodeStorage);
+  public void executeSolid();
+  public void executeTranslucent();
+  public void executeOutline();
+  public void executeTranslucentAfterTerrain();
+  public void executeAlwaysOnTop();
+  private void executePhase(net.minecraft.client.renderer.feature.phase.FeatureRenderPhase<?>, net.minecraft.client.renderer.feature.FeatureFrameContext);
+  public boolean hasAnyAlwaysOnTop();
+  public boolean hasAnyOutline();
+  public void close();
+  private static void clearGroups(java.util.Collection<java.util.List<net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedGroup<?>>>);
+  private static boolean lambda$clearGroups$0(java.util.List);
+}
+Compiled from "FeatureRenderDispatcher.java"
+class net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedGroup<Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> {
+  private final int featureGroupIndex;
+  private final net.minecraft.client.renderer.feature.FeatureRendererType<Submit> featureType;
+  private final boolean strictlyOrdered;
+  private final int fromInclusive;
+  private int toInclusive;
+  public net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedGroup(int, net.minecraft.client.renderer.feature.FeatureRendererType<Submit>, boolean, int, int);
+  public void prepare(net.minecraft.client.renderer.feature.FeatureFrameContext, net.minecraft.client.renderer.feature.FeatureRendererMap, java.util.List<net.minecraft.client.renderer.feature.submit.SubmitNode>);
+  public void execute(net.minecraft.client.renderer.feature.FeatureFrameContext, net.minecraft.client.renderer.feature.FeatureRendererMap, java.util.List<net.minecraft.client.renderer.feature.submit.SubmitNode>);
+  private java.util.List<Submit> sliceUnchecked(java.util.List<net.minecraft.client.renderer.feature.submit.SubmitNode>);
+}
+Compiled from "FeatureRenderer.java"
+public interface net.minecraft.client.renderer.feature.FeatureRenderer<Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> extends java.lang.AutoCloseable {
+  public default void beginPrepare(net.minecraft.client.renderer.feature.FeatureFrameContext);
+  public abstract void prepareGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<Submit>, boolean);
+  public default void finishPrepare(net.minecraft.client.renderer.feature.FeatureFrameContext);
+  public abstract void executeGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, int, java.util.List<Submit>, boolean);
+  public default void finishExecute(net.minecraft.client.renderer.feature.FeatureFrameContext);
+  public default void close();
+}
+Compiled from "FeatureRendererMap.java"
+public class net.minecraft.client.renderer.feature.FeatureRendererMap implements java.lang.AutoCloseable {
+  private net.minecraft.client.renderer.feature.FeatureRenderer<?>[] renderers;
+  public net.minecraft.client.renderer.feature.FeatureRendererMap();
+  public <Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> void put(net.minecraft.client.renderer.feature.FeatureRendererType<Submit>, net.minecraft.client.renderer.feature.FeatureRenderer<Submit>);
+  public <Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> net.minecraft.client.renderer.feature.FeatureRenderer<Submit> get(net.minecraft.client.renderer.feature.FeatureRendererType<Submit>);
+  public <Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> net.minecraft.client.renderer.feature.FeatureRenderer<Submit> getOrThrow(net.minecraft.client.renderer.feature.FeatureRendererType<Submit>);
+  public java.lang.Iterable<net.minecraft.client.renderer.feature.FeatureRenderer<?>> values();
+  public void close();
+}
+Compiled from "FeatureRendererType.java"
+public final class net.minecraft.client.renderer.feature.FeatureRendererType<Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> extends java.lang.Record {
+  private final int id;
+  private final java.lang.String name;
+  private static final java.util.concurrent.atomic.AtomicInteger NEXT_ID;
+  public net.minecraft.client.renderer.feature.FeatureRendererType(int, java.lang.String);
+  public static <Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> net.minecraft.client.renderer.feature.FeatureRendererType<Submit> create(java.lang.String);
+  public java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int id();
+  public java.lang.String name();
+  static {};
+}
+Compiled from "FlameFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.FlameFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.FlameFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.FlameFeatureRenderer$Submit> TYPE;
+  public net.minecraft.client.renderer.feature.FlameFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.FlameFeatureRenderer$Submit>);
+  private void prepare(net.minecraft.client.renderer.feature.FlameFeatureRenderer$Submit, com.mojang.blaze3d.vertex.VertexConsumer, net.minecraft.client.renderer.texture.TextureAtlasSprite, net.minecraft.client.renderer.texture.TextureAtlasSprite);
+  private static void fireVertex(com.mojang.blaze3d.vertex.PoseStack$Pose, com.mojang.blaze3d.vertex.VertexConsumer, float, float, float, float, float, int);
+  static {};
+}
+Compiled from "FlameFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.FlameFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.SubmitNode {
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose pose;
+  private final net.minecraft.client.renderer.entity.state.EntityRenderState entityRenderState;
+  private final org.joml.Quaternionf rotation;
+  public net.minecraft.client.renderer.feature.FlameFeatureRenderer$Submit(com.mojang.blaze3d.vertex.PoseStack$Pose, net.minecraft.client.renderer.entity.state.EntityRenderState, org.joml.Quaternionf);
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.FlameFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public com.mojang.blaze3d.vertex.PoseStack$Pose pose();
+  public net.minecraft.client.renderer.entity.state.EntityRenderState entityRenderState();
+  public org.joml.Quaternionf rotation();
+}
+Compiled from "GizmoFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.GizmoFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.GizmoFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.GizmoFeatureRenderer$Submit> TYPE;
+  private final com.mojang.blaze3d.vertex.PoseStack poseStack;
+  public net.minecraft.client.renderer.feature.GizmoFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.GizmoFeatureRenderer$Submit>);
+  private void buildTexts(java.util.List<net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives$Text>, net.minecraft.client.renderer.state.level.CameraRenderState, net.minecraft.client.gui.Font);
+  private void buildLines(java.util.List<net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives$Line>, net.minecraft.client.renderer.state.level.CameraRenderState, org.joml.Matrix4fc, boolean);
+  private void buildTriangleFans(java.util.List<net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives$TriangleFan>, net.minecraft.client.renderer.state.level.CameraRenderState);
+  private void buildQuads(java.util.List<net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives$Quad>, net.minecraft.client.renderer.state.level.CameraRenderState);
+  private void buildPoints(java.util.List<net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives$Point>, net.minecraft.client.renderer.state.level.CameraRenderState);
+  static {};
+}
+Compiled from "GizmoFeatureRenderer.java"
+class net.minecraft.client.renderer.feature.GizmoFeatureRenderer$1 implements net.minecraft.client.gui.Font$GlyphVisitor {
+  final org.joml.Matrix4f val$pose;
+  final net.minecraft.client.renderer.feature.GizmoFeatureRenderer this$0;
+  net.minecraft.client.renderer.feature.GizmoFeatureRenderer$1();
+  public void acceptRenderable(net.minecraft.client.gui.font.TextRenderable);
+}
+Compiled from "GizmoFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.GizmoFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.SubmitNode {
+  private final net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives$Group group;
+  private final net.minecraft.client.renderer.state.level.CameraRenderState camera;
+  public net.minecraft.client.renderer.feature.GizmoFeatureRenderer$Submit(net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives$Group, net.minecraft.client.renderer.state.level.CameraRenderState);
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.GizmoFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives$Group group();
+  public net.minecraft.client.renderer.state.level.CameraRenderState camera();
+}
+Compiled from "ItemFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.ItemFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit> TYPE;
+  public static final net.minecraft.resources.Identifier ENCHANTED_GLINT_ARMOR;
+  public static final net.minecraft.resources.Identifier ENCHANTED_GLINT_ITEM;
+  private static final float SPECIAL_FOIL_UI_SCALE;
+  private static final float SPECIAL_FOIL_FIRST_PERSON_SCALE;
+  private static final float SPECIAL_FOIL_TEXTURE_SCALE;
+  public static final int NO_TINT;
+  private final com.mojang.blaze3d.vertex.QuadInstance quadInstance;
+  public net.minecraft.client.renderer.feature.ItemFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit>);
+  private void prepareSubmit(net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit, boolean);
+  private void prepareMainSubmit(net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit);
+  private void prepareOutlineSubmit(net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit);
+  private void prepareFoilSubmit(net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit);
+  private com.mojang.blaze3d.vertex.VertexConsumer getFoilBuffer(net.minecraft.client.renderer.rendertype.RenderType, com.mojang.blaze3d.vertex.PoseStack$Pose);
+  private static com.mojang.blaze3d.vertex.PoseStack$Pose computeFoilDecalPose(net.minecraft.world.item.ItemDisplayContext, com.mojang.blaze3d.vertex.PoseStack$Pose);
+  private static boolean useTransparentGlint(net.minecraft.client.renderer.rendertype.RenderType);
+  private static int getLayerColorSafe(int[], int);
+  private static int getLayerColorSafe(int[], net.minecraft.client.resources.model.geometry.BakedQuad$MaterialInfo);
+  static {};
+}
+Compiled from "ItemFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.TranslucentSubmit {
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose pose;
+  private final net.minecraft.world.item.ItemDisplayContext displayContext;
+  private final int lightCoords;
+  private final int overlayCoords;
+  private final int outlineColor;
+  private final int[] tintLayers;
+  private final java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> quads;
+  private final net.minecraft.client.renderer.item.ItemStackRenderState$FoilType foilType;
+  public net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit(com.mojang.blaze3d.vertex.PoseStack$Pose, net.minecraft.world.item.ItemDisplayContext, int, int, int, int[], java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad>, net.minecraft.client.renderer.item.ItemStackRenderState$FoilType);
+  public boolean hasTranslucency();
+  public float distanceToCameraSq();
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.ItemFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public com.mojang.blaze3d.vertex.PoseStack$Pose pose();
+  public net.minecraft.world.item.ItemDisplayContext displayContext();
+  public int lightCoords();
+  public int overlayCoords();
+  public int outlineColor();
+  public int[] tintLayers();
+  public java.util.List<net.minecraft.client.resources.model.geometry.BakedQuad> quads();
+  public net.minecraft.client.renderer.item.ItemStackRenderState$FoilType foilType();
+}
+Compiled from "LeashFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.LeashFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.LeashFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.LeashFeatureRenderer$Submit> TYPE;
+  private static final int LEASH_RENDER_STEPS;
+  private static final float LEASH_WIDTH;
+  public net.minecraft.client.renderer.feature.LeashFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.LeashFeatureRenderer$Submit>);
+  private void prepare(net.minecraft.client.renderer.feature.LeashFeatureRenderer$Submit);
+  private static void addVertexPair(com.mojang.blaze3d.vertex.VertexConsumer, org.joml.Matrix4fc, float, float, float, float, float, float, int, boolean, net.minecraft.client.renderer.entity.state.EntityRenderState$LeashState);
+  static {};
+}
+Compiled from "LeashFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.LeashFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.SubmitNode {
+  private final org.joml.Matrix4f pose;
+  private final net.minecraft.client.renderer.entity.state.EntityRenderState$LeashState leashState;
+  public net.minecraft.client.renderer.feature.LeashFeatureRenderer$Submit(org.joml.Matrix4f, net.minecraft.client.renderer.entity.state.EntityRenderState$LeashState);
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.LeashFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public org.joml.Matrix4f pose();
+  public net.minecraft.client.renderer.entity.state.EntityRenderState$LeashState leashState();
+}
+Compiled from "ModelFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.ModelFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.ModelFeatureRenderer$Submit<?>> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.ModelFeatureRenderer$Submit<?>> TYPE;
+  private final com.mojang.blaze3d.vertex.PoseStack poseStack;
+  public net.minecraft.client.renderer.feature.ModelFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.ModelFeatureRenderer$Submit<?>>);
+  private <S> void prepareModel(net.minecraft.client.renderer.feature.ModelFeatureRenderer$Submit<S>);
+  static {};
+}
+Compiled from "ModelFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.ModelFeatureRenderer$CrumblingOverlay extends java.lang.Record {
+  private final int progress;
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose cameraPose;
+  public net.minecraft.client.renderer.feature.ModelFeatureRenderer$CrumblingOverlay(int, com.mojang.blaze3d.vertex.PoseStack$Pose);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int progress();
+  public com.mojang.blaze3d.vertex.PoseStack$Pose cameraPose();
+}
+Compiled from "ModelFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.ModelFeatureRenderer$Submit<S> extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.BatchableSubmit, net.minecraft.client.renderer.feature.submit.TranslucentSubmit {
+  private final net.minecraft.client.renderer.rendertype.RenderType renderType;
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose pose;
+  private final net.minecraft.client.model.Model<? super S> model;
+  private final S state;
+  private final int lightCoords;
+  private final int overlayCoords;
+  private final int tintedColor;
+  private final net.minecraft.client.renderer.texture.TextureAtlasSprite sprite;
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose sheetedDecalPose;
+  public net.minecraft.client.renderer.feature.ModelFeatureRenderer$Submit(net.minecraft.client.renderer.rendertype.RenderType, com.mojang.blaze3d.vertex.PoseStack$Pose, net.minecraft.client.model.Model<? super S>, S, int, int, int, net.minecraft.client.renderer.texture.TextureAtlasSprite, com.mojang.blaze3d.vertex.PoseStack$Pose);
+  public java.lang.Object batchKey();
+  public float distanceToCameraSq();
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.ModelFeatureRenderer$Submit<S>> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.client.renderer.rendertype.RenderType renderType();
+  public com.mojang.blaze3d.vertex.PoseStack$Pose pose();
+  public net.minecraft.client.model.Model<? super S> model();
+  public S state();
+  public int lightCoords();
+  public int overlayCoords();
+  public int tintedColor();
+  public net.minecraft.client.renderer.texture.TextureAtlasSprite sprite();
+  public com.mojang.blaze3d.vertex.PoseStack$Pose sheetedDecalPose();
+}
+Compiled from "MovingBlockFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$Submit> TYPE;
+  private final com.mojang.blaze3d.vertex.PoseStack poseStack;
+  public net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$Submit>);
+  private void putBakedQuad(com.mojang.blaze3d.vertex.PoseStack, float, float, float, net.minecraft.client.resources.model.geometry.BakedQuad, com.mojang.blaze3d.vertex.QuadInstance, net.minecraft.client.renderer.chunk.ChunkSectionLayer, int);
+  private void lambda$buildGroup$1(net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$Submit, float, float, float, net.minecraft.client.resources.model.geometry.BakedQuad, com.mojang.blaze3d.vertex.QuadInstance);
+  private void lambda$buildGroup$0(net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$Submit, float, float, float, net.minecraft.client.resources.model.geometry.BakedQuad, com.mojang.blaze3d.vertex.QuadInstance);
+  static {};
+}
+Compiled from "MovingBlockFeatureRenderer.java"
+class net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$1 {
+  static final int[] $SwitchMap$net$minecraft$client$renderer$chunk$ChunkSectionLayer;
+  static {};
+}
+Compiled from "MovingBlockFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.TranslucentSubmit {
+  private final org.joml.Matrix4fc pose;
+  private final net.minecraft.client.renderer.block.MovingBlockRenderState movingBlockRenderState;
+  private final int outlineColor;
+  public net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$Submit(org.joml.Matrix4fc, net.minecraft.client.renderer.block.MovingBlockRenderState, int);
+  public float distanceToCameraSq();
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.MovingBlockFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public org.joml.Matrix4fc pose();
+  public net.minecraft.client.renderer.block.MovingBlockRenderState movingBlockRenderState();
+  public int outlineColor();
+}
+Compiled from "NameTagFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.NameTagFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.NameTagFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.NameTagFeatureRenderer$Submit> TYPE;
+  public net.minecraft.client.renderer.feature.NameTagFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.NameTagFeatureRenderer$Submit>);
+  private static net.minecraft.client.gui.Font$PreparedText prepareText(net.minecraft.client.gui.Font, net.minecraft.client.renderer.feature.NameTagFeatureRenderer$Submit);
+  static {};
+}
+Compiled from "NameTagFeatureRenderer.java"
+class net.minecraft.client.renderer.feature.NameTagFeatureRenderer$GlyphRenderer implements net.minecraft.client.gui.Font$GlyphVisitor {
+  private final org.joml.Matrix4f pose;
+  private int lightCoords;
+  private net.minecraft.client.gui.Font$DisplayMode displayMode;
+  final net.minecraft.client.renderer.feature.NameTagFeatureRenderer this$0;
+  private net.minecraft.client.renderer.feature.NameTagFeatureRenderer$GlyphRenderer(net.minecraft.client.renderer.feature.NameTagFeatureRenderer);
+  public void prepare(net.minecraft.client.renderer.feature.NameTagFeatureRenderer$Submit, net.minecraft.client.gui.Font$DisplayMode);
+  public void acceptRenderable(net.minecraft.client.gui.font.TextRenderable);
+}
+Compiled from "NameTagFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.NameTagFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.TranslucentSubmit {
+  private final org.joml.Matrix4fc pose;
+  private final float x;
+  private final float y;
+  private final net.minecraft.network.chat.Component text;
+  private final int lightCoords;
+  private final int color;
+  private final int backgroundColor;
+  private final net.minecraft.client.gui.Font$DisplayMode displayMode;
+  public net.minecraft.client.renderer.feature.NameTagFeatureRenderer$Submit(org.joml.Matrix4fc, float, float, net.minecraft.network.chat.Component, int, int, int, net.minecraft.client.gui.Font$DisplayMode);
+  public float distanceToCameraSq();
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.NameTagFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public org.joml.Matrix4fc pose();
+  public float x();
+  public float y();
+  public net.minecraft.network.chat.Component text();
+  public int lightCoords();
+  public int color();
+  public int backgroundColor();
+  public net.minecraft.client.gui.Font$DisplayMode displayMode();
+}
+Compiled from "QuadParticleFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer implements net.minecraft.client.renderer.feature.FeatureRenderer<net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$Submit> TYPE;
+  private final java.util.List<net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$PreparedGroup> groups;
+  private com.mojang.blaze3d.buffers.GpuBufferSlice dynamicTransforms;
+  public net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer();
+  public void prepareGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$Submit>, boolean);
+  public void finishPrepare(net.minecraft.client.renderer.feature.FeatureFrameContext);
+  public void executeGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, int, java.util.List<net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$Submit>, boolean);
+  private static void drawLayers(net.minecraft.client.renderer.StagedVertexBuffer, java.util.Map<net.minecraft.client.particle.SingleQuadParticle$Layer, net.minecraft.client.renderer.StagedVertexBuffer$Draw>, com.mojang.blaze3d.systems.RenderPass, net.minecraft.client.renderer.texture.TextureManager);
+  public void finishExecute(net.minecraft.client.renderer.feature.FeatureFrameContext);
+  private static java.lang.String lambda$executeGroup$0(net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$PreparedGroup);
+  private static net.minecraft.client.renderer.StagedVertexBuffer$Draw lambda$prepareGroup$0(net.minecraft.client.renderer.StagedVertexBuffer, net.minecraft.client.particle.SingleQuadParticle$Layer);
+  static {};
+}
+Compiled from "QuadParticleFeatureRenderer.java"
+final class net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$PreparedGroup extends java.lang.Record {
+  private final java.util.Map<net.minecraft.client.particle.SingleQuadParticle$Layer, net.minecraft.client.renderer.StagedVertexBuffer$Draw> layers;
+  private final boolean translucent;
+  private net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$PreparedGroup(java.util.Map<net.minecraft.client.particle.SingleQuadParticle$Layer, net.minecraft.client.renderer.StagedVertexBuffer$Draw>, boolean);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public java.util.Map<net.minecraft.client.particle.SingleQuadParticle$Layer, net.minecraft.client.renderer.StagedVertexBuffer$Draw> layers();
+  public boolean translucent();
+}
+Compiled from "QuadParticleFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.SubmitNode {
+  private final net.minecraft.client.renderer.state.level.QuadParticleRenderState particles;
+  private final boolean translucent;
+  public net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$Submit(net.minecraft.client.renderer.state.level.QuadParticleRenderState, boolean);
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.QuadParticleFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.client.renderer.state.level.QuadParticleRenderState particles();
+  public boolean translucent();
+}
+Compiled from "RenderTypeFeatureRenderer.java"
+public abstract class net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<Submit extends net.minecraft.client.renderer.feature.submit.SubmitNode> implements net.minecraft.client.renderer.feature.FeatureRenderer<Submit> {
+  private net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer$Group currentGroup;
+  private final java.util.List<net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer$Group> groups;
+  public net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer();
+  protected abstract void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<Submit>);
+  protected final com.mojang.blaze3d.vertex.VertexConsumer getVertexBuilder(net.minecraft.client.renderer.rendertype.RenderType);
+  private net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer$Group currentGroup();
+  public final void prepareGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<Submit>, boolean);
+  public void executeGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, int, java.util.List<Submit>, boolean);
+  public void finishExecute(net.minecraft.client.renderer.feature.FeatureFrameContext);
+}
+Compiled from "RenderTypeFeatureRenderer.java"
+class net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer$Group {
+  private final net.minecraft.client.renderer.StagedVertexBuffer stagedBuffer;
+  private final boolean canReorder;
+  private final java.util.List<net.minecraft.client.renderer.StagedVertexBuffer$Draw> draws;
+  private final java.util.List<net.minecraft.client.renderer.rendertype.PreparedRenderType> drawRenderTypes;
+  private net.minecraft.client.renderer.rendertype.RenderType lastRenderType;
+  private net.minecraft.client.renderer.StagedVertexBuffer$Draw lastDraw;
+  private net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer$Group(net.minecraft.client.renderer.StagedVertexBuffer, boolean);
+  public com.mojang.blaze3d.vertex.VertexConsumer getVertexBuilder(net.minecraft.client.renderer.rendertype.RenderType);
+  private net.minecraft.client.renderer.StagedVertexBuffer$Draw getOrAddDraw(net.minecraft.client.renderer.rendertype.RenderType);
+}
+Compiled from "ShadowFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.ShadowFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.ShadowFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.ShadowFeatureRenderer$Submit> TYPE;
+  private static final net.minecraft.client.renderer.rendertype.RenderType SHADOW_RENDER_TYPE;
+  public net.minecraft.client.renderer.feature.ShadowFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.ShadowFeatureRenderer$Submit>);
+  private void prepare(net.minecraft.client.renderer.feature.ShadowFeatureRenderer$Submit, com.mojang.blaze3d.vertex.VertexConsumer);
+  private static void shadowVertex(org.joml.Matrix4fc, com.mojang.blaze3d.vertex.VertexConsumer, int, float, float, float, float, float);
+  static {};
+}
+Compiled from "ShadowFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.ShadowFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.SubmitNode {
+  private final org.joml.Matrix4fc pose;
+  private final float radius;
+  private final java.util.List<net.minecraft.client.renderer.entity.state.EntityRenderState$ShadowPiece> pieces;
+  public net.minecraft.client.renderer.feature.ShadowFeatureRenderer$Submit(org.joml.Matrix4fc, float, java.util.List<net.minecraft.client.renderer.entity.state.EntityRenderState$ShadowPiece>);
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.ShadowFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public org.joml.Matrix4fc pose();
+  public float radius();
+  public java.util.List<net.minecraft.client.renderer.entity.state.EntityRenderState$ShadowPiece> pieces();
+}
+Compiled from "ShapeOutlineFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.ShapeOutlineFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.ShapeOutlineFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.ShapeOutlineFeatureRenderer$Submit> TYPE;
+  public net.minecraft.client.renderer.feature.ShapeOutlineFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.ShapeOutlineFeatureRenderer$Submit>);
+  private static void lambda$buildGroup$0(org.joml.Vector3f, com.mojang.blaze3d.vertex.VertexConsumer, com.mojang.blaze3d.vertex.PoseStack$Pose, int, float, double, double, double, double, double, double);
+  static {};
+}
+Compiled from "ShapeOutlineFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.ShapeOutlineFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.SubmitNode {
+  private final com.mojang.blaze3d.vertex.PoseStack$Pose pose;
+  private final net.minecraft.world.phys.shapes.VoxelShape shape;
+  private final net.minecraft.client.renderer.rendertype.RenderType renderType;
+  private final int color;
+  private final float width;
+  public net.minecraft.client.renderer.feature.ShapeOutlineFeatureRenderer$Submit(com.mojang.blaze3d.vertex.PoseStack$Pose, net.minecraft.world.phys.shapes.VoxelShape, net.minecraft.client.renderer.rendertype.RenderType, int, float);
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.ShapeOutlineFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public com.mojang.blaze3d.vertex.PoseStack$Pose pose();
+  public net.minecraft.world.phys.shapes.VoxelShape shape();
+  public net.minecraft.client.renderer.rendertype.RenderType renderType();
+  public int color();
+  public float width();
+}
+Compiled from "TextFeatureRenderer.java"
+public class net.minecraft.client.renderer.feature.TextFeatureRenderer extends net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer<net.minecraft.client.renderer.feature.TextFeatureRenderer$Submit> {
+  public static final net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.TextFeatureRenderer$Submit> TYPE;
+  public net.minecraft.client.renderer.feature.TextFeatureRenderer();
+  protected void buildGroup(net.minecraft.client.renderer.feature.FeatureFrameContext, java.util.List<net.minecraft.client.renderer.feature.TextFeatureRenderer$Submit>);
+  static {};
+}
+Compiled from "TextFeatureRenderer.java"
+class net.minecraft.client.renderer.feature.TextFeatureRenderer$GlyphRenderer implements net.minecraft.client.gui.Font$GlyphVisitor {
+  private final org.joml.Matrix4f pose;
+  private int lightCoords;
+  private net.minecraft.client.gui.Font$DisplayMode displayMode;
+  final net.minecraft.client.renderer.feature.TextFeatureRenderer this$0;
+  private net.minecraft.client.renderer.feature.TextFeatureRenderer$GlyphRenderer(net.minecraft.client.renderer.feature.TextFeatureRenderer);
+  public void acceptRenderable(net.minecraft.client.gui.font.TextRenderable);
+}
+Compiled from "TextFeatureRenderer.java"
+public final class net.minecraft.client.renderer.feature.TextFeatureRenderer$Submit extends java.lang.Record implements net.minecraft.client.renderer.feature.submit.SubmitNode {
+  private final org.joml.Matrix4fc pose;
+  private final float x;
+  private final float y;
+  private final net.minecraft.util.FormattedCharSequence string;
+  private final boolean dropShadow;
+  private final net.minecraft.client.gui.Font$DisplayMode displayMode;
+  private final int lightCoords;
+  private final int color;
+  private final int backgroundColor;
+  private final int outlineColor;
+  public net.minecraft.client.renderer.feature.TextFeatureRenderer$Submit(org.joml.Matrix4fc, float, float, net.minecraft.util.FormattedCharSequence, boolean, net.minecraft.client.gui.Font$DisplayMode, int, int, int, int);
+  public net.minecraft.client.renderer.feature.FeatureRendererType<net.minecraft.client.renderer.feature.TextFeatureRenderer$Submit> featureType();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public org.joml.Matrix4fc pose();
+  public float x();
+  public float y();
+  public net.minecraft.util.FormattedCharSequence string();
+  public boolean dropShadow();
+  public net.minecraft.client.gui.Font$DisplayMode displayMode();
+  public int lightCoords();
+  public int color();
+  public int backgroundColor();
+  public int outlineColor();
+}

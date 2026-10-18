@@ -1,0 +1,333 @@
+Compiled from "ChatAbilities.java"
+public class net.minecraft.client.multiplayer.chat.ChatAbilities {
+  public static final net.minecraft.client.multiplayer.chat.ChatAbilities NO_RESTRICTIONS;
+  private final java.util.Set<net.minecraft.client.multiplayer.chat.ChatRestriction> restrictionReasons;
+  private final net.minecraft.server.permissions.PermissionSet permissions;
+  private final java.util.function.Predicate<net.minecraft.client.multiplayer.chat.GuiMessage> visibleMessagesFilter;
+  private net.minecraft.client.multiplayer.chat.ChatAbilities(java.util.Set<net.minecraft.client.multiplayer.chat.ChatRestriction>);
+  private static java.util.function.Predicate<net.minecraft.client.multiplayer.chat.GuiMessage> selectVisibleMessages(net.minecraft.client.multiplayer.chat.ChatAbilities);
+  public boolean hasAnyRestrictions();
+  public java.util.stream.Stream<net.minecraft.client.multiplayer.chat.ChatRestriction> restrictions();
+  public net.minecraft.server.permissions.PermissionSet permissions();
+  public boolean canSendMessages();
+  public boolean canSendCommands();
+  public boolean canReceivePlayerMessages();
+  public boolean canReceiveSystemMessages();
+  public java.util.function.Predicate<net.minecraft.client.multiplayer.chat.GuiMessage> visibleMessagesFilter();
+  private static boolean lambda$selectVisibleMessages$0(com.google.common.collect.ImmutableSet, net.minecraft.client.multiplayer.chat.GuiMessage);
+  static {};
+}
+Compiled from "ChatAbilities.java"
+public class net.minecraft.client.multiplayer.chat.ChatAbilities$Builder {
+  private final java.util.Set<net.minecraft.client.multiplayer.chat.ChatRestriction> restrictions;
+  public net.minecraft.client.multiplayer.chat.ChatAbilities$Builder();
+  public net.minecraft.client.multiplayer.chat.ChatAbilities$Builder addRestriction(net.minecraft.client.multiplayer.chat.ChatRestriction);
+  public net.minecraft.client.multiplayer.chat.ChatAbilities build();
+}
+Compiled from "ChatListener.java"
+public class net.minecraft.client.multiplayer.chat.ChatListener {
+  private static final net.minecraft.network.chat.Component CHAT_VALIDATION_ERROR;
+  private final net.minecraft.client.Minecraft minecraft;
+  private final java.util.Deque<net.minecraft.client.multiplayer.chat.ChatListener$Message> delayedMessageQueue;
+  private long messageDelay;
+  private long previousMessageTime;
+  public net.minecraft.client.multiplayer.chat.ChatListener(net.minecraft.client.Minecraft);
+  public void tick();
+  public void setMessageDelay(double);
+  public void acceptNextDelayedMessage();
+  public long queueSize();
+  public void flushQueue();
+  public boolean removeFromDelayedMessageQueue(net.minecraft.network.chat.MessageSignature);
+  private boolean willDelayMessages();
+  private void handleMessage(net.minecraft.network.chat.MessageSignature, java.util.function.BooleanSupplier);
+  public void handlePlayerChatMessage(net.minecraft.network.chat.PlayerChatMessage, com.mojang.authlib.GameProfile, net.minecraft.network.chat.ChatType$Bound);
+  public void handleChatMessageError(java.util.UUID, net.minecraft.network.chat.MessageSignature, net.minecraft.network.chat.ChatType$Bound);
+  public void handleDisguisedChatMessage(net.minecraft.network.chat.Component, net.minecraft.network.chat.ChatType$Bound);
+  private boolean showMessageToPlayer(net.minecraft.network.chat.ChatType$Bound, net.minecraft.network.chat.PlayerChatMessage, net.minecraft.network.chat.Component, com.mojang.authlib.GameProfile, boolean, java.time.Instant);
+  private void narrateChatMessage(net.minecraft.network.chat.ChatType$Bound, net.minecraft.network.chat.Component);
+  private net.minecraft.client.multiplayer.chat.ChatTrustLevel evaluateTrustLevel(net.minecraft.network.chat.PlayerChatMessage, net.minecraft.network.chat.Component, java.time.Instant);
+  private void logPlayerMessage(net.minecraft.network.chat.PlayerChatMessage, com.mojang.authlib.GameProfile, net.minecraft.client.multiplayer.chat.ChatTrustLevel);
+  private void logSystemMessage(net.minecraft.network.chat.Component, java.time.Instant);
+  public void handleSystemMessage(net.minecraft.network.chat.Component, boolean);
+  public void handleOverlay(net.minecraft.network.chat.Component);
+  private java.util.UUID guessChatUUID(net.minecraft.network.chat.Component);
+  private boolean isSenderLocalPlayer(java.util.UUID);
+  private boolean lambda$handleDisguisedChatMessage$0(net.minecraft.network.chat.ChatType$Bound, net.minecraft.network.chat.Component, java.time.Instant);
+  private boolean lambda$handleChatMessageError$0(net.minecraft.network.chat.MessageSignature, java.util.UUID, net.minecraft.network.chat.ChatType$Bound);
+  private boolean lambda$handlePlayerChatMessage$0(net.minecraft.network.chat.ChatType$Bound, net.minecraft.network.chat.PlayerChatMessage, net.minecraft.network.chat.Component, com.mojang.authlib.GameProfile, boolean, java.time.Instant);
+  private static boolean lambda$removeFromDelayedMessageQueue$0(net.minecraft.network.chat.MessageSignature, net.minecraft.client.multiplayer.chat.ChatListener$Message);
+  static {};
+}
+Compiled from "ChatListener.java"
+final class net.minecraft.client.multiplayer.chat.ChatListener$Message extends java.lang.Record {
+  private final net.minecraft.network.chat.MessageSignature signature;
+  private final java.util.function.BooleanSupplier handler;
+  private net.minecraft.client.multiplayer.chat.ChatListener$Message(net.minecraft.network.chat.MessageSignature, java.util.function.BooleanSupplier);
+  public boolean accept();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.network.chat.MessageSignature signature();
+  public java.util.function.BooleanSupplier handler();
+}
+Compiled from "ChatLog.java"
+public class net.minecraft.client.multiplayer.chat.ChatLog {
+  private final net.minecraft.client.multiplayer.chat.LoggedChatEvent[] buffer;
+  private int nextId;
+  public static com.mojang.serialization.Codec<net.minecraft.client.multiplayer.chat.ChatLog> codec(int);
+  public net.minecraft.client.multiplayer.chat.ChatLog(int);
+  private net.minecraft.client.multiplayer.chat.ChatLog(int, java.util.List<net.minecraft.client.multiplayer.chat.LoggedChatEvent>);
+  private java.util.List<net.minecraft.client.multiplayer.chat.LoggedChatEvent> loggedChatEvents();
+  public void push(net.minecraft.client.multiplayer.chat.LoggedChatEvent);
+  public net.minecraft.client.multiplayer.chat.LoggedChatEvent lookup(int);
+  private int index(int);
+  public int start();
+  public int end();
+  private int size();
+  private static net.minecraft.client.multiplayer.chat.LoggedChatEvent[] lambda$new$0(int, int);
+  private static com.mojang.serialization.DataResult lambda$codec$0(int, java.util.List);
+  private static java.lang.String lambda$codec$1(int, int);
+}
+Compiled from "ChatRestriction.java"
+public abstract class net.minecraft.client.multiplayer.chat.ChatRestriction extends java.lang.Enum<net.minecraft.client.multiplayer.chat.ChatRestriction> {
+  public static final net.minecraft.client.multiplayer.chat.ChatRestriction CHAT_AND_COMMANDS_DISABLED_BY_OPTIONS;
+  public static final net.minecraft.client.multiplayer.chat.ChatRestriction CHAT_DISABLED_BY_OPTIONS;
+  public static final net.minecraft.client.multiplayer.chat.ChatRestriction DISABLED_BY_LAUNCHER;
+  public static final net.minecraft.client.multiplayer.chat.ChatRestriction DISABLED_BY_PROFILE;
+  private final net.minecraft.network.chat.Component display;
+  private final java.util.Optional<net.minecraft.client.multiplayer.chat.ChatRestriction$Action> action;
+  private static final net.minecraft.client.multiplayer.chat.ChatRestriction[] $VALUES;
+  public static net.minecraft.client.multiplayer.chat.ChatRestriction[] values();
+  public static net.minecraft.client.multiplayer.chat.ChatRestriction valueOf(java.lang.String);
+  private net.minecraft.client.multiplayer.chat.ChatRestriction(net.minecraft.network.chat.Component, java.util.Optional<net.minecraft.client.multiplayer.chat.ChatRestriction$Action>);
+  public net.minecraft.network.chat.Component display();
+  public java.util.Optional<net.minecraft.client.multiplayer.chat.ChatRestriction$Action> action();
+  private static void disablePlayerMessages(java.util.Set<net.minecraft.server.permissions.Permission>);
+  private static void disableCommands(java.util.Set<net.minecraft.server.permissions.Permission>);
+  public abstract void modifyPermissions(java.util.Set<net.minecraft.server.permissions.Permission>);
+  private static net.minecraft.client.multiplayer.chat.ChatRestriction[] $values();
+  static {};
+}
+Compiled from "ChatRestriction.java"
+final class net.minecraft.client.multiplayer.chat.ChatRestriction$1 extends net.minecraft.client.multiplayer.chat.ChatRestriction {
+  private net.minecraft.client.multiplayer.chat.ChatRestriction$1(java.lang.String, int, net.minecraft.network.chat.Component, java.util.Optional);
+  public void modifyPermissions(java.util.Set<net.minecraft.server.permissions.Permission>);
+}
+Compiled from "ChatRestriction.java"
+final class net.minecraft.client.multiplayer.chat.ChatRestriction$2 extends net.minecraft.client.multiplayer.chat.ChatRestriction {
+  private net.minecraft.client.multiplayer.chat.ChatRestriction$2(java.lang.String, int, net.minecraft.network.chat.Component, java.util.Optional);
+  public void modifyPermissions(java.util.Set<net.minecraft.server.permissions.Permission>);
+}
+Compiled from "ChatRestriction.java"
+final class net.minecraft.client.multiplayer.chat.ChatRestriction$3 extends net.minecraft.client.multiplayer.chat.ChatRestriction {
+  private net.minecraft.client.multiplayer.chat.ChatRestriction$3(java.lang.String, int, net.minecraft.network.chat.Component, java.util.Optional);
+  public void modifyPermissions(java.util.Set<net.minecraft.server.permissions.Permission>);
+}
+Compiled from "ChatRestriction.java"
+final class net.minecraft.client.multiplayer.chat.ChatRestriction$4 extends net.minecraft.client.multiplayer.chat.ChatRestriction {
+  private net.minecraft.client.multiplayer.chat.ChatRestriction$4(java.lang.String, int, net.minecraft.network.chat.Component, java.util.Optional);
+  public void modifyPermissions(java.util.Set<net.minecraft.server.permissions.Permission>);
+}
+Compiled from "ChatRestriction.java"
+public final class net.minecraft.client.multiplayer.chat.ChatRestriction$Action extends java.lang.Record {
+  private final net.minecraft.network.chat.Component title;
+  private final java.util.function.BiConsumer<net.minecraft.client.Minecraft, net.minecraft.client.gui.screens.Screen> runnable;
+  public static final net.minecraft.client.multiplayer.chat.ChatRestriction$Action GO_TO_ACCOUNT;
+  public static final net.minecraft.client.multiplayer.chat.ChatRestriction$Action GO_TO_CHAT_SETTINGS;
+  public net.minecraft.client.multiplayer.chat.ChatRestriction$Action(net.minecraft.network.chat.Component, java.util.function.BiConsumer<net.minecraft.client.Minecraft, net.minecraft.client.gui.screens.Screen>);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.network.chat.Component title();
+  public java.util.function.BiConsumer<net.minecraft.client.Minecraft, net.minecraft.client.gui.screens.Screen> runnable();
+  private static void lambda$static$1(net.minecraft.client.Minecraft, net.minecraft.client.gui.screens.Screen);
+  private static void lambda$static$0(net.minecraft.client.Minecraft, net.minecraft.client.gui.screens.Screen);
+  static {};
+}
+Compiled from "ChatTrustLevel.java"
+public final class net.minecraft.client.multiplayer.chat.ChatTrustLevel extends java.lang.Enum<net.minecraft.client.multiplayer.chat.ChatTrustLevel> implements net.minecraft.util.StringRepresentable {
+  public static final net.minecraft.client.multiplayer.chat.ChatTrustLevel SECURE;
+  public static final net.minecraft.client.multiplayer.chat.ChatTrustLevel MODIFIED;
+  public static final net.minecraft.client.multiplayer.chat.ChatTrustLevel NOT_SECURE;
+  public static final com.mojang.serialization.Codec<net.minecraft.client.multiplayer.chat.ChatTrustLevel> CODEC;
+  private final java.lang.String serializedName;
+  private static final net.minecraft.client.multiplayer.chat.ChatTrustLevel[] $VALUES;
+  public static net.minecraft.client.multiplayer.chat.ChatTrustLevel[] values();
+  public static net.minecraft.client.multiplayer.chat.ChatTrustLevel valueOf(java.lang.String);
+  private net.minecraft.client.multiplayer.chat.ChatTrustLevel(java.lang.String);
+  public static net.minecraft.client.multiplayer.chat.ChatTrustLevel evaluate(net.minecraft.network.chat.PlayerChatMessage, net.minecraft.network.chat.Component, java.time.Instant);
+  private static boolean isModified(net.minecraft.network.chat.PlayerChatMessage, net.minecraft.network.chat.Component);
+  private static boolean containsModifiedStyle(net.minecraft.network.chat.Component);
+  private static boolean isModifiedStyle(net.minecraft.network.chat.Style);
+  public boolean isNotSecure();
+  public net.minecraft.client.multiplayer.chat.GuiMessageTag createTag(net.minecraft.network.chat.PlayerChatMessage);
+  public java.lang.String getSerializedName();
+  private static net.minecraft.client.multiplayer.chat.ChatTrustLevel[] $values();
+  private static java.util.Optional lambda$containsModifiedStyle$0(net.minecraft.network.chat.Style, java.lang.String);
+  static {};
+}
+Compiled from "GuiMessage.java"
+public final class net.minecraft.client.multiplayer.chat.GuiMessage extends java.lang.Record {
+  private final int addedTime;
+  private final net.minecraft.network.chat.Component content;
+  private final net.minecraft.network.chat.MessageSignature signature;
+  private final net.minecraft.client.multiplayer.chat.GuiMessageSource source;
+  private final net.minecraft.client.multiplayer.chat.GuiMessageTag tag;
+  private static final int MESSAGE_TAG_MARGIN_LEFT;
+  public net.minecraft.client.multiplayer.chat.GuiMessage(int, net.minecraft.network.chat.Component, net.minecraft.network.chat.MessageSignature, net.minecraft.client.multiplayer.chat.GuiMessageSource, net.minecraft.client.multiplayer.chat.GuiMessageTag);
+  public java.util.List<net.minecraft.util.FormattedCharSequence> splitLines(net.minecraft.client.gui.Font, int);
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int addedTime();
+  public net.minecraft.network.chat.Component content();
+  public net.minecraft.network.chat.MessageSignature signature();
+  public net.minecraft.client.multiplayer.chat.GuiMessageSource source();
+  public net.minecraft.client.multiplayer.chat.GuiMessageTag tag();
+}
+Compiled from "GuiMessage.java"
+public final class net.minecraft.client.multiplayer.chat.GuiMessage$Line extends java.lang.Record {
+  private final net.minecraft.client.multiplayer.chat.GuiMessage parent;
+  private final net.minecraft.util.FormattedCharSequence content;
+  private final boolean endOfEntry;
+  public net.minecraft.client.multiplayer.chat.GuiMessage$Line(net.minecraft.client.multiplayer.chat.GuiMessage, net.minecraft.util.FormattedCharSequence, boolean);
+  public int getTagIconLeft(net.minecraft.client.gui.Font);
+  public net.minecraft.client.multiplayer.chat.GuiMessageTag tag();
+  public int addedTime();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.client.multiplayer.chat.GuiMessage parent();
+  public net.minecraft.util.FormattedCharSequence content();
+  public boolean endOfEntry();
+}
+Compiled from "GuiMessageSource.java"
+public final class net.minecraft.client.multiplayer.chat.GuiMessageSource extends java.lang.Enum<net.minecraft.client.multiplayer.chat.GuiMessageSource> {
+  public static final net.minecraft.client.multiplayer.chat.GuiMessageSource PLAYER;
+  public static final net.minecraft.client.multiplayer.chat.GuiMessageSource SYSTEM_SERVER;
+  public static final net.minecraft.client.multiplayer.chat.GuiMessageSource SYSTEM_CLIENT;
+  private static final net.minecraft.client.multiplayer.chat.GuiMessageSource[] $VALUES;
+  public static net.minecraft.client.multiplayer.chat.GuiMessageSource[] values();
+  public static net.minecraft.client.multiplayer.chat.GuiMessageSource valueOf(java.lang.String);
+  private net.minecraft.client.multiplayer.chat.GuiMessageSource();
+  private static net.minecraft.client.multiplayer.chat.GuiMessageSource[] $values();
+  static {};
+}
+Compiled from "GuiMessageTag.java"
+public final class net.minecraft.client.multiplayer.chat.GuiMessageTag extends java.lang.Record {
+  private final int indicatorColor;
+  private final net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon icon;
+  private final net.minecraft.network.chat.Component text;
+  private final java.lang.String logTag;
+  private static final net.minecraft.network.chat.Component SYSTEM_TEXT;
+  private static final net.minecraft.network.chat.Component SYSTEM_TEXT_SINGLE_PLAYER;
+  private static final net.minecraft.network.chat.Component CHAT_NOT_SECURE_TEXT;
+  private static final net.minecraft.network.chat.Component CHAT_MODIFIED_TEXT;
+  private static final net.minecraft.network.chat.Component CHAT_ERROR_TEXT;
+  private static final int CHAT_NOT_SECURE_INDICATOR_COLOR;
+  private static final int CHAT_MODIFIED_INDICATOR_COLOR;
+  private static final net.minecraft.client.multiplayer.chat.GuiMessageTag SYSTEM;
+  private static final net.minecraft.client.multiplayer.chat.GuiMessageTag SYSTEM_SINGLE_PLAYER;
+  private static final net.minecraft.client.multiplayer.chat.GuiMessageTag CHAT_NOT_SECURE;
+  private static final net.minecraft.client.multiplayer.chat.GuiMessageTag CHAT_ERROR;
+  public net.minecraft.client.multiplayer.chat.GuiMessageTag(int, net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon, net.minecraft.network.chat.Component, java.lang.String);
+  public static net.minecraft.client.multiplayer.chat.GuiMessageTag system();
+  public static net.minecraft.client.multiplayer.chat.GuiMessageTag systemSinglePlayer();
+  public static net.minecraft.client.multiplayer.chat.GuiMessageTag chatNotSecure();
+  public static net.minecraft.client.multiplayer.chat.GuiMessageTag chatModified(java.lang.String);
+  public static net.minecraft.client.multiplayer.chat.GuiMessageTag chatError();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public int indicatorColor();
+  public net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon icon();
+  public net.minecraft.network.chat.Component text();
+  public java.lang.String logTag();
+  static {};
+}
+Compiled from "GuiMessageTag.java"
+public final class net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon extends java.lang.Enum<net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon> {
+  public static final net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon CHAT_MODIFIED;
+  public final net.minecraft.resources.Identifier sprite;
+  public final int width;
+  public final int height;
+  private static final net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon[] $VALUES;
+  public static net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon[] values();
+  public static net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon valueOf(java.lang.String);
+  private net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon(net.minecraft.resources.Identifier, int, int);
+  public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);
+  private static net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon[] $values();
+  static {};
+}
+Compiled from "LoggedChatEvent.java"
+public interface net.minecraft.client.multiplayer.chat.LoggedChatEvent {
+  public static final com.mojang.serialization.Codec<net.minecraft.client.multiplayer.chat.LoggedChatEvent> CODEC;
+  public abstract net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type type();
+  static {};
+}
+Compiled from "LoggedChatEvent.java"
+public final class net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type extends java.lang.Enum<net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type> implements net.minecraft.util.StringRepresentable {
+  public static final net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type PLAYER;
+  public static final net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type SYSTEM;
+  private final java.lang.String serializedName;
+  private final java.util.function.Supplier<com.mojang.serialization.MapCodec<? extends net.minecraft.client.multiplayer.chat.LoggedChatEvent>> codec;
+  private static final net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type[] $VALUES;
+  public static net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type[] values();
+  public static net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type valueOf(java.lang.String);
+  private net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type(java.lang.String, java.util.function.Supplier<com.mojang.serialization.MapCodec<? extends net.minecraft.client.multiplayer.chat.LoggedChatEvent>>);
+  private com.mojang.serialization.MapCodec<? extends net.minecraft.client.multiplayer.chat.LoggedChatEvent> codec();
+  public java.lang.String getSerializedName();
+  private static net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type[] $values();
+  private static com.mojang.serialization.MapCodec lambda$static$1();
+  private static com.mojang.serialization.MapCodec lambda$static$0();
+  static {};
+}
+Compiled from "LoggedChatMessage.java"
+public interface net.minecraft.client.multiplayer.chat.LoggedChatMessage extends net.minecraft.client.multiplayer.chat.LoggedChatEvent {
+  public static net.minecraft.client.multiplayer.chat.LoggedChatMessage$Player player(com.mojang.authlib.GameProfile, net.minecraft.network.chat.PlayerChatMessage, net.minecraft.client.multiplayer.chat.ChatTrustLevel);
+  public static net.minecraft.client.multiplayer.chat.LoggedChatMessage$System system(net.minecraft.network.chat.Component, java.time.Instant);
+  public abstract net.minecraft.network.chat.Component toContentComponent();
+  public default net.minecraft.network.chat.Component toNarrationComponent();
+  public abstract boolean canReport(java.util.UUID);
+}
+Compiled from "LoggedChatMessage.java"
+public final class net.minecraft.client.multiplayer.chat.LoggedChatMessage$Player extends java.lang.Record implements net.minecraft.client.multiplayer.chat.LoggedChatMessage {
+  private final com.mojang.authlib.GameProfile profile;
+  private final net.minecraft.network.chat.PlayerChatMessage message;
+  private final net.minecraft.client.multiplayer.chat.ChatTrustLevel trustLevel;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.client.multiplayer.chat.LoggedChatMessage$Player> CODEC;
+  private static final java.time.format.DateTimeFormatter TIME_FORMATTER;
+  public net.minecraft.client.multiplayer.chat.LoggedChatMessage$Player(com.mojang.authlib.GameProfile, net.minecraft.network.chat.PlayerChatMessage, net.minecraft.client.multiplayer.chat.ChatTrustLevel);
+  public net.minecraft.network.chat.Component toContentComponent();
+  public net.minecraft.network.chat.Component toNarrationComponent();
+  public net.minecraft.network.chat.Component toHeadingComponent();
+  private net.minecraft.network.chat.Component getTimeComponent();
+  public boolean canReport(java.util.UUID);
+  public java.util.UUID profileId();
+  public net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type type();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public com.mojang.authlib.GameProfile profile();
+  public net.minecraft.network.chat.PlayerChatMessage message();
+  public net.minecraft.client.multiplayer.chat.ChatTrustLevel trustLevel();
+  private static com.mojang.datafixers.kinds.App lambda$static$0(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}
+Compiled from "LoggedChatMessage.java"
+public final class net.minecraft.client.multiplayer.chat.LoggedChatMessage$System extends java.lang.Record implements net.minecraft.client.multiplayer.chat.LoggedChatMessage {
+  private final net.minecraft.network.chat.Component message;
+  private final java.time.Instant timeStamp;
+  public static final com.mojang.serialization.MapCodec<net.minecraft.client.multiplayer.chat.LoggedChatMessage$System> CODEC;
+  public net.minecraft.client.multiplayer.chat.LoggedChatMessage$System(net.minecraft.network.chat.Component, java.time.Instant);
+  public net.minecraft.network.chat.Component toContentComponent();
+  public boolean canReport(java.util.UUID);
+  public net.minecraft.client.multiplayer.chat.LoggedChatEvent$Type type();
+  public final java.lang.String toString();
+  public final int hashCode();
+  public final boolean equals(java.lang.Object);
+  public net.minecraft.network.chat.Component message();
+  public java.time.Instant timeStamp();
+  private static com.mojang.datafixers.kinds.App lambda$static$0(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);
+  static {};
+}

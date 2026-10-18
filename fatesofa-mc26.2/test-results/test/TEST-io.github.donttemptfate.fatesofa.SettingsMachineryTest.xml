@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.donttemptfate.fatesofa.SettingsMachineryTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-18T15:54:27.105Z" hostname="runnervm8k3b6" time="0.012">
+  <properties/>
+  <testcase name="textTypesStoredAndChecked" classname="io.github.donttemptfate.fatesofa.SettingsMachineryTest" time="0.002"/>
+  <testcase name="templatesRulesAndColours" classname="io.github.donttemptfate.fatesofa.SettingsMachineryTest" time="0.002"/>
+  <testcase name="bundlesGiveManyOptionsAndDeclareCleanly" classname="io.github.donttemptfate.fatesofa.SettingsMachineryTest" time="0.003"/>
+  <testcase name="alertFillsTemplatesHonoursCooldownAndIslands" classname="io.github.donttemptfate.fatesofa.SettingsMachineryTest" time="0.001"/>
+  <testcase name="customChatRules" classname="io.github.donttemptfate.fatesofa.SettingsMachineryTest" time="0.001"/>
+  <testcase name="displayIslandsMenusLinesAndRainbow" classname="io.github.donttemptfate.fatesofa.SettingsMachineryTest" time="0.0"/>
+  <testcase name="soundValues" classname="io.github.donttemptfate.fatesofa.SettingsMachineryTest" time="0.001"/>
+  <testcase name="trackerResets" classname="io.github.donttemptfate.fatesofa.SettingsMachineryTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
