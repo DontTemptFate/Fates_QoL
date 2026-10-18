@@ -59,6 +59,13 @@ fabricApi {
 	}
 }
 
+// CI's "together" job: -PextraMods=<jar> adds another mod (Fates Flipper) to the game test client
+if (project.hasProperty("extraMods")) {
+	loom.runs.configureEach {
+		vmArg "-Dfabric.addMods=" + project.property("extraMods")
+	}
+}
+
 processResources {
 	def version = project.version
 	def minecraftDep = project.minecraft_dep

@@ -141,6 +141,8 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			});
 			ctx.waitTicks(5);
 			ctx.takeScreenshot("08c_networth_chat");
+			// CI's "together" job adds Fates Flipper to this client; on its own this does nothing
+			if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("fatesflipper")) together(ctx, o);
 
 			// Batch 7: crash reports carry a Fates OFA line
 			ctx.runOnClient(mc -> {
@@ -669,6 +671,74 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			mc.gui.setScreen(null);
 		});
 		ctx.waitTicks(5);
+	}
+
+	/**
+	 * Fates Flipper installed next to OFA (CI "together" job, contract-mod §10 item 6): both start, OFA's
+	 * tooltip lines reach the Flipper's MODS section, a hovered SkyBlock item draws with both, and each
+	 * mod's settings opens from its own chat command. The Flipper is used only through reflection, so
+	 * OFA never depends on it.
+	 */
+	static void together(ClientGameTestContext ctx, Ofa o) {
+		var loader = net.fabricmc.loader.api.FabricLoader.getInstance();
+		String ff = loader.getModContainer("fatesflipper").map(m -> m.getMetadata().getVersion().getFriendlyString()).orElse("?");
+		String common = loader.getModContainer("fatescommon").map(m -> m.getMetadata().getVersion().getFriendlyString()).orElse("missing");
+		FatesOfaClient.LOG.info("[gametest] together: Fates Flipper {}, Fates Common {}", ff, common);
+		check(!"missing".equals(common), "Fates Flipper loaded without its Fates Common library");
+
+		ItemStack hype = sb(Items.IRON_SWORD, "HYPERION", "§6Hyperion", "§6§lLEGENDARY DUNGEON SWORD", 1);
+		// what the Flipper puts under MODS: the game's tooltip minus its own and the item's lines
+		String mods = ctx.computeOnClient(mc -> {
+			try {
+				Object lines = Class.forName("io.github.donttemptfate.fatesflipper.ui.ItemTooltips")
+						.getMethod("otherModsLines", ItemStack.class).invoke(null, hype);
+				return String.join("\n", ((List<?>) lines).stream().map(l -> ((Component) l).getString()).toList());
+			} catch (ReflectiveOperationException e) {
+				return "(reflection failed: " + e + ")";
+			}
+		});
+		FatesOfaClient.LOG.info("[gametest] together: Flipper MODS section:\n{}", mods);
+		check(mods.contains("Worth"), "OFA's price lines don't reach the Flipper's MODS section: " + mods);
+
+		// a real hover over the Hyperion in a chest: both mods draw (the Flipper's card, OFA's lines inside)
+		SimpleContainer chest = new SimpleContainer(27);
+		chest.setItem(1, hype);
+		ctx.runOnClient(mc -> mc.gui.setScreen(new ContainerScreen(ChestMenu.threeRows(0, mc.player.getInventory(), chest),
+				mc.player.getInventory(), Component.literal("Large Chest"))));
+		ctx.waitTicks(10);
+		double scale = ctx.computeOnClient(mc -> mc.getWindow().getGuiScale());
+		int[] gui = ctx.computeOnClient(mc -> new int[] {mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight()});
+		int left = (gui[0] - 176) / 2, top = (gui[1] - (114 + 3 * 18)) / 2;
+		ctx.getInput().setCursorPos((left + 8 + 18 + 8) * scale, (top + 18 + 8) * scale);
+		ctx.waitTicks(10);
+		ctx.takeScreenshot("90_together_tooltip");
+		check(ctx.computeOnClient(mc -> mc.gui.screen() instanceof ContainerScreen), "the chest closed while hovering with both mods");
+
+		// each mod's settings from its own command, one after the other
+		ctx.runOnClient(mc -> mc.gui.setScreen(null));
+		ctx.waitTicks(2);
+		chatCommand(ctx, "/ff config");
+		ctx.waitFor(mc -> mc.gui.screen() != null && mc.gui.screen().getClass().getName().startsWith("io.github.donttemptfate.fatesflipper"), 100);
+		ctx.waitTicks(10);
+		ctx.takeScreenshot("91_together_flipper_settings");
+		ctx.runOnClient(mc -> mc.gui.setScreen(null));
+		ctx.waitTicks(2);
+		chatCommand(ctx, "/ofa");
+		ctx.waitFor(mc -> mc.gui.screen() instanceof SettingsScreen, 100);
+		ctx.waitTicks(10);
+		ctx.takeScreenshot("92_together_ofa_settings");
+		ctx.runOnClient(mc -> mc.gui.setScreen(null));
+		ctx.waitTicks(2);
+		for (Feature f : Features.all()) check(!f.failed(), "with Fates Flipper installed, " + f.id + " switched itself off: " + f.errors().lastError());
+		FatesOfaClient.LOG.info("[gametest] together: OK");
+	}
+
+	static void chatCommand(ClientGameTestContext ctx, String command) {
+		ctx.runOnClient(mc -> mc.gui.setScreen(new net.minecraft.client.gui.screens.ChatScreen("", false)));
+		ctx.waitTicks(5);
+		ctx.getInput().typeChars(command);
+		ctx.waitTicks(2);
+		ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RETURN);
 	}
 
 	static void check(boolean ok, String msg) {

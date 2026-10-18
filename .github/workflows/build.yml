@@ -98,10 +98,82 @@ jobs:
           name: fatesofa-mc${{ matrix.mc }}
           path: out/mc${{ matrix.mc }}
 
+  # Fates Flipper and OFA in one client (contract-mod §10 item 6): the Flipper is built from its public
+  # repo and added to OFA's game test, which then also runs its "together" checks.
+  together:
+    name: With Fates Flipper, Minecraft ${{ matrix.mc }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: ["26.2", "26.3"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: DontTemptFate/Fates_Flipper
+          ref: main
+          path: flipper
+
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4
+
+      - name: Build Fates Flipper
+        id: flipper
+        run: |
+          set -o pipefail
+          cd flipper
+          chmod +x ./gradlew
+          ./gradlew build -x test -Pmc=${{ matrix.mc }} --no-daemon 2>&1 | tee ../flipper-build.log
+          jar=$(ls build/libs/*.jar | grep -v -- '-sources' | head -1)
+          echo "jar=$PWD/$jar" >> "$GITHUB_OUTPUT"
+          echo "Fates Flipper $(git rev-parse --short HEAD): $jar"
+
+      - name: Virtual display for the game test
+        if: matrix.mc != '26.2'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb libgl1-mesa-dri libegl1 mesa-vulkan-drivers > /dev/null
+
+      - name: In-game test with both mods
+        id: gametest
+        timeout-minutes: 15
+        run: |
+          set -o pipefail
+          chmod +x ./gradlew
+          cmd="./gradlew runClientGametest -Pmc=${{ matrix.mc }} -PextraMods=${{ steps.flipper.outputs.jar }} --stacktrace --no-daemon"
+          if [ "${{ matrix.mc }}" = "26.2" ]; then $cmd 2>&1 | tee gametest.log; else xvfb-run -a -s "-screen 0 1280x720x24" $cmd 2>&1 | tee gametest.log; fi
+          grep -q "\[gametest\] together: OK" build/run/clientGameTest/logs/latest.log || { echo "the together checks didn't run"; exit 1; }
+
+      - name: Collect results
+        if: always()
+        run: |
+          out=out/together-mc${{ matrix.mc }}
+          mkdir -p "$out/screenshots"
+          cp flipper-build.log gametest.log "$out/" 2>/dev/null || true
+          cp build/run/clientGameTest/screenshots/9*.png "$out/screenshots/" 2>/dev/null || true
+          cp build/run/clientGameTest/logs/latest.log "$out/client-latest.log" 2>/dev/null || true
+          {
+            echo "flipper=${{ steps.flipper.outcome }}"
+            echo "gametest=${{ steps.gametest.outcome }}"
+          } > "$out/RESULT"
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: together-mc${{ matrix.mc }}
+          path: out/together-mc${{ matrix.mc }}
+
   # Publishes every version's jar, logs, screenshots and API reference to the `ci-results` branch, so
   # the result can be read with plain git. Only for pushes.
   publish:
-    needs: build
+    needs: [build, together]
     if: always() && github.event_name != 'pull_request'
     permissions:
       contents: write
