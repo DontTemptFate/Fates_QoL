@@ -111,7 +111,7 @@ public final class ItemTracker extends Feature {
 
 	/** Compares the inventory with half a second ago; only while no menu is open (moving items from a chest isn't a pickup). */
 	void scanInventory(Minecraft mc) {
-		if (!from("inventory") || mc.player == null || mc.gui.screen() != null || !Ofa.get().state.onSkyBlock()) {
+		if (!from("inventory") || mc.player == null || mc.gui.screen() != null || !(Ofa.get().state.onSkyBlock() || io.github.donttemptfate.fatesofa.game.Dev.test())) {
 			lastInv = null;
 			return;
 		}

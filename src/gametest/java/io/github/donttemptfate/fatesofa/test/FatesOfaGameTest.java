@@ -179,6 +179,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.runOnClient(mc -> {
 				var t = io.github.donttemptfate.fatesofa.features.ItemTracker.INSTANCE.flow.total("Enchanted Diamond");
 				FatesOfaClient.LOG.info("[gametest] pickup counted: {}", t == null ? "none" : t.amount);
+				check(t != null && t.amount == 32, "an inventory pickup wasn't counted");
 				mc.player.getInventory().setItem(7, ItemStack.EMPTY);
 			});
 			ctx.takeScreenshot("08d_trackers_hud");
