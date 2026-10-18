@@ -458,7 +458,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		String bound = ctx.computeOnClient(mc -> io.github.donttemptfate.fatesofa.game.Keys.hudEditor.getTranslatedKeyMessage().getString());
 		check(bound.equalsIgnoreCase("J"), "key capture didn't bind the HUD editor key: " + bound);
 		ctx.takeScreenshot("05f_keys");
-		ctx.runOnClient(mc -> io.github.donttemptfate.fatesofa.game.Keys.rebind(io.github.donttemptfate.fatesofa.game.Keys.hudEditor, -1));
+		ctx.runOnClient(mc -> io.github.donttemptfate.fatesofa.game.Keys.rebind(io.github.donttemptfate.fatesofa.game.Keys.hudEditor, null));
 
 		// diagnostics: per-feature timing
 		ctx.waitTicks(50);

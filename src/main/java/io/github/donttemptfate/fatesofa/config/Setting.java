@@ -19,7 +19,7 @@ public final class Setting<T> {
 
 		/** Stored as a string. */
 		public boolean textual() {
-			return this == STRING || this == SOUND || this == ISLANDS || this == LINES || this == TEMPLATE || this == RULES;
+			return this == STRING || this == KEY || this == SOUND || this == ISLANDS || this == LINES || this == TEMPLATE || this == RULES;
 		}
 	}
 
@@ -129,9 +129,9 @@ public final class Setting<T> {
 		return new Builder<>(key, label, Type.COLOR, argb);
 	}
 
-	/** A key on the keyboard (the game's key code; -1 = none). */
-	public static Builder<Integer> key(String key, String label) {
-		return new Builder<>(key, label, Type.KEY, -1);
+	/** A key on the keyboard, stored by the game's key name ("key.keyboard.r"; "" = none). */
+	public static Builder<String> key(String key, String label) {
+		return new Builder<>(key, label, Type.KEY, "");
 	}
 
 	/** A sound with volume and pitch ("" = silent). */

@@ -189,20 +189,20 @@ public class SettingsMachineryTest {
 		Settings s = new Settings(null);
 		Setting<String> rules = s.declare(Setting.rules("t.rules", "Rules", "").maxLength(20).build());
 		Setting<String> isl = s.declare(Setting.islands("t.isl", "Islands", "").build());
-		Setting<Integer> key = s.declare(Setting.key("t.key", "Key").build());
+		Setting<String> key = s.declare(Setting.key("t.key", "Key").build());
 		s.set(rules, "a => hide");
 		assertEquals("a => hide", s.get(rules));
 		s.set(rules, "x".repeat(21)); // too long: refused, old value stays
 		assertEquals("a => hide", s.get(rules));
 		s.set(isl, "HUB,GARDEN,NOT_AN_ISLAND");
 		assertEquals(2, Values.islands(s.get(isl)).size());
-		assertEquals(Integer.valueOf(-1), s.get(key));
-		s.set(key, 82);
+		assertEquals("", s.get(key));
+		s.set(key, "key.keyboard.r");
 		String line = s.export();
 		Settings other = new Settings(null);
 		other.declare(Setting.rules("t.rules", "Rules", "").maxLength(20).build());
-		Setting<Integer> key2 = other.declare(Setting.key("t.key", "Key").build());
+		Setting<String> key2 = other.declare(Setting.key("t.key", "Key").build());
 		assertTrue(other.importLine(line) >= 2);
-		assertEquals(Integer.valueOf(82), other.get(key2));
+		assertEquals("key.keyboard.r", other.get(key2));
 	}
 }

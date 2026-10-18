@@ -19,4 +19,9 @@ public final class Compat {
 	public static void setCursor(Minecraft mc, double x, double y) {
 		GLFW.glfwSetCursorPos(mc.getWindow().handle(), x, y);
 	}
+
+	/** True while a key (the game's key value) is held. */
+	public static boolean isKeyDown(Minecraft mc, int key) {
+		return com.mojang.blaze3d.platform.InputConstants.isKeyDown(mc.getWindow(), key);
+	}
 }

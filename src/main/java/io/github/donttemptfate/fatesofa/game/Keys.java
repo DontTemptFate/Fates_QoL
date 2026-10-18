@@ -31,24 +31,32 @@ public final class Keys {
 		return out;
 	}
 
-	/** Rebinds an OFA key from OFA's own settings (code -1 = unbound) and saves the game's options. */
-	public static void rebind(KeyMapping k, int code) {
+	/** Rebinds an OFA key from OFA's own settings (null = unbound) and saves the game's options. */
+	public static void rebind(KeyMapping k, com.mojang.blaze3d.platform.InputConstants.Key key) {
 		Minecraft mc = Minecraft.getInstance();
-		k.setKey(code < 0 ? com.mojang.blaze3d.platform.InputConstants.UNKNOWN : com.mojang.blaze3d.platform.InputConstants.Type.KEYBOARD.getOrCreate(code));
+		k.setKey(key == null ? com.mojang.blaze3d.platform.InputConstants.UNKNOWN : key);
 		KeyMapping.resetMapping();
 		mc.options.save();
 	}
 
-	/** The name of a keyboard key ("R", "Left Shift"), or "None". */
-	public static String keyName(int code) {
-		if (code < 0) return "None";
-		return com.mojang.blaze3d.platform.InputConstants.Type.KEYBOARD.getOrCreate(code).getDisplayName().getString();
+	/** The shown name of a key stored by name ("R", "Left Shift"), or "None". */
+	public static String keyName(String name) {
+		if (name == null || name.isEmpty()) return "None";
+		try {
+			return com.mojang.blaze3d.platform.InputConstants.getKey(name).getDisplayName().getString();
+		} catch (RuntimeException e) {
+			return name;
+		}
 	}
 
 	/** True while a key picked in OFA's settings is held. */
-	public static boolean isDown(int code) {
-		if (code < 0) return false;
-		return com.mojang.blaze3d.platform.InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), code);
+	public static boolean isDown(String name) {
+		if (name == null || name.isEmpty()) return false;
+		try {
+			return Compat.isKeyDown(Minecraft.getInstance(), com.mojang.blaze3d.platform.InputConstants.getKey(name).getValue());
+		} catch (RuntimeException e) {
+			return false;
+		}
 	}
 
 	static void register() {

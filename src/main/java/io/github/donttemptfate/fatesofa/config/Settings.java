@@ -143,7 +143,7 @@ public final class Settings {
 			JsonPrimitive p = e.getAsJsonPrimitive();
 			return switch (s.type) {
 				case BOOL -> p.isBoolean() ? p.getAsBoolean() : null;
-				case INT, COLOR, KEY -> {
+				case INT, COLOR -> {
 					if (!p.isNumber()) yield null;
 					int v = p.getAsInt();
 					if (s.type == Setting.Type.INT && (v < s.min || v > s.max)) yield null;
@@ -155,7 +155,7 @@ public final class Settings {
 					yield v < s.min || v > s.max || Double.isNaN(v) ? null : v;
 				}
 				case ENUM -> p.isString() && s.options.contains(p.getAsString()) ? p.getAsString() : null;
-				case STRING, SOUND, ISLANDS, LINES, TEMPLATE, RULES -> p.isString() && p.getAsString().length() <= s.maxLength ? p.getAsString() : null;
+				case STRING, KEY, SOUND, ISLANDS, LINES, TEMPLATE, RULES -> p.isString() && p.getAsString().length() <= s.maxLength ? p.getAsString() : null;
 			};
 		} catch (RuntimeException ex) {
 			return null;

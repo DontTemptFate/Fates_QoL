@@ -362,7 +362,7 @@ public final class SettingsScreen extends Screen {
 				hits.add(row, () -> {
 					capturingMapping = k;
 					capturing = null;
-				}, () -> io.github.donttemptfate.fatesofa.game.Keys.rebind(k, -1), "key:" + k.getName());
+				}, () -> io.github.donttemptfate.fatesofa.game.Keys.rebind(k, null), "key:" + k.getName());
 			}
 		};
 	}
@@ -746,7 +746,7 @@ public final class SettingsScreen extends Screen {
 						}, name);
 					}
 					case KEY -> {
-						Setting<Integer> k = (Setting<Integer>) s;
+						Setting<String> k = (Setting<String>) s;
 						boolean cap = capturing == s;
 						String shown = cap ? "Press a key… (Esc: none)" : io.github.donttemptfate.fatesofa.game.Keys.keyName(st.get(k));
 						int bw = Math.max(70, font.width(shown) + 12);
@@ -1164,13 +1164,13 @@ public final class SettingsScreen extends Screen {
 	public boolean keyPressed(KeyEvent e) {
 		int esc = com.mojang.blaze3d.platform.InputConstants.KEY_ESCAPE;
 		if (capturing != null) {
-			Setting<Integer> k = (Setting<Integer>) capturing;
-			ofa.settings.set(k, e.key() == esc ? -1 : e.key());
+			Setting<String> k = (Setting<String>) capturing;
+			ofa.settings.set(k, e.key() == esc ? "" : com.mojang.blaze3d.platform.InputConstants.getKey(e).getName());
 			capturing = null;
 			return true;
 		}
 		if (capturingMapping != null) {
-			io.github.donttemptfate.fatesofa.game.Keys.rebind(capturingMapping, e.key() == esc ? -1 : e.key());
+			io.github.donttemptfate.fatesofa.game.Keys.rebind(capturingMapping, e.key() == esc ? null : com.mojang.blaze3d.platform.InputConstants.getKey(e));
 			capturingMapping = null;
 			return true;
 		}
