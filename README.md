@@ -24,6 +24,10 @@ Status: **beta** — expect rough edges, and please report them (see below).
 
 [Mod Menu](https://modrinth.com/mod/modmenu) is optional: its Configure button opens OFA's settings.
 
+OFA works alongside [Fates Flipper](https://github.com/DontTemptFate/Fates_Flipper). Both carry the small
+Fates Common library inside their jar, so there's nothing extra to install. With both installed, the font
+and theme are one shared setting.
+
 ## What's in it
 
 | Area | Highlights |
@@ -112,6 +116,6 @@ Releases are made by pushing a tag `v<version>`, for example `v0.1.0-beta.1`. Th
 
 - Item and recipe data: NotEnoughUpdates-REPO and SkyHanni-REPO (MIT).
 - Hypixel Mod API protocol (MIT, Hypixel Inc.).
-- Chakra Petch font (SIL Open Font License 1.1, Cadson Demak).
+- [Fates Common](https://github.com/DontTemptFate/Fates_Common) (GPL-3.0-only), the look and item reading shared with Fates Flipper; it carries the Chakra Petch font (SIL Open Font License 1.1, Cadson Demak).
 
 Not affiliated with Hypixel or Mojang.

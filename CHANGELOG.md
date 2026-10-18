@@ -42,6 +42,8 @@ First public test build.
   coins to collect; bazaar orders are outlined when outbid or filled.
 - **Islands:** Crystal Hollows & Mineshaft (crystals, chests, corpses, mineshaft alert), Crimson Isle (reputation,
   quests, trophy fish, keys), foraging (logs per hour), Rift collectibles (Enigma Souls, Montezuma).
+- **With Fates Flipper:** both mods can be installed together. OFA's price lines appear in the Flipper's item
+  cards, and the font and theme are one shared setting for both mods.
 - **Fixes:** clicks and sliders on 26.3 (SDL input); chat repeats fold into one line; the settings page list scrolls.
 - **For bug reports:** Diagnostics shows timings and has Copy diagnostics, and crash reports include a "Fates OFA"
   line.
