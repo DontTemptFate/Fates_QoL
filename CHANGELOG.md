@@ -10,7 +10,7 @@ First public test build.
   Includes a colour picker (opacity, rainbow, hex), a sound picker (volume, pitch, test), island chips, line
   lists you can reorder, text templates, your own chat rules, key binds inside OFA, and presets.
 - **Every HUD card:** where it shows, background, accent colour, number style, and which lines in what order.
-- **Trackers:** reset timing, per-hour rates, idle pause, the price used to value drops, and a Reset button.
+- **Tracker settings:** reset timing, per-hour rates, idle pause, the price used to value drops, and a Reset button.
 - **Alerts** for garden visitors, Jacob's contest, finished commissions, trophy fish, double hooks, rare catches,
   slayer spawn / kill / fail, 270 / 300 score, crypts, failed puzzles, Kuudra supplies and Fresh Tools, Rift time,
   low health, and upcoming events.

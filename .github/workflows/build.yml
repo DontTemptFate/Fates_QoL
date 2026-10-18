@@ -34,7 +34,8 @@ jobs:
       - name: README lists every command; changelog readable
         run: |
           python3 ci/check_readme.py
-          python3 ci/release_notes.py "$(grep '^version=' gradle.properties | cut -d= -f2)" > /dev/null || python3 ci/release_notes.py 0.1.0-beta.1 > /dev/null
+          # the changelog must have a section for the version being built (the release takes its notes from it)
+          python3 ci/release_notes.py "$(grep '^version=' gradle.properties | cut -d= -f2)" > /dev/null
 
       - name: Build and test
         id: build
@@ -156,7 +157,7 @@ jobs:
           out=out/together-mc${{ matrix.mc }}
           mkdir -p "$out/screenshots"
           cp flipper-build.log gametest.log "$out/" 2>/dev/null || true
-          cp build/run/clientGameTest/screenshots/9*.png "$out/screenshots/" 2>/dev/null || true
+          cp build/run/clientGameTest/screenshots/*_9[0-9]_*.png "$out/screenshots/" 2>/dev/null || true
           cp build/run/clientGameTest/logs/latest.log "$out/client-latest.log" 2>/dev/null || true
           {
             echo "flipper=${{ steps.flipper.outcome }}"

@@ -12,7 +12,7 @@ progression planner.
 - **Open source:** GPL-3.0-only, written clean-room. Other mods were studied by how they behave, never by
   reading their source.
 
-Status: **alpha** — expect rough edges, and please report them (see below).
+Status: **beta** — expect rough edges, and please report them (see below).
 
 ## Install
 
