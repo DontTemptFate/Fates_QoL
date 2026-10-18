@@ -270,6 +270,15 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.takeScreenshot("08j_bazaar_orders");
 			ctx.runOnClient(mc -> mc.gui.setScreen(null));
 
+			// Batch 8d: island counters from chat
+			ctx.runOnClient(mc -> {
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("  TUNGSTEN CORPSE LOOT! "), false);
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("You uncovered a treasure chest!"), false);
+				io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("WOW! You found a Glacite Mineshaft portal!"), false);
+				String sum = ((io.github.donttemptfate.fatesofa.features.HollowsTracker) Features.get("hollows_tracker")).testSummary();
+				check(sum.equals("1|{Tungsten=1}|1"), "hollows counters: " + sum);
+			});
+
 			// a waypoint a few blocks ahead, drawn in the world
 			ctx.runOnClient(mc -> {
 				mc.gui.setScreen(null);

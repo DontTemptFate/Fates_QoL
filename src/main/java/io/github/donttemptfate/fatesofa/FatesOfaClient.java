@@ -82,5 +82,9 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new PuzzleHelpers());
 		Features.add(new AuctionHelper());
 		Features.add(new BazaarOrders());
+		Features.add(new HollowsTracker());
+		Features.add(new CrimsonIsleTracker());
+		Features.add(new ForagingTracker());
+		Features.add(new RiftChecklist());
 	}
 }
