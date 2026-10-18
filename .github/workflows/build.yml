@@ -37,6 +37,10 @@ jobs:
           set -o pipefail
           chmod +x ./gradlew
           ./gradlew build -Pmc=${{ matrix.mc }} --stacktrace --no-daemon 2>&1 | tee build.log
+          # the Mod Menu stand-ins are only for compiling; they must never ship
+          for f in build/libs/*.jar; do
+            if unzip -l "$f" | grep -q terraformersmc; then echo "Mod Menu stub classes found in $f" | tee -a build.log; exit 1; fi
+          done
 
       # Signatures of the Minecraft / Fabric classes the mod uses, for development (no source access here).
       - name: API reference (javap)

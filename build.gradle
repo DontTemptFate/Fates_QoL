@@ -25,11 +25,11 @@ sourceSets {
 	test {
 		java.srcDir "common/src/test/java"
 	}
-	// Mod Menu's two API interfaces, only to compile against (never packaged; the real ones come with Mod Menu)
-	modmenuStub {
-		java.srcDir "stubs/modmenu"
-		compileClasspath += main.compileClasspath
-	}
+}
+// Mod Menu's two API interfaces, only to compile against: left out of the jar (the real ones come with Mod Menu)
+sourceSets.main.java.srcDir "stubs/modmenu"
+tasks.named("jar") {
+	exclude "com/terraformersmc/**"
 }
 
 base {
@@ -45,7 +45,6 @@ dependencies {
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	compileOnly sourceSets.modmenuStub.output
 	testImplementation "junit:junit:4.13.2"
 	testImplementation "com.google.code.gson:gson:2.11.0"
 }
