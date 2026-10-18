@@ -686,7 +686,12 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		FatesOfaClient.LOG.info("[gametest] together: Fates Flipper {}, Fates Common {}", ff, common);
 		check(!"missing".equals(common), "Fates Flipper loaded without its Fates Common library");
 
+		// upgrades, so OFA has a "Worth … with upgrades" line to hand over (the Batch 6 prices are loaded)
 		ItemStack hype = sb(Items.IRON_SWORD, "HYPERION", "§6Hyperion", "§6§lLEGENDARY DUNGEON SWORD", 1);
+		CompoundTag t = hype.get(DataComponents.CUSTOM_DATA).copyTag();
+		t.putInt("hot_potato_count", 10);
+		t.putInt("rarity_upgrades", 1);
+		hype.set(DataComponents.CUSTOM_DATA, CustomData.of(t));
 		// what the Flipper puts under MODS: the game's tooltip minus its own and the item's lines
 		String mods = ctx.computeOnClient(mc -> {
 			try {
