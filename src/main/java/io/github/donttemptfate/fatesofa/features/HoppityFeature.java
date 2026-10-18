@@ -21,7 +21,18 @@ import java.util.regex.Pattern;
 
 /** Hoppity's Hunt: which chocolate eggs have appeared and not been found yet, with an alert when one appears. */
 public final class HoppityFeature extends Feature {
-	final Setting<Boolean> alert = setting(Setting.bool("hoppity.alert", "Egg alert", true));
+	static final Map<String, String> MEALS = io.github.donttemptfate.fatesofa.core.Display.lines("Breakfast", "Breakfast", "Brunch", "Brunch",
+			"Lunch", "Lunch", "Déjeuner", "Déjeuner", "Dinner", "Dinner", "Supper", "Supper");
+
+	final io.github.donttemptfate.fatesofa.core.Display display = new io.github.donttemptfate.fatesofa.core.Display(this, "hoppity",
+			io.github.donttemptfate.fatesofa.core.Display.GROUP, 0xFFFF55FF,
+			io.github.donttemptfate.fatesofa.core.Display.lines("waiting", "Eggs waiting", "found", "Found this session"),
+			java.util.List.of("waiting"), false);
+	final Setting<Boolean> showAge = setting(Setting.bool("hoppity.age", "Show how long each egg has been up", true).group("Display").advanced());
+	final io.github.donttemptfate.fatesofa.core.Alert alert = new io.github.donttemptfate.fatesofa.core.Alert(this, "hoppity.alert", "Egg alert",
+			"{meal} egg", "Hoppity's Hunt", 0xFFFF55FF, "minecraft:block.note_block.pling|1|1.6", "meal");
+	final Setting<String> alertMeals = setting(Setting.lines("hoppity.alert.meals", "Alert for", MEALS, java.util.List.copyOf(MEALS.keySet()))
+			.group("Egg alert"));
 
 	static final Pattern SPAWNED = Pattern.compile("^HOPPITY'S HUNT A Chocolate (?<meal>[\\wé]+) Egg has appeared!$");
 	static final Pattern FOUND = Pattern.compile("^HOPPITY'S HUNT You found a Chocolate (?<meal>[\\wé]+) Egg.*$");
@@ -41,13 +52,12 @@ public final class HoppityFeature extends Feature {
 			Pattern sp = o.patterns.get("misc.chocolatefactory.egg.spawned", "meal");
 			Matcher s = (sp != null ? sp : SPAWNED).matcher(m.plain());
 			if (s.matches()) {
+				String meal = s.group("meal");
 				synchronized (waiting) {
-					waiting.put(s.group("meal"), m.atMs());
+					waiting.put(meal, m.atMs());
 				}
-				if (on(alert)) {
-					Alerts.title(s.group("meal") + " egg", 0xFF55FF, "Hoppity's Hunt");
-					Alerts.ding();
-				}
+				if (io.github.donttemptfate.fatesofa.config.Values.lines(get(alertMeals), alertMeals.options).contains(meal) || !MEALS.containsKey(meal))
+					alert.fire(Map.of("meal", meal), o.state.island(), m.atMs());
 				return;
 			}
 			Pattern fp = o.patterns.get("misc.chocolatefactory.egg.found", "meal");
@@ -60,22 +70,25 @@ public final class HoppityFeature extends Feature {
 			}
 		}));
 		Hud.register(new HudElement("hoppity", "Hoppity's eggs", this, HudPos.at(Anchor.TOP_RIGHT, -4, 4), 15, this::card, this::sample,
-				() -> o.state.onSkyBlock() && !waiting.isEmpty()));
+				() -> o.state.onSkyBlock() && !waiting.isEmpty()).display(display));
 	}
 
 	Card card() {
 		long now = System.currentTimeMillis();
-		Card c = Trackers.card("HOPPITY", found + " FOUND");
+		Card c = Trackers.card(display, "HOPPITY", display.shows("found") ? found + " FOUND" : null);
 		Card.KeyValues kv = Trackers.rows();
-		synchronized (waiting) {
-			for (Map.Entry<String, Long> e : waiting.entrySet()) Trackers.row(kv, e.getKey() + " egg", "up " + Fmt.duration(now - e.getValue()), Ui.PINK);
+		if (display.shows("waiting")) {
+			synchronized (waiting) {
+				for (Map.Entry<String, Long> e : waiting.entrySet())
+					Trackers.row(kv, e.getKey() + " egg", on(showAge) ? "up " + Fmt.duration(now - e.getValue()) : "", Ui.PINK);
+			}
 		}
 		c.add(kv);
 		return c;
 	}
 
 	Card sample() {
-		Card c = Trackers.card("HOPPITY", "14 FOUND");
+		Card c = Trackers.card(display, "HOPPITY", "14 FOUND");
 		Card.KeyValues kv = Trackers.rows();
 		Trackers.row(kv, "Breakfast egg", "up 2m 10s", Ui.PINK);
 		c.add(kv);

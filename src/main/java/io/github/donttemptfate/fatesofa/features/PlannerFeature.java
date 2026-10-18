@@ -29,6 +29,12 @@ public final class PlannerFeature extends Feature {
 	static final Pattern BAG = Pattern.compile("^Accessory Bag(?: \\((?<page>\\d+)/(?<of>\\d+)\\))?$");
 	static final Pattern SKILL = Pattern.compile("^(?<name>Farming|Mining|Combat|Foraging|Fishing|Enchanting|Alchemy|Carpentry|Runecrafting|Social|Taming|Hunting) (?<lvl>[IVXLC]+|\\d+)$");
 
+	public final io.github.donttemptfate.fatesofa.config.Setting<Integer> maxPriceM = setting(io.github.donttemptfate.fatesofa.config.Setting.integer("planner.maxPrice", "Skip accessories costing more than (M coins)", 0, 0, 5000)
+			.group("Magical Power").help("0 = list every price."));
+	public final io.github.donttemptfate.fatesofa.config.Setting<Boolean> craftableOnly = setting(io.github.donttemptfate.fatesofa.config.Setting.bool("planner.craftableOnly", "Only accessories you can craft", false).group("Magical Power"));
+	public final io.github.donttemptfate.fatesofa.config.Setting<Integer> craftsListed = setting(io.github.donttemptfate.fatesofa.config.Setting.integer("planner.crafts", "Crafts listed", 40, 10, 150).group("Crafts").advanced());
+	public final io.github.donttemptfate.fatesofa.config.Setting<Integer> minGainK = setting(io.github.donttemptfate.fatesofa.config.Setting.integer("planner.minGain", "Only crafts that gain at least (k coins)", 0, 0, 100_000).group("Crafts"));
+	public final io.github.donttemptfate.fatesofa.config.Setting<Integer> worthMinK = setting(io.github.donttemptfate.fatesofa.config.Setting.integer("planner.worthMin", "Hide items worth less than (k coins)", 0, 0, 100_000).group("Networth"));
 	private ProfileData data;
 	private int tick;
 

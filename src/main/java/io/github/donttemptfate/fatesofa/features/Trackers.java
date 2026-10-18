@@ -23,6 +23,45 @@ final class Trackers {
 		return c;
 	}
 
+	/** A tracker card in the player's Display settings (background, accent colour). */
+	static Card card(io.github.donttemptfate.fatesofa.core.Display d, String title, String right) {
+		Card c = new Card(d.alpha(), 110, 190);
+		c.add(new Card.Line(List.of(Card.seg(title, Ui.Role.LABEL, d.accent(System.currentTimeMillis()))),
+				right == null ? List.of() : List.of(Card.seg(right, Ui.Role.LABEL, Ui.GRAY))));
+		return c;
+	}
+
+	/** A number in the Display's style: short (1.2M) or full (1,234,567). */
+	static String num(io.github.donttemptfate.fatesofa.core.Display d, double v) {
+		return d.compact() ? Fmt.shortNum(v) : Fmt.full(Math.round(v));
+	}
+
+	/** Value of {@code amount} of a named item in the tracker's price mode, or NaN. */
+	static double valueOf(String name, int amount, io.github.donttemptfate.fatesofa.core.Tracker t) {
+		String key = keyForName(name);
+		return key == null ? Double.NaN : valueOfKey(key, amount, t);
+	}
+
+	/** Value of {@code amount} of an item key in the tracker's price mode, or NaN. */
+	static double valueOfKey(String key, double amount, io.github.donttemptfate.fatesofa.core.Tracker t) {
+		var prices = Ofa.get().prices;
+		long now = System.currentTimeMillis();
+		switch (t.priceMode()) {
+			case "npc" -> {
+				Double n = prices.npcPrice(key);
+				return n == null ? Double.NaN : n * amount;
+			}
+			case "bazaar_instant", "bazaar_offer" -> {
+				var q = prices.bazaarQuote(key, now);
+				if (q != null) return (t.priceMode().equals("bazaar_instant") ? q.instantSell() : q.instantBuy()) * amount;
+			}
+			default -> {
+			}
+		}
+		Price p = prices.value(key, now);
+		return p == null ? Double.NaN : p.value() * amount;
+	}
+
 	static Card.KeyValues rows() {
 		return new Card.KeyValues(1);
 	}

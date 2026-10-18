@@ -25,6 +25,11 @@ public final class WaypointFeature extends Feature {
 	final Setting<Boolean> fromChat = setting(Setting.bool("waypoints.chat", "Waypoints from chat coordinates", true)
 			.help("When someone shares \"x: …, y: …, z: …\" in chat, show it for a few minutes."));
 	final Setting<Integer> keepMinutes = setting(Setting.integer("waypoints.keep", "Keep shared waypoints (minutes)", 3, 1, 30));
+	final io.github.donttemptfate.fatesofa.core.Highlight look = new io.github.donttemptfate.fatesofa.core.Highlight(this, "waypoints.look", 0xFF55FFFF);
+	final Setting<Boolean> ownColours = setting(Setting.bool("waypoints.ownColours", "Use each waypoint's own colour", true).group(io.github.donttemptfate.fatesofa.core.Highlight.GROUP));
+	final Setting<Boolean> distance = setting(Setting.bool("waypoints.distance", "Show the distance", true).group(io.github.donttemptfate.fatesofa.core.Highlight.GROUP));
+	final Setting<String> chatOn = setting(Setting.islands("waypoints.chat.on", "Chat coordinates only on", "").advanced()
+			.help("Islands where shared coordinates become waypoints. Nothing picked = everywhere."));
 
 	public final Waypoints waypoints = new Waypoints();
 
@@ -42,7 +47,7 @@ public final class WaypointFeature extends Feature {
 			if (k.equals("waypoints.saved")) waypoints.fromJson(o.settings.raw("waypoints.saved")); // imported
 		});
 		ChatBus.onChat(m -> guard(() -> {
-			if (!on(fromChat) || !o.state.onSkyBlock()) return;
+			if (!on(fromChat) || !o.state.onSkyBlock() || !io.github.donttemptfate.fatesofa.config.Values.allows(get(chatOn), o.state.island())) return;
 			Waypoints.Waypoint w = Waypoints.fromChat(m.plain(), island(), m.atMs(), get(keepMinutes) * 60_000L);
 			if (w != null) waypoints.add(w);
 		}));
@@ -64,13 +69,15 @@ public final class WaypointFeature extends Feature {
 		var list = waypoints.on(island(), System.currentTimeMillis());
 		if (list.isEmpty()) return;
 		try (var c = mc.levelRenderer.collectPerFrameRenderThreadGizmos()) {
+			long now = System.currentTimeMillis();
 			for (Waypoints.Waypoint w : list) {
-				int argb = 0xFF000000 | w.color();
+				int argb = on(ownColours) ? 0xFF000000 | w.color() : look.color(now);
 				BlockPos pos = new BlockPos(w.x(), w.y(), w.z());
-				Gizmos.cuboid(new AABB(pos), GizmoStyle.strokeAndFill(argb, 2f, (argb & 0x00FFFFFF) | 0x40000000)).setAlwaysOnTop();
 				double dist = Math.sqrt(mc.player.distanceToSqr(Vec3.atCenterOf(pos)));
-				Gizmos.billboardText(w.name() + " (" + Math.round(dist) + "m)", Vec3.atCenterOf(pos).add(0, 1.2, 0),
-						TextGizmo.Style.forColorAndCentered(argb)).setAlwaysOnTop();
+				if (!look.inRange(dist)) continue;
+				io.github.donttemptfate.fatesofa.game.Draw.box(look, new AABB(pos), argb, 0);
+				io.github.donttemptfate.fatesofa.game.Draw.label(look, w.name() + (on(distance) ? " (" + Math.round(dist) + "m)" : ""),
+						Vec3.atCenterOf(pos).add(0, 1.2, 0), argb);
 			}
 		}
 	}

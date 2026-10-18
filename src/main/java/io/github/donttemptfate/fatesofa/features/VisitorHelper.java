@@ -20,6 +20,15 @@ import java.util.List;
 
 /** Garden visitors: what their request costs at the bazaar, what the item rewards are worth, and coins per copper. */
 public final class VisitorHelper extends Feature {
+	final io.github.donttemptfate.fatesofa.core.Display display = new io.github.donttemptfate.fatesofa.core.Display(this, "visitor", 0xFF55FF55, io.github.donttemptfate.fatesofa.core.Display.lines("wanted", "Items wanted", "rewards", "Rewards", "cost", "Cost to buy",
+			"copper", "Copper", "per_copper", "Coins per copper"), java.util.List.of("wanted", "rewards", "cost", "copper", "per_copper"));
+	final io.github.donttemptfate.fatesofa.config.Setting<String> buyBy = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.choice("visitor.buyBy", "Price items at", "instant_buy", java.util.List.of("instant_buy", "buy_order"))
+			.labels(java.util.Map.of("instant_buy", "Bazaar instant buy", "buy_order", "Bazaar buy order")));
+	final io.github.donttemptfate.fatesofa.config.Setting<Integer> goodBelow = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.integer("visitor.goodBelow", "Coins per copper counted as good (green) below", 1500, 0, 20000)
+			.help("Offers cheaper than this per copper show green; dearer ones show red. 0 = no colouring."));
+
 	public VisitorHelper() {
 		super("visitor_helper", "Visitor offer value", "When a garden visitor's offer is open: cost of the items wanted (bazaar), "
 				+ "value of item rewards, and coins per copper.", Category.FARMING, true, Risk.SAFE);
@@ -42,30 +51,53 @@ public final class VisitorHelper extends Feature {
 		}
 		if (offer == null) return;
 		long now = System.currentTimeMillis();
-		double cost = 0;
+		double cost = 0, rewards = 0;
 		boolean unpriced = false;
-		Card c = Trackers.card("VISITOR OFFER", null);
+		Card c = Trackers.card(display, "VISITOR OFFER", null);
 		Card.KeyValues kv = Trackers.rows();
+		java.util.List<Object[]> wanted = new java.util.ArrayList<>();
 		for (VisitorOffer.Line l : offer.wanted()) {
 			String key = Trackers.keyForName(l.name());
 			var q = key == null ? null : Ofa.get().prices.bazaarQuote(key, now);
-			double each = q != null && q.instantBuy() > 0 ? q.instantBuy() : Double.NaN;
+			double each = q == null ? Double.NaN : get(buyBy).equals("buy_order") ? q.instantSell() : q.instantBuy();
+			if (!(each > 0)) each = Double.NaN;
 			if (Double.isNaN(each)) unpriced = true;
 			else cost += each * l.amount();
-			Trackers.row(kv, Fmt.shortNum(l.amount()) + "× " + l.name(), Double.isNaN(each) ? "—" : Fmt.shortNum(each * l.amount()), Ui.WHITE);
+			wanted.add(new Object[] {l, each});
 		}
-		double rewards = 0;
+		java.util.List<Object[]> rewardList = new java.util.ArrayList<>();
 		for (VisitorOffer.Line l : offer.rewards()) {
 			double v = Trackers.valueOf(l.name(), (int) l.amount());
 			if (!Double.isNaN(v)) rewards += v;
-			Trackers.row(kv, "Reward: " + l.name(), Double.isNaN(v) ? "—" : Fmt.shortNum(v), Ui.GREEN);
+			rewardList.add(new Object[] {l, v});
 		}
-		Trackers.row(kv, "Cost to buy", Fmt.shortNum(cost) + (unpriced ? " + unpriced" : ""), Ui.GOLD);
-		if (offer.copper() > 0) {
-			Trackers.row(kv, "Copper", Fmt.shortNum(offer.copper()), Ui.ORANGE);
-			double net = Math.max(0, cost - rewards);
-			Trackers.row(kv, "Coins per copper", Fmt.shortNum(net / offer.copper()), Ui.AQUA);
-		}
+		double fCost = cost, fRewards = rewards;
+		boolean fUnpriced = unpriced;
+		VisitorOffer fo = offer;
+		display.each(java.util.Map.of(
+				"wanted", () -> {
+					for (Object[] w : wanted) {
+						VisitorOffer.Line l = (VisitorOffer.Line) w[0];
+						double each = (double) w[1];
+						Trackers.row(kv, Trackers.num(display, l.amount()) + "× " + l.name(), Double.isNaN(each) ? "—" : Trackers.num(display, each * l.amount()), Ui.WHITE);
+					}
+				},
+				"rewards", () -> {
+					for (Object[] r : rewardList) {
+						double v = (double) r[1];
+						Trackers.row(kv, "Reward: " + ((VisitorOffer.Line) r[0]).name(), Double.isNaN(v) ? "—" : Trackers.num(display, v), Ui.GREEN);
+					}
+				},
+				"cost", () -> Trackers.row(kv, "Cost to buy", Trackers.num(display, fCost) + (fUnpriced ? " + unpriced" : ""), Ui.GOLD),
+				"copper", () -> {
+					if (fo.copper() > 0) Trackers.row(kv, "Copper", Trackers.num(display, fo.copper()), Ui.ORANGE);
+				},
+				"per_copper", () -> {
+					if (fo.copper() <= 0) return;
+					double per = Math.max(0, fCost - fRewards) / fo.copper();
+					int col = get(goodBelow) <= 0 ? Ui.AQUA : per <= get(goodBelow) ? Ui.GREEN : Ui.RED;
+					Trackers.row(kv, "Coins per copper", Trackers.num(display, per), col);
+				}));
 		c.add(kv);
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
 		int room = a.fatesofa$leftPos() - 8;

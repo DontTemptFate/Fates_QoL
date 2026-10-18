@@ -19,7 +19,8 @@ public final class FishingTracker {
 	}
 
 	static final Pattern DOUBLE_HOOK = Pattern.compile("^It's a Double Hook!.*");
-	static final Pattern TROPHY = Pattern.compile("^TROPHY FISH! You caught an? (?<name>.+?) (?<tier>BRONZE|SILVER|GOLD|DIAMOND)\\.?$");
+	public static final Pattern TROPHY_PATTERN = Pattern.compile("^TROPHY FISH! You caught an? (?<name>.+?) (?<tier>BRONZE|SILVER|GOLD|DIAMOND)\\.?$");
+	static final Pattern TROPHY = TROPHY_PATTERN;
 
 	private final Map<String, Creature> byMessage = new HashMap<>();
 	private final Map<String, Integer> creatures = new LinkedHashMap<>();
@@ -74,6 +75,12 @@ public final class FishingTracker {
 		doubleHook = false;
 		if (!c.rarity().equals("COMMON") && !c.rarity().equals("UNCOMMON")) lastRare = c;
 		return c;
+	}
+
+	/** The rarity of a creature by name (from the loaded data), or null. */
+	public synchronized String rarityOf(String name) {
+		for (Creature c : byMessage.values()) if (c.name().equals(name)) return c.rarity();
+		return null;
 	}
 
 	public synchronized Map<String, Integer> creatures() {

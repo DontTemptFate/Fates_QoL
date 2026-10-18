@@ -35,6 +35,10 @@ public final class ContainerValue extends Feature {
 	final Setting<String> where = setting(Setting.choice("chestvalue.where", "Show in", "storage", List.of("storage", "every_window"))
 			.help("\"Storage\": chests, backpacks, ender chest, sacks, minions, dungeon reward chests. \"Every window\": any menu."));
 	final Setting<Integer> minK = setting(Setting.integer("chestvalue.min", "Ignore items worth less than (k coins)", 0, 0, 10_000));
+	final io.github.donttemptfate.fatesofa.core.Display display = new io.github.donttemptfate.fatesofa.core.Display(this, "chestvalue", 0xFFFF55FF, io.github.donttemptfate.fatesofa.core.Display.lines("total", "Total value", "items", "Most valuable items", "count", "How many items were valued"),
+			List.of("total", "items"));
+	final Setting<Integer> nameLength = setting(Setting.integer("chestvalue.nameLength", "Longest item name (letters)", 22, 10, 40).group("Display").advanced());
+	final Setting<Boolean> stackCounts = setting(Setting.bool("chestvalue.counts", "Show stack sizes (3×)", true).group("Display").advanced());
 
 	public ContainerValue() {
 		super("chest_value", "Chest value", "Shows what a chest, backpack or ender chest page is worth, with its most valuable items.",
@@ -85,15 +89,21 @@ public final class ContainerValue extends Feature {
 		if (vals.isEmpty()) return null;
 		double total = Valuer.total(vals);
 		List<Valuer.Valued> top = Valuer.top(vals, get(topN));
-		Card c = new Card(0.88f, 90, 170);
-		c.add(new Card.Line(List.of(Card.seg("VALUE", Ui.Role.LABEL, Ui.accent())), List.of(Card.seg("TOP " + top.size(), Ui.Role.LABEL, Ui.GRAY))));
-		c.add(new Card.Hero(List.of(Card.seg(Fmt.shortNum(total), Ui.Role.HERO_S, Ui.GOLD)), null, 0, null));
-		Card.KeyValues kv = new Card.KeyValues(1);
-		for (Valuer.Valued v : top) {
-			String name = v.name().length() > 22 ? v.name().substring(0, 21) + "…" : v.name();
-			kv.row(Card.seg((v.count() > 1 ? v.count() + "× " : "") + name, Ui.Role.SMALL, Ui.WHITE), Card.seg(Fmt.shortNum(v.total()), Ui.Role.SMALL, Ui.GOLD));
-		}
-		c.add(kv);
+		Card c = new Card(display.alpha(), 90, 200);
+		c.add(new Card.Line(List.of(Card.seg("VALUE", Ui.Role.LABEL, display.accent(now))), display.shows("items") ? List.of(Card.seg("TOP " + top.size(), Ui.Role.LABEL, Ui.GRAY)) : List.of()));
+		int len = get(nameLength);
+		display.each(java.util.Map.of(
+				"total", () -> c.add(new Card.Hero(List.of(Card.seg(Trackers.num(display, total), Ui.Role.HERO_S, Ui.GOLD)), null, 0, null)),
+				"items", () -> {
+					Card.KeyValues kv = new Card.KeyValues(1);
+					for (Valuer.Valued v : top) {
+						String name = v.name().length() > len ? v.name().substring(0, len - 1) + "…" : v.name();
+						kv.row(Card.seg((v.count() > 1 && on(stackCounts) ? v.count() + "× " : "") + name, Ui.Role.SMALL, Ui.WHITE),
+								Card.seg(Trackers.num(display, v.total()), Ui.Role.SMALL, Ui.GOLD));
+					}
+					c.add(kv);
+				},
+				"count", () -> c.add(Card.Line.of(Card.seg(vals.size() + " items valued", Ui.Role.SMALL, Ui.GRAY)))));
 		return c;
 	}
 

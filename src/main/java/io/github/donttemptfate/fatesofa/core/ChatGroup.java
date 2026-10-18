@@ -16,7 +16,7 @@ public final class ChatGroup {
 
 	public ChatGroup(Feature f, String prefix, String label, String group, String def) {
 		this.f = f;
-		action = f.setting(Setting.choice(prefix, label, def, ACTIONS).group(group)
+		action = f.setting(Setting.choice(prefix, label, def, ACTIONS).group(group).keywords("hide spam filter fold")
 				.labels(Map.of("show", "Show", "hide", "Hide", "fold", "Fold repeats")));
 		sound = f.setting(Setting.sound(prefix + ".sound", label + ": sound", "").group(group).advanced());
 	}

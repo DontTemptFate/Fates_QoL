@@ -24,7 +24,8 @@ public final class LocationHud extends Feature {
 		all.put("profile", "Profile type");
 		all.put("area", "Area");
 		all.put("server", "Server");
-		display = new io.github.donttemptfate.fatesofa.core.Display(this, "location", Ui.AQUA, all, java.util.List.of("island", "profile", "area", "server"));
+		display = new io.github.donttemptfate.fatesofa.core.Display(this, "location", io.github.donttemptfate.fatesofa.core.Display.GROUP, Ui.AQUA, all,
+				java.util.List.of("island", "profile", "area", "server"), false);
 	}
 
 	@Override

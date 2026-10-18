@@ -23,6 +23,13 @@ import java.util.List;
 
 /** Bingo: remembers your card when you open it and keeps the goals still to do on the HUD. */
 public final class BingoFeature extends Feature {
+	final io.github.donttemptfate.fatesofa.core.Display display = new io.github.donttemptfate.fatesofa.core.Display(this, "bingo", io.github.donttemptfate.fatesofa.core.Display.GROUP, 0xFFFF55FF, null, null, false);
+	final io.github.donttemptfate.fatesofa.config.Setting<Integer> shown = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.integer("bingo.shown", "Goals listed", 12, 1, 25).group("Display"));
+	final io.github.donttemptfate.fatesofa.config.Setting<Boolean> community = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.bool("bingo.community", "Include community goals", true).group("Display"));
+	final io.github.donttemptfate.fatesofa.config.Setting<Boolean> anyProfile = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.bool("bingo.anyProfile", "Show on non-Bingo profiles too", false).group("Display").advanced());
 	private final List<String> open = new ArrayList<>();
 	private int done;
 	private int tick;
@@ -38,7 +45,7 @@ public final class BingoFeature extends Feature {
 			if (mc.gui.screen() instanceof AbstractContainerScreen<?> s && Strip.clean(s.getTitle().getString()).equals("Bingo Card")) read(s);
 		}));
 		Hud.register(new HudElement("bingo", "Bingo card", this, HudPos.at(Anchor.LEFT, 4, -60), 20, this::card, this::sample,
-				() -> Ofa.get().state.profileType() == ProfileType.BINGO && !open.isEmpty()));
+				() -> (Ofa.get().state.profileType() == ProfileType.BINGO || on(anyProfile)) && !open.isEmpty()).display(display));
 	}
 
 	void read(AbstractContainerScreen<?> s) {
@@ -49,7 +56,7 @@ public final class BingoFeature extends Feature {
 			ItemStack st = sl.getItem();
 			if (st.isEmpty()) continue;
 			List<String> lore = Items.lorePlain(st);
-			boolean isGoal = lore.stream().anyMatch(l -> l.contains("Personal Goal") || l.contains("Community Goal"));
+			boolean isGoal = lore.stream().anyMatch(l -> l.contains("Personal Goal") || (on(community) && l.contains("Community Goal")));
 			if (!isGoal) continue;
 			boolean finished = lore.stream().anyMatch(l -> l.equals("GOAL REACHED") || l.contains("COMPLETE"));
 			if (finished) complete++;
@@ -64,17 +71,18 @@ public final class BingoFeature extends Feature {
 	}
 
 	Card card() {
-		Card c = Trackers.card("BINGO", done + " DONE");
+		Card c = Trackers.card(display, "BINGO", done + " DONE");
 		Card.KeyValues kv = Trackers.rows();
 		synchronized (open) {
-			for (String g : open) kv.row(Card.seg("• " + g, Ui.Role.SMALL, Ui.WHITE));
+			for (int i = 0; i < Math.min(get(shown), open.size()); i++) kv.row(Card.seg("• " + open.get(i), Ui.Role.SMALL, Ui.WHITE));
+			if (open.size() > get(shown)) kv.row(Card.seg("+" + (open.size() - get(shown)) + " more", Ui.Role.SMALL, Ui.GRAY));
 		}
 		c.add(kv);
 		return c;
 	}
 
 	Card sample() {
-		Card c = Trackers.card("BINGO", "11 DONE");
+		Card c = Trackers.card(display, "BINGO", "11 DONE");
 		Card.KeyValues kv = Trackers.rows();
 		kv.row(Card.seg("• Obtain a Sea Emperor kill", Ui.Role.SMALL, Ui.WHITE));
 		kv.row(Card.seg("• Reach Combat XV", Ui.Role.SMALL, Ui.WHITE));

@@ -39,6 +39,7 @@ public final class Alert {
 	}
 
 	private final Feature f;
+	public final Setting<Boolean> on;
 	public final Setting<Boolean> showTitle;
 	public final Setting<String> title;
 	public final Setting<String> subtitle;
@@ -51,7 +52,14 @@ public final class Alert {
 	private long lastAt = Long.MIN_VALUE / 2;
 
 	public Alert(Feature f, String prefix, String group, String titleDef, String subtitleDef, int colorDef, String soundDef, String... placeholders) {
+		this(f, prefix, group, true, titleDef, subtitleDef, colorDef, soundDef, placeholders);
+	}
+
+	/** {@code defaultOn}: whether this alert is on before the player touches it. */
+	public Alert(Feature f, String prefix, String group, boolean defaultOn, String titleDef, String subtitleDef, int colorDef, String soundDef,
+			String... placeholders) {
 		this.f = f;
+		on = f.setting(Setting.bool(prefix + ".on", group, defaultOn).group(group).help("Switch this alert on or off."));
 		showTitle = f.setting(Setting.bool(prefix + ".title.on", "Title on screen", true).group(group));
 		title = f.setting(Setting.template(prefix + ".title", "Title text", titleDef, placeholders).group(group));
 		subtitle = f.setting(Setting.template(prefix + ".subtitle", "Subtitle text", subtitleDef, placeholders).group(group).advanced());
@@ -66,16 +74,26 @@ public final class Alert {
 
 	/** Shows the alert now unless it's on cooldown or not wanted here. Returns whether it fired. */
 	public boolean fire(Map<String, ?> vars, Island here, long nowMs) {
-		if (f.store() == null || !f.active()) return false;
+		return fire(vars, here, nowMs, -1);
+	}
+
+	/** Like {@link #fire(Map, Island, long)} with the title in {@code rgb} instead of the set colour (-1 = set colour). */
+	public boolean fire(Map<String, ?> vars, Island here, long nowMs, int rgb) {
+		if (f.store() == null || !f.active() || !f.on(on)) return false;
 		if (!Values.allows(f.get(onlyOn), here)) return false;
 		if (nowMs - lastAt < f.get(cooldown) * 1000L) return false;
 		lastAt = nowMs;
 		Sink s = sink;
-		if (f.on(showTitle)) s.title(Values.fill(f.get(title), vars), Values.fill(f.get(subtitle), vars), f.get(color) & 0xFFFFFF);
+		if (f.on(showTitle)) s.title(Values.fill(f.get(title), vars), Values.fill(f.get(subtitle), vars), rgb >= 0 ? rgb : f.get(color) & 0xFFFFFF);
 		Values.Sound snd = Values.sound(f.get(sound));
 		if (!snd.silent()) s.sound(snd);
 		if (f.on(chat)) s.chat(Values.fill(f.get(chatText), vars));
 		return true;
+	}
+
+	/** On (and its feature active)? For features that should skip work when nobody wants the alert. */
+	public boolean wanted() {
+		return f.store() != null && f.active() && f.on(on);
 	}
 
 	public List<String> placeholders() {

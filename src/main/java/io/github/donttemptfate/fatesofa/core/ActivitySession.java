@@ -10,7 +10,7 @@ import java.util.Map;
  * break, another island) isn't counted, so per-hour rates stay honest.
  */
 public final class ActivitySession {
-	private final long idleLimitMs;
+	private volatile long idleLimitMs;
 	private long activeMs;
 	private long lastEventAt = -1;
 	private long startedAt = -1;
@@ -19,6 +19,11 @@ public final class ActivitySession {
 
 	public ActivitySession(long idleLimitMs) {
 		this.idleLimitMs = idleLimitMs;
+	}
+
+	/** Gaps longer than this stop the clock (from the Tracker bundle's "pause after idle"; 0 = never). */
+	public void idleLimit(long ms) {
+		idleLimitMs = ms <= 0 ? Long.MAX_VALUE / 4 : ms;
 	}
 
 	/** Something happened at {@code now} (a crop broken, a catch, a kill). */

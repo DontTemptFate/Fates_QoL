@@ -43,6 +43,14 @@ public final class QuickCommandsFeature extends Feature {
 	final Setting<Boolean> aliases = setting(Setting.bool("quick.aliases", "Short aliases", true)
 			.help("Type a quick command's alias (e.g. /ch) to send it. New aliases work after you rejoin the server."));
 
+	final Setting<String> placement = setting(Setting.choice("quick.where", "Tabs go", "auto", List.of("auto", "top", "left")).group("Tabs")
+			.labels(Map.of("auto", "Above, or left when there's no room", "top", "Always above (hidden when no room)", "left", "Always down the left side")));
+	final Setting<Boolean> tooltips = setting(Setting.bool("quick.tooltips", "Tooltips on tabs", true).group("Tabs"));
+	final Setting<Boolean> plus = setting(Setting.bool("quick.plus", "Show the + (edit) tab", true).group("Tabs")
+			.help("Off: right-click any tab or use /ofa quick to edit."));
+	final Setting<Integer> tabColour = setting(Setting.color("quick.colour", "Tab colour", 0xF0160622).group("Tabs").advanced());
+	final Setting<Integer> gapPx = setting(Setting.integer("quick.gap", "Space between tabs", 2, 0, 8).group("Tabs").advanced());
+
 	static final int TAB_W = 22, TAB_H = 21;
 	private List<QuickCommands.Entry> entries = QuickCommands.defaults();
 	private final Map<String, ItemStack> icons = new HashMap<>();
@@ -145,12 +153,15 @@ public final class QuickCommandsFeature extends Feature {
 	List<int[]> layout(AbstractContainerScreen<?> s) {
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
 		int top = a.fatesofa$topPos(), left = a.fatesofa$leftPos();
-		boolean above = top >= TAB_H + 2;
+		String where = store() == null ? "auto" : get(placement);
+		boolean above = !where.equals("left") && top >= TAB_H + 2;
+		if (where.equals("top") && !above) return null;
 		if (!above && left < TAB_W + 2) return null;
+		int gap = store() == null ? 2 : get(gapPx);
 		List<int[]> out = new ArrayList<>();
 		int pos = above ? left + 3 : top + 3;
 		int max = above ? left + a.fatesofa$imageWidth() - 3 : top + a.fatesofa$imageHeight() - 3;
-		int step = above ? TAB_W + 2 : TAB_H + 2, size = above ? TAB_W : TAB_H;
+		int step = above ? TAB_W + gap : TAB_H + gap, size = above ? TAB_W : TAB_H;
 		int i = 0;
 		for (QuickCommands.Entry e : entries) {
 			if (e.tab()) {
@@ -160,7 +171,7 @@ public final class QuickCommandsFeature extends Feature {
 			}
 			i++;
 		}
-		out.add(above ? new int[] {pos, top - TAB_H, -1, 0} : new int[] {left - TAB_W, pos, -1, 1});
+		if (store() == null || on(plus) || out.isEmpty()) out.add(above ? new int[] {pos, top - TAB_H, -1, 0} : new int[] {left - TAB_W, pos, -1, 1});
 		return out;
 	}
 
@@ -187,7 +198,8 @@ public final class QuickCommandsFeature extends Feature {
 			boolean side = tb[3] == 1;
 			int lift = over ? 2 : 0;
 			int x = tb[0] - (side ? lift : 0), y = tb[1] - (side ? 0 : lift), w = TAB_W + (side ? lift : 0), h = TAB_H + (side ? 0 : lift);
-			g.fill(x, y, x + w, y + h, over ? 0xF02A0D46 : 0xF0160622);
+			int base = get(tabColour);
+			g.fill(x, y, x + w, y + h, over ? lighter(base) : base);
 			// frame on three sides (the window is the fourth)
 			g.fill(x, y, x + w, y + 1, t.outer());
 			g.fill(x, y, x + 1, y + h, t.outer());
@@ -206,7 +218,7 @@ public final class QuickCommandsFeature extends Feature {
 				hovered = tb;
 			}
 		}
-		if (hovered != null) {
+		if (hovered != null && on(tooltips)) {
 			List<Component> lines = new ArrayList<>();
 			if (hovered[2] < 0) {
 				lines.add(Component.literal("Quick buttons").withStyle(ChatFormatting.WHITE));
@@ -226,6 +238,12 @@ public final class QuickCommandsFeature extends Feature {
 			}
 			g.setComponentTooltipForNextFrame(Minecraft.getInstance().font, lines, mx, my);
 		}
+	}
+
+	/** The hovered tab: the same colour, a little lighter. */
+	static int lighter(int argb) {
+		int r = Math.min(255, ((argb >> 16) & 0xFF) + 20), gg = Math.min(255, ((argb >> 8) & 0xFF) + 7), b = Math.min(255, (argb & 0xFF) + 36);
+		return (argb & 0xFF000000) | r << 16 | gg << 8 | b;
 	}
 
 	/** True when the click hit a tab (the window doesn't get it). Public for the in-game test. */

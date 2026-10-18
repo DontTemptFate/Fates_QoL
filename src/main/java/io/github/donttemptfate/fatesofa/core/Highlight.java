@@ -18,6 +18,7 @@ public final class Highlight {
 	public final Setting<Integer> maxDistance;
 	public final Setting<Boolean> label;
 	public final Setting<Double> labelScale;
+	public final Setting<Integer> fillOpacity;
 
 	public Highlight(Feature f, String prefix, int colorDefault) {
 		this.f = f;
@@ -28,6 +29,29 @@ public final class Highlight {
 		maxDistance = f.setting(Setting.integer(prefix + ".maxDistance", "Max distance (blocks)", 64, 8, 256).group(GROUP).advanced());
 		label = f.setting(Setting.bool(prefix + ".label", "Show a label", true).group(GROUP));
 		labelScale = f.setting(Setting.decimal(prefix + ".labelScale", "Label size", 1.0, 0.5, 3.0).group(GROUP).advanced());
+		fillOpacity = f.setting(Setting.integer(prefix + ".fillOpacity", "Fill opacity %", 25, 5, 100).group(GROUP).advanced());
+	}
+
+	public float width() {
+		return f.store() == null ? width.def : f.get(width);
+	}
+
+	public boolean throughWalls() {
+		return f.store() == null || f.on(throughWalls);
+	}
+
+	public boolean label() {
+		return f.store() == null || f.on(label);
+	}
+
+	public float labelScale() {
+		return f.store() == null ? 1f : f.get(labelScale).floatValue();
+	}
+
+	/** The fill colour for {@code argb}: same colour at the fill opacity. */
+	public int fill(int argb) {
+		int pct = f.store() == null ? fillOpacity.def : f.get(fillOpacity);
+		return (argb & 0x00FFFFFF) | (Math.round(pct * 2.55f) << 24);
 	}
 
 	public int color(long nowMs) {

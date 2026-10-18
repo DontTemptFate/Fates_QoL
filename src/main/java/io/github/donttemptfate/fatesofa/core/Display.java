@@ -25,13 +25,24 @@ public final class Display {
 
 	/** {@code prefix}: key prefix ("location"); {@code allLines}/{@code shown}: null for single-line cards. */
 	public Display(Feature f, String prefix, int accentDefault, Map<String, String> allLines, List<String> shown) {
+		this(f, prefix, GROUP, accentDefault, allLines, shown);
+	}
+
+	/** With a group name, for features that have more than one card ("Map card", "Score card"). */
+	public Display(Feature f, String prefix, String group, int accentDefault, Map<String, String> allLines, List<String> shown) {
+		this(f, prefix, group, accentDefault, allLines, shown, true);
+	}
+
+	/** {@code numbers}: false for cards without numbers, so no number-style option appears. */
+	public Display(Feature f, String prefix, String group, int accentDefault, Map<String, String> allLines, List<String> shown, boolean numbers) {
 		this.f = f;
+		final String GROUP = group;
 		showOn = f.setting(Setting.islands(prefix + ".show", "Show on", "").group(GROUP)
 				.help("Islands where this card shows. Nothing picked = everywhere."));
 		hideInMenus = f.setting(Setting.bool(prefix + ".hideInMenus", "Hide while a menu is open", false).group(GROUP).advanced());
 		background = f.setting(Setting.integer(prefix + ".background", "Background opacity %", 80, 0, 100).group(GROUP));
 		accent = f.setting(Setting.color(prefix + ".accent", "Accent colour", accentDefault).rainbow().group(GROUP));
-		compact = f.setting(Setting.bool(prefix + ".compact", "Short numbers (1.2M)", true).group(GROUP).advanced());
+		compact = !numbers ? null : f.setting(Setting.bool(prefix + ".compact", "Short numbers (1.2M)", true).group(GROUP).advanced());
 		lines = allLines == null ? null : f.setting(Setting.lines(prefix + ".lines", "Lines and order", allLines, shown).group(GROUP)
 				.help("Tick the lines to show; use the arrows to change their order."));
 	}
@@ -54,7 +65,7 @@ public final class Display {
 	}
 
 	public boolean compact() {
-		return f.store() == null || f.on(compact);
+		return compact == null || f.store() == null || f.on(compact);
 	}
 
 	/** The lines to show, in order (every default line for single-line cards). */
@@ -65,5 +76,24 @@ public final class Display {
 
 	public boolean shows(String line) {
 		return lines == null || lines().contains(line);
+	}
+
+	/** Runs each shown line's part in the player's order (parts not shown are skipped). */
+	public void each(Map<String, Runnable> parts) {
+		if (lines == null) {
+			parts.values().forEach(Runnable::run);
+			return;
+		}
+		for (String id : lines()) {
+			Runnable r = parts.get(id);
+			if (r != null) r.run();
+		}
+	}
+
+	/** Every line id → name, in default order (for building {@link #lines} maps in one line). */
+	public static Map<String, String> lines(String... idName) {
+		Map<String, String> m = new java.util.LinkedHashMap<>();
+		for (int i = 0; i + 1 < idName.length; i += 2) m.put(idName[i], idName[i + 1]);
+		return m;
 	}
 }

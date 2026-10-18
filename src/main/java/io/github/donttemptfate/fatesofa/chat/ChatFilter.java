@@ -75,6 +75,22 @@ public final class ChatFilter {
 		this.groupOn = on;
 	}
 
+	/**
+	 * Per-group choice ("show", "hide", "fold"; null = the group's own action when switched on). Set by
+	 * the chat settings; takes over from {@link #groups} for groups it answers.
+	 */
+	private volatile java.util.function.Function<String, String> groupMode = g -> null;
+
+	public void groupModes(java.util.function.Function<String, String> mode) {
+		this.groupMode = mode;
+	}
+
+	/** The group's own action ("hide" or "fold") from the first rule of that group. */
+	public static String defaultMode(String group) {
+		for (ChatRule r : DEFAULTS) if (r.group().equals(group)) return r.action() == ChatRule.Action.HIDE ? "hide" : "fold";
+		return "hide";
+	}
+
 	/** Also fold any message repeated within a minute, not only the listed groups. */
 	public void compactAll(boolean on) {
 		this.compactAll = on;
@@ -92,8 +108,11 @@ public final class ChatFilter {
 	public synchronized Decision decide(String plain, long now) {
 		if (plain == null || plain.isBlank()) return Decision.SHOW;
 		for (ChatRule r : rules) {
-			if (!groupOn.test(r.group()) || !r.matches(plain)) continue;
-			if (r.action() == ChatRule.Action.HIDE) return new Decision(Result.HIDE, 1, r.group());
+			String mode = groupMode.apply(r.group());
+			if (mode == null && !groupOn.test(r.group())) continue;
+			if (!r.matches(plain)) continue;
+			if ("show".equals(mode)) return new Decision(Result.SHOW, 1, r.group());
+			if ("hide".equals(mode) || (mode == null && r.action() == ChatRule.Action.HIDE)) return new Decision(Result.HIDE, 1, r.group());
 			return compact(plain, now, r.group());
 		}
 		if (compactAll) {

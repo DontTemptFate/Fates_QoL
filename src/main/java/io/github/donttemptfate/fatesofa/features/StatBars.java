@@ -17,11 +17,27 @@ import java.util.List;
 
 /** Health and mana as clear bars with numbers (from the action bar), placed wherever you like. */
 public final class StatBars extends Feature {
+	final io.github.donttemptfate.fatesofa.core.Display display = new io.github.donttemptfate.fatesofa.core.Display(this, "statbars", io.github.donttemptfate.fatesofa.core.Display.GROUP, 0xFFFF5555,
+			io.github.donttemptfate.fatesofa.core.Display.lines("health", "Health", "defense", "Defense", "mana", "Mana", "overflow", "Overflow mana"),
+			List.of("health", "defense", "mana", "overflow"));
+	final io.github.donttemptfate.fatesofa.config.Setting<Integer> width = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.integer("statbars.width", "Bar width", 182, 80, 260).group("Display"));
+	final io.github.donttemptfate.fatesofa.config.Setting<Integer> healthColour = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.color("statbars.healthColour", "Health colour", 0xFFFF5555).group("Display"));
+	final io.github.donttemptfate.fatesofa.config.Setting<Integer> manaColour = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.color("statbars.manaColour", "Mana colour", 0xFF55FFFF).group("Display"));
+	final io.github.donttemptfate.fatesofa.config.Setting<Boolean> numbers = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.bool("statbars.numbers", "Show the numbers", true).group("Display"));
+	final io.github.donttemptfate.fatesofa.core.Alert lowHealth = new io.github.donttemptfate.fatesofa.core.Alert(this, "statbars.lowAlert", "Low health alert", false,
+			"LOW HEALTH", "{health} ❤", 0xFFFF5555, "minecraft:entity.arrow.hit_player|1|0.7", "health");
+	final io.github.donttemptfate.fatesofa.config.Setting<Integer> lowPercent = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.integer("statbars.lowAlert.percent", "Below (% of max health)", 25, 5, 90).group("Low health alert"));
 	private volatile ActionBar last;
 	private volatile long lastAt;
+	private boolean low;
 
 	public StatBars() {
-		super("stat_bars", "Health & mana bars", "Health (with defense) and mana as bars with numbers, from SkyBlock's action bar.",
+		super("stat_bars", "Health & mana bars", "Health (with defense) and mana as bars with numbers, from SkyBlock's action bar, with an optional low-health alert.",
 				Category.COMBAT, false, Risk.SAFE);
 	}
 
@@ -29,14 +45,18 @@ public final class StatBars extends Feature {
 	public void init() {
 		ChatBus.onActionBar(m -> guard(() -> {
 			ActionBar a = ActionBar.parse(m.plain());
-			if (a != null) {
-				last = a;
-				lastAt = m.atMs();
+			if (a == null) return;
+			last = a;
+			lastAt = m.atMs();
+			if (!Double.isNaN(a.health()) && a.maxHealth() > 0) {
+				boolean nowLow = a.health() / a.maxHealth() * 100 < get(lowPercent);
+				if (nowLow && !low) lowHealth.fire(java.util.Map.of("health", Fmt.shortNum(a.health())), Ofa.get().state.island(), m.atMs());
+				low = nowLow;
 			}
 		}));
 		Hud.register(new HudElement("stat_bars", "Health & mana", this, HudPos.at(Anchor.BOTTOM, 0, -56), 50, this::card,
 				() -> build(new ActionBar(1234, 1500, 820, 300, 450, 0)),
-				() -> Ofa.get().state.onSkyBlock() && last != null && System.currentTimeMillis() - lastAt < 5000));
+				() -> Ofa.get().state.onSkyBlock() && last != null && System.currentTimeMillis() - lastAt < 5000).display(display));
 	}
 
 	Card card() {
@@ -44,18 +64,27 @@ public final class StatBars extends Feature {
 		return a == null ? null : build(a);
 	}
 
-	static Card build(ActionBar a) {
-		Card c = new Card(0.70f, 140, 182);
-		if (!Double.isNaN(a.health())) {
-			c.add(new Card.Line(List.of(Card.seg(Fmt.shortNum(a.health()) + " / " + Fmt.shortNum(a.maxHealth()) + " ❤", Ui.Role.SMALL, Ui.RED)),
-					Double.isNaN(a.defense()) ? List.of() : List.of(Card.seg(Fmt.shortNum(a.defense()) + " ❈", Ui.Role.SMALL, Ui.GREEN))));
-			c.add(new Card.Bar(a.maxHealth() > 0 ? a.health() / a.maxHealth() : 0, a.health() > a.maxHealth() ? Ui.GOLD : Ui.RED));
-		}
-		if (!Double.isNaN(a.mana())) {
-			c.add(Card.Line.of(Card.seg(Fmt.shortNum(a.mana()) + " / " + Fmt.shortNum(a.maxMana()) + " ✎" + (a.overflow() > 0 ? "  +" + Fmt.shortNum(a.overflow()) + " ʬ" : ""),
-					Ui.Role.SMALL, Ui.AQUA)));
-			c.add(new Card.Bar(a.maxMana() > 0 ? a.mana() / a.maxMana() : 0, Ui.AQUA));
-		}
+	Card build(ActionBar a) {
+		int w = store() == null ? 182 : get(width);
+		Card c = new Card(display.alpha(), Math.min(140, w), w);
+		boolean nums = store() == null || on(numbers);
+		int hc = store() == null ? Ui.RED : get(healthColour) | 0xFF000000;
+		int mc = store() == null ? Ui.AQUA : get(manaColour) | 0xFF000000;
+		display.each(java.util.Map.of(
+				"health", () -> {
+					if (Double.isNaN(a.health())) return;
+					boolean def = display.shows("defense") && !Double.isNaN(a.defense());
+					if (nums || def) c.add(new Card.Line(nums ? List.of(Card.seg(Trackers.num(display, a.health()) + " / " + Trackers.num(display, a.maxHealth()) + " ❤", Ui.Role.SMALL, hc)) : List.of(),
+							def ? List.of(Card.seg(Trackers.num(display, a.defense()) + " ❈", Ui.Role.SMALL, Ui.GREEN)) : List.of()));
+					c.add(new Card.Bar(a.maxHealth() > 0 ? a.health() / a.maxHealth() : 0, a.health() > a.maxHealth() ? Ui.GOLD : hc));
+				},
+				"mana", () -> {
+					if (Double.isNaN(a.mana())) return;
+					boolean ov = display.shows("overflow") && a.overflow() > 0;
+					if (nums) c.add(Card.Line.of(Card.seg(Trackers.num(display, a.mana()) + " / " + Trackers.num(display, a.maxMana()) + " ✎" + (ov ? "  +" + Trackers.num(display, a.overflow()) + " ʬ" : ""),
+							Ui.Role.SMALL, mc)));
+					c.add(new Card.Bar(a.maxMana() > 0 ? a.mana() / a.maxMana() : 0, mc));
+				}));
 		return c;
 	}
 }

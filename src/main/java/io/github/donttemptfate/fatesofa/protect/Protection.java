@@ -50,18 +50,23 @@ public final class Protection {
 	/** A second click sooner than this is an accidental double-click, not a confirmation. */
 	public volatile long confirmMinGapMs = 300;
 
+	/** What a lock stops (the player can allow some, e.g. trading their locked items). */
+	public volatile java.util.Set<Action> lockStops = java.util.EnumSet.allOf(Action.class);
+	/** What a valuable item asks a second click for. */
+	public volatile java.util.Set<Action> confirmFor = java.util.EnumSet.of(Action.NPC_SELL, Action.SALVAGE, Action.DROP);
+
 	private String pendingConfirm;
 	private long pendingAt;
 
 	public synchronized Decision decide(Action action, Facts f, long now) {
 		if (!enabled || f == null) return Decision.ALLOW;
 		boolean locked = (f.uuid() != null && lockedUuids.contains(f.uuid())) || (f.uuid() == null && f.key() != null && lockedKeys.contains(f.key()));
-		if (locked && action != Action.TRADE) {
-			return new Decision(Verdict.BLOCK, label(f) + " is locked — unlock it to " + action.verb + " it");
+		if (locked && lockStops.contains(action)) {
+			if (action != Action.TRADE) return new Decision(Verdict.BLOCK, label(f) + " is locked — unlock it to " + action.verb + " it");
+			return new Decision(Verdict.BLOCK, label(f) + " is locked");
 		}
-		if (locked) return new Decision(Verdict.BLOCK, label(f) + " is locked");
 		boolean valuable = confirmValue > 0 && f.value() >= confirmValue;
-		if (valuable && (action == Action.NPC_SELL || action == Action.SALVAGE || action == Action.DROP)) {
+		if (valuable && confirmFor.contains(action)) {
 			String token = action + "|" + (f.uuid() != null ? f.uuid() : f.key()) + "|" + f.slot();
 			if (token.equals(pendingConfirm) && now - pendingAt <= confirmWindowMs) {
 				if (now - pendingAt < confirmMinGapMs) return new Decision(Verdict.CONFIRM, label(f) + " is valuable — click again (a moment apart) to " + action.verb + " it");

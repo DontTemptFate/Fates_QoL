@@ -15,14 +15,18 @@ import net.minecraft.network.chat.MutableComponent;
 
 /** Value lines under SkyBlock item tooltips: market value, stack value, NPC price, bazaar buy/sell. */
 public final class ValueTooltip extends Feature {
-	final Setting<Boolean> stack = setting(Setting.bool("valuetip.stack", "Show the whole stack's value", true));
-	final Setting<Boolean> npc = setting(Setting.bool("valuetip.npc", "Show the NPC sell price", true));
-	final Setting<Boolean> bazaar = setting(Setting.bool("valuetip.bazaar", "Show bazaar buy / sell", true));
-	final Setting<Boolean> debugKey = setting(Setting.bool("valuetip.key", "Show the item's id", false)
-			.help("Adds the SkyBlock id under the tooltip (handy for reporting problems)."));
+	final Setting<String> lines = setting(Setting.lines("valuetip.lines", "Lines and order", io.github.donttemptfate.fatesofa.core.Display.lines(
+			"value", "Market value", "bazaar", "Bazaar buy / sell", "stack", "Whole stack's value", "auction", "Auction details (lowest BIN, median, sales/day)",
+			"npc", "NPC sell price", "key", "The item's id"),
+			java.util.List.of("value", "bazaar", "stack", "npc")).help("Tick the lines to show under tooltips; arrows change the order."));
+	final Setting<Boolean> shift = setting(Setting.bool("valuetip.shift", "Only while Shift is held", false));
+	final Setting<Boolean> shortNumbers = setting(Setting.bool("valuetip.short", "Short numbers (1.2M)", true).advanced());
+	final Setting<Integer> minValue = setting(Setting.integer("valuetip.min", "Hide for items worth less than (coins)", 0, 0, 100_000).advanced()
+			.help("Keeps cheap items' tooltips short. 0 = always show."));
+	final Setting<Boolean> blank = setting(Setting.bool("valuetip.blank", "Blank line before the prices", false).advanced());
 
 	public ValueTooltip() {
-		super("value_tooltip", "Price lines in tooltips", "Market value, NPC price and bazaar prices under SkyBlock item tooltips.",
+		super("value_tooltip", "Price lines in tooltips", "Market value, NPC price, bazaar and auction prices under SkyBlock item tooltips.",
 				Category.ITEMS, true, Risk.SAFE);
 	}
 
@@ -31,29 +35,58 @@ public final class ValueTooltip extends Feature {
 		return java.util.Set.of("price", "lbin", "worth", "value", "npc");
 	}
 
+	String n(double v) {
+		return on(shortNumbers) ? Fmt.shortNum(v) : Fmt.full(Math.round(v));
+	}
+
 	@Override
 	public void init() {
-		ItemTooltipCallback.EVENT.register((st, ctx, flag, lines) -> guard(() -> {
+		ItemTooltipCallback.EVENT.register((st, ctx, flag, out) -> guard(() -> {
+			if (on(shift) && !net.minecraft.client.Minecraft.getInstance().hasShiftDown()) return;
 			Ofa o = Ofa.get();
 			String key = io.github.donttemptfate.fates.common.item.ItemFacts.of(st).key(); // cached per stack: no NBT copy per frame
 			if (key == null) return;
 			long now = System.currentTimeMillis();
-			PriceTables.Bz bz = on(bazaar) ? o.prices.bazaarQuote(key, now) : null;
-			if (bz != null) {
-				lines.add(line("Bazaar buy ", Fmt.shortNum(bz.instantBuy()), " · sell ", Fmt.shortNum(bz.instantSell())));
-				if (on(stack) && st.getCount() > 1) lines.add(line("Stack sells for ", Fmt.shortNum(bz.instantSell() * st.getCount()), null, null));
-			} else {
-				Price p = o.prices.value(key, now);
-				if (p != null && p.kind() != Price.Kind.NPC) {
-					MutableComponent l = line("Value ", Fmt.shortNum(p.value()), null, null);
-					l.append(Component.literal(" (" + p.kind().label + ")").withStyle(ChatFormatting.DARK_GRAY));
-					lines.add(l);
-					if (on(stack) && st.getCount() > 1) lines.add(line("Stack ", Fmt.shortNum(p.value() * st.getCount()), null, null));
+			PriceTables.Bz bz = o.prices.bazaarQuote(key, now);
+			Price p = o.prices.value(key, now);
+			if (get(minValue) > 0 && (p == null || p.value() < get(minValue))) return;
+			java.util.List<Component> add = new java.util.ArrayList<>();
+			int count = st.getCount();
+			for (String id : io.github.donttemptfate.fatesofa.config.Values.lines(get(lines), lines.options)) {
+				switch (id) {
+					case "value" -> {
+						if (bz == null && p != null && p.kind() != Price.Kind.NPC) {
+							MutableComponent l = line("Value ", n(p.value()), null, null);
+							l.append(Component.literal(" (" + p.kind().label + ")").withStyle(ChatFormatting.DARK_GRAY));
+							add.add(l);
+						}
+					}
+					case "bazaar" -> {
+						if (bz != null) add.add(line("Bazaar buy ", n(bz.instantBuy()), " · sell ", n(bz.instantSell())));
+					}
+					case "stack" -> {
+						if (count > 1 && bz != null) add.add(line("Stack sells for ", n(bz.instantSell() * count), null, null));
+						else if (count > 1 && p != null && p.kind() != Price.Kind.NPC) add.add(line("Stack ", n(p.value() * count), null, null));
+					}
+					case "auction" -> {
+						PriceTables.Ah a = o.prices.ahQuote(key);
+						if (a != null) {
+							add.add(line("Lowest BIN ", n(a.lbin()), " · median ", n(a.median())));
+							if (a.salesPerDay() > 0) add.add(Component.literal("Sells ~" + Fmt.trimmed(a.salesPerDay()) + " a day").withStyle(ChatFormatting.DARK_GRAY));
+						}
+					}
+					case "npc" -> {
+						Double np = o.prices.npcPrice(key);
+						if (np != null && np > 0) add.add(line("NPC sell ", n(np) + (count > 1 ? " (" + n(np * count) + ")" : ""), null, null));
+					}
+					case "key" -> add.add(Component.literal(key).withStyle(ChatFormatting.DARK_GRAY));
+					default -> {
+					}
 				}
 			}
-			Double n = on(npc) ? o.prices.npcPrice(key) : null;
-			if (n != null && n > 0) lines.add(line("NPC sell ", Fmt.shortNum(n) + (st.getCount() > 1 ? " (" + Fmt.shortNum(n * st.getCount()) + ")" : ""), null, null));
-			if (on(debugKey)) lines.add(Component.literal(key).withStyle(ChatFormatting.DARK_GRAY));
+			if (add.isEmpty()) return;
+			if (on(blank)) out.add(Component.empty());
+			out.addAll(add);
 		}));
 	}
 

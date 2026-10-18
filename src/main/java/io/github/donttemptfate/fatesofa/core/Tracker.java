@@ -2,6 +2,8 @@ package io.github.donttemptfate.fatesofa.core;
 
 import io.github.donttemptfate.fatesofa.config.Setting;
 
+import io.github.donttemptfate.fatesofa.state.Island;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -24,6 +26,11 @@ public final class Tracker {
 	public final Setting<Boolean> profit;
 
 	public Tracker(Feature f, String prefix) {
+		this(f, prefix, true);
+	}
+
+	/** {@code coins}: false for trackers without money (mining powder), so no price options appear. */
+	public Tracker(Feature f, String prefix, boolean coins) {
 		this.f = f;
 		reset = f.setting(Setting.choice(prefix + ".reset", "Reset counts", "session", RESETS).group(GROUP)
 				.labels(java.util.Map.of("never", "Never", "session", "Each game session", "daily", "Each day", "island_change", "On island change")));
@@ -31,9 +38,51 @@ public final class Tracker {
 		uptime = f.setting(Setting.bool(prefix + ".uptime", "Show time tracked", true).group(GROUP));
 		idlePause = f.setting(Setting.integer(prefix + ".idlePause", "Pause after idle (s)", 60, 0, 900).group(GROUP).advanced()
 				.help("Stop the clock when nothing happened for this long (0 = never pause)."));
-		price = f.setting(Setting.choice(prefix + ".price", "Value items by", "default", PRICES).group(GROUP).advanced()
+		price = !coins ? null : f.setting(Setting.choice(prefix + ".price", "Value items by", "default", PRICES).group(GROUP).advanced()
 				.labels(java.util.Map.of("default", "OFA default", "bazaar_instant", "Bazaar instant sell", "bazaar_offer", "Bazaar sell offer", "npc", "NPC price")));
-		profit = f.setting(Setting.bool(prefix + ".profit", "Show coin value", true).group(GROUP));
+		profit = !coins ? null : f.setting(Setting.bool(prefix + ".profit", "Show coin value", true).group(GROUP));
+	}
+
+	private long startedAt = -1;
+	private Island lastIsland;
+
+	/**
+	 * Call every second or so: applies "pause after idle" to the session and resets the counts (with
+	 * {@code reset}) when the reset setting says so. Returns true when it reset.
+	 */
+	public boolean maintain(ActivitySession s, Runnable reset, Island here, long nowMs) {
+		if (f.store() == null) return false;
+		s.idleLimit(f.get(idlePause) * 1000L);
+		boolean changed = lastIsland != null && here != null && here != lastIsland;
+		if (here != null) lastIsland = here;
+		if (!s.started()) {
+			startedAt = -1;
+			return false;
+		}
+		if (startedAt < 0) startedAt = nowMs;
+		if (shouldReset(startedAt, nowMs, changed, false, ZoneId.systemDefault())) {
+			reset.run();
+			startedAt = -1;
+			return true;
+		}
+		return false;
+	}
+
+	public boolean showPerHour() {
+		return f.store() == null || f.on(perHour);
+	}
+
+	public boolean showUptime() {
+		return f.store() == null || f.on(uptime);
+	}
+
+	public boolean showProfit() {
+		return profit != null && (f.store() == null || f.on(profit));
+	}
+
+	/** The price mode picked ("default", "bazaar_instant", "bazaar_offer", "npc"). */
+	public String priceMode() {
+		return price == null || f.store() == null ? "default" : f.get(price);
 	}
 
 	String mode() {

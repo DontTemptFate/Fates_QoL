@@ -30,10 +30,19 @@ import java.util.List;
  * player does every click.
  */
 public final class DungeonHelpers extends Feature {
-	final Setting<Boolean> terminals = setting(Setting.bool("helpers.terminals", "F7 terminal highlights", true)
+	final Setting<Boolean> terminals = setting(Setting.bool("helpers.terminals", "F7 terminal highlights", true).group("Terminal highlights")
 			.help("Outlines the slots a terminal asks for. You click them yourself."));
-	final Setting<Boolean> weirdos = setting(Setting.bool("helpers.weirdos", "Three Weirdos answer", true)
+	final Setting<Boolean> weirdos = setting(Setting.bool("helpers.weirdos", "Three Weirdos answer", true).group("Three Weirdos")
 			.help("Says in chat whose chest has the reward."));
+
+	final Setting<Integer> first = setting(Setting.color("helpers.terminals.first", "Click first", 0xFF55FF55).rainbow().group("Terminal highlights"));
+	final Setting<Integer> second = setting(Setting.color("helpers.terminals.second", "Click second", 0xFFFFFF55).group("Terminal highlights"));
+	final Setting<Integer> later = setting(Setting.color("helpers.terminals.later", "Click after that", 0xFFFFAA00).group("Terminal highlights"));
+	final Setting<Integer> thickness = setting(Setting.integer("helpers.terminals.thickness", "Outline thickness", 2, 1, 4).group("Terminal highlights"));
+	final Setting<Integer> count = setting(Setting.integer("helpers.terminals.count", "Slots highlighted ahead", 3, 1, 12).group("Terminal highlights")
+			.help("How many of the next slots to mark (1 = only the next one)."));
+	final Setting<Boolean> fill = setting(Setting.bool("helpers.terminals.fill", "Fill the slot too", false).group("Terminal highlights").advanced());
+	final Setting<Boolean> weirdosTitle = setting(Setting.bool("helpers.weirdos.title", "Also as a title on screen", false).group("Three Weirdos"));
 
 	public DungeonHelpers() {
 		super("dungeon_helpers", "Dungeon puzzle & terminal hints", "Highlights for F7 terminals and the Three Weirdos answer. "
@@ -46,7 +55,9 @@ public final class DungeonHelpers extends Feature {
 		ChatBus.onChat(m -> guard(() -> {
 			if (!on(weirdos) || !o.state.in(Island.DUNGEON)) return;
 			String who = ThreeWeirdos.answer(m.plain());
-			if (who != null) Game.ok("Three Weirdos: the reward is in " + who + "'s chest.");
+			if (who == null) return;
+			Game.ok("Three Weirdos: the reward is in " + who + "'s chest.");
+			if (on(weirdosTitle)) io.github.donttemptfate.fatesofa.game.Alerts.title(who, 0x55FF55, "has the reward");
 		}));
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {
 			if (!(screen instanceof AbstractContainerScreen<?> acs)) return;
@@ -70,11 +81,13 @@ public final class DungeonHelpers extends Feature {
 		List<Integer> hint = TerminalHelper.hint(Strip.clean(s.getTitle().getString()), slots);
 		if (hint.isEmpty()) return;
 		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
-		for (int i = 0; i < hint.size(); i++) {
+		long now = System.currentTimeMillis();
+		for (int i = 0; i < Math.min(hint.size(), get(count)); i++) {
 			Slot sl = s.getMenu().getSlot(hint.get(i));
 			int x = a.fatesofa$leftPos() + sl.x, y = a.fatesofa$topPos() + sl.y;
-			int col = i == 0 ? 0xFF55FF55 : i == 1 ? 0xFFFFFF55 : 0xFFFFAA00;
-			Ui.ring(g, x - 1, y - 1, 18, 18, 2, col);
+			int col = i == 0 ? io.github.donttemptfate.fatesofa.config.Values.color(get(first), on(first.rainbow), now) : (i == 1 ? get(second) : get(later)) | 0xFF000000;
+			if (on(fill)) g.fill(x, y, x + 16, y + 16, (col & 0x00FFFFFF) | 0x50000000);
+			Ui.ring(g, x - 1, y - 1, 18, 18, get(thickness), col);
 		}
 	}
 }

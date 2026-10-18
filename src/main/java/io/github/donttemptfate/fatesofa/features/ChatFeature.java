@@ -16,8 +16,8 @@ import java.util.Set;
 public final class ChatFeature extends Feature {
 	static final Set<String> ON_BY_DEFAULT = Set.of("lobby_joins", "watchdog", "ability_cooldown", "implosion", "blocks_in_way", "guild_exp");
 
-	private final Map<String, Setting<Boolean>> groups = new LinkedHashMap<>();
-	final Setting<Boolean> foldAll = setting(Setting.bool("chat.foldAll", "Fold any repeated message", false)
+	private final Map<String, io.github.donttemptfate.fatesofa.core.ChatGroup> groups = new LinkedHashMap<>();
+	final Setting<Boolean> foldAll = setting(Setting.bool("chat.foldAll", "Fold any repeated message", false).group("Message groups")
 			.help("Any line that repeats within a minute is hidden after the first (not only the groups above)."));
 	final Setting<String> ownRules = setting(Setting.rules("chat.rules", "Your own rules", "")
 			.group("Your own rules")
@@ -33,17 +33,17 @@ public final class ChatFeature extends Feature {
 		super("chat_filter", "Chat cleanup", "Hide chat spam by group (lobby joins, Watchdog, cooldown spam…) and fold repeated lines.",
 				Category.CHAT, true, Risk.SAFE);
 		for (Map.Entry<String, String> e : ChatFilter.GROUPS.entrySet()) {
-			groups.put(e.getKey(), setting(Setting.bool("chat.hide." + e.getKey(), e.getValue(), ON_BY_DEFAULT.contains(e.getKey()))
-					.keywords("hide spam filter")));
+			String def = ON_BY_DEFAULT.contains(e.getKey()) ? ChatFilter.defaultMode(e.getKey()) : "show";
+			groups.put(e.getKey(), new io.github.donttemptfate.fatesofa.core.ChatGroup(this, "chat.group." + e.getKey(), e.getValue(), "Message groups", def));
 		}
 	}
 
 	@Override
 	public void init() {
 		Ofa o = Ofa.get();
-		o.chat.groups(g -> {
-			Setting<Boolean> s = groups.get(g);
-			return s != null && on(s);
+		o.chat.groupModes(g -> {
+			var cg = groups.get(g);
+			return cg == null ? "show" : cg.action();
 		});
 		ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
 			if (overlay) return true;
@@ -72,6 +72,10 @@ public final class ChatFeature extends Feature {
 				}
 				o.chat.compactAll(on(foldAll));
 				ChatFilter.Decision d = o.chat.decide(plain, System.currentTimeMillis());
+				if (d.group() != null && groups.containsKey(d.group())) {
+					var snd = groups.get(d.group()).sound();
+					if (!snd.silent() && d.result() != ChatFilter.Result.COMPACT) io.github.donttemptfate.fatesofa.game.Alerts.play(snd);
+				}
 				if (d.result() == ChatFilter.Result.SHOW) return true;
 				hiddenCount++;
 				// a repeat: shown once more as the latest line, with how many times it came ("×3")

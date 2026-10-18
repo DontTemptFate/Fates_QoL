@@ -404,6 +404,7 @@ public final class SettingsScreen extends Screen {
 			boolean on = cats.contains(f.category) && f.enabled.def;
 			ofa.settings.set(f.enabled, on);
 		}
+		Presets.applyTweaks(name, ofa.settings);
 		ofa.settings.set(General.ONBOARDED, true);
 		setNote("Preset \"" + name + "\" applied.");
 	}

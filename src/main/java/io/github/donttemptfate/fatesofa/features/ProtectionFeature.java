@@ -37,9 +37,22 @@ public final class ProtectionFeature extends Feature {
 
 	final Setting<Integer> confirmMillions = setting(Setting.integer("protect.confirmValue", "Ask before selling items worth (M coins)", 5, 0, 1000)
 			.help("Selling, salvaging or dropping an item worth at least this many million coins needs a second click. 0 = never ask.")
-			.keywords("confirm valuable sell salvage drop"));
-	final Setting<Boolean> showLocks = setting(Setting.bool("protect.showLocks", "Show lock marks on items", true)
+			.keywords("confirm valuable sell salvage drop").group("Valuable items"));
+	final Setting<Boolean> showLocks = setting(Setting.bool("protect.showLocks", "Show lock marks on items", true).group("Lock marks")
 			.help("A red corner on locked items and slots in every inventory."));
+	final Setting<Integer> itemMark = setting(Setting.color("protect.itemMark", "Locked item mark", 0xFFFF5555).group("Lock marks"));
+	final Setting<Integer> slotMark = setting(Setting.color("protect.slotMark", "Locked slot mark", 0xFFFFAA00).group("Lock marks"));
+	final Setting<String> markStyle = setting(Setting.choice("protect.markStyle", "Mark style", "corner", java.util.List.of("corner", "outline", "tint"))
+			.group("Lock marks"));
+	final Setting<String> lockStops = setting(Setting.lines("protect.lockStops", "Locks stop", io.github.donttemptfate.fatesofa.core.Display.lines("DROP", "Dropping", "NPC_SELL", "Selling to an NPC", "SALVAGE", "Salvaging", "TRADE", "Trading", "AUCTION", "Listing on the auction house", "BAZAAR", "Selling on the bazaar"),
+			java.util.List.of("DROP", "NPC_SELL", "SALVAGE", "TRADE", "AUCTION", "BAZAAR")).group("What locks stop")
+			.help("Untick what you want to allow for locked items (e.g. trading). Moving items around is always allowed."));
+	final Setting<String> confirmFor = setting(Setting.lines("protect.confirmFor", "Ask twice before", io.github.donttemptfate.fatesofa.core.Display.lines("DROP", "Dropping", "NPC_SELL", "Selling to an NPC", "SALVAGE", "Salvaging", "TRADE", "Trading", "AUCTION", "Listing on the auction house", "BAZAAR", "Selling on the bazaar"),
+			java.util.List.of("NPC_SELL", "SALVAGE", "DROP")).group("Valuable items"));
+	final Setting<Integer> confirmSeconds = setting(Setting.integer("protect.confirmSeconds", "Time for the second click (s)", 3, 1, 10).group("Valuable items").advanced());
+	final Setting<String> blockSound = setting(Setting.sound("protect.sound", "Sound when something is stopped", "minecraft:entity.villager.no|0.6|1").group("When stopped"));
+	final Setting<Boolean> chatNote = setting(Setting.bool("protect.chat", "Say why in chat", true).group("When stopped"));
+	final Setting<Boolean> titleNote = setting(Setting.bool("protect.title", "Also a title on screen", false).group("When stopped").advanced());
 
 	private long lastNoteAt;
 	private String lastNote;
@@ -55,10 +68,10 @@ public final class ProtectionFeature extends Feature {
 		Ofa o = Ofa.get();
 		o.protection.fromJson(o.settings.raw("protect.locks"));
 		o.settings.onChange(k -> {
-			if (k.equals(confirmMillions.key)) o.protection.confirmValue = get(confirmMillions) * 1_000_000.0;
+			if (k.startsWith("protect.")) apply(o);
 			if (k.equals("protect.locks")) o.protection.fromJson(o.settings.raw("protect.locks")); // imported
 		});
-		o.protection.confirmValue = get(confirmMillions) * 1_000_000.0;
+		apply(o);
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {
 			if (!(screen instanceof AbstractContainerScreen<?> acs)) return;
 			ScreenEvents.afterExtract(screen).register((s, g, mx, my, d) -> guard(() -> drawLocks(acs, g)));
@@ -68,6 +81,20 @@ public final class ProtectionFeature extends Feature {
 				return false;
 			}, true));
 		});
+	}
+
+	/** Pushes the settings into the protection rules. */
+	void apply(Ofa o) {
+		o.protection.confirmValue = get(confirmMillions) * 1_000_000.0;
+		o.protection.confirmWindowMs = get(confirmSeconds) * 1000L;
+		o.protection.lockStops = actions(get(lockStops), lockStops.options);
+		o.protection.confirmFor = actions(get(confirmFor), confirmFor.options);
+	}
+
+	static java.util.Set<Protection.Action> actions(String v, java.util.List<String> known) {
+		java.util.Set<Protection.Action> out = java.util.EnumSet.noneOf(Protection.Action.class);
+		for (String id : io.github.donttemptfate.fatesofa.config.Values.lines(v, known)) out.add(Protection.Action.valueOf(id));
+		return out;
 	}
 
 	void toggleHovered(AbstractContainerScreen<?> screen, boolean slot) {
@@ -107,10 +134,16 @@ public final class ProtectionFeature extends Feature {
 			boolean itemLock = !st.isEmpty() && o.protection.itemLocked(facts.uuid(), facts.uuid() == null ? facts.key() : null);
 			if (!slotLock && !itemLock) continue;
 			int x = lx + s.x, y = ty + s.y;
-			int c = itemLock ? 0xFFFF5555 : 0xFFFFAA00;
-			g.fill(x, y, x + 4, y + 1, c);
-			g.fill(x, y, x + 1, y + 4, c);
-			if (slotLock) Ui.ring(g, x - 1, y - 1, 18, 18, 1, 0x80FFAA00);
+			int c = (itemLock ? get(itemMark) : get(slotMark)) | 0xFF000000;
+			switch (get(markStyle)) {
+				case "outline" -> Ui.ring(g, x - 1, y - 1, 18, 18, 1, c);
+				case "tint" -> g.fill(x, y, x + 16, y + 16, (c & 0x00FFFFFF) | 0x50000000);
+				default -> {
+					g.fill(x, y, x + 4, y + 1, c);
+					g.fill(x, y, x + 1, y + 4, c);
+				}
+			}
+			if (slotLock) Ui.ring(g, x - 1, y - 1, 18, 18, 1, (get(slotMark) & 0x00FFFFFF) | 0x80000000);
 		}
 	}
 
@@ -208,7 +241,11 @@ public final class ProtectionFeature extends Feature {
 	/** Tells the player why (at most once a second per message); returns true = blocked. */
 	boolean note(String text) {
 		long now = System.currentTimeMillis();
-		if (!text.equals(lastNote) || now - lastNoteAt > 1000) Game.warn(text);
+		if (!text.equals(lastNote) || now - lastNoteAt > 1000) {
+			if (on(chatNote)) Game.warn(text);
+			if (on(titleNote)) io.github.donttemptfate.fatesofa.game.Alerts.title("STOPPED", 0xFF5555, text.length() > 48 ? text.substring(0, 47) + "…" : text);
+			io.github.donttemptfate.fatesofa.game.Alerts.play(io.github.donttemptfate.fatesofa.config.Values.sound(get(blockSound)));
+		}
 		lastNote = text;
 		lastNoteAt = now;
 		return true;

@@ -62,7 +62,7 @@ public final class SecretRoutes extends Feature {
 
 	final Setting<Boolean> waypoints = setting(Setting.bool("secrets.waypoints", "Show secrets", true)
 			.help("A box on each known secret of the rooms around you; collected ones disappear."));
-	final Setting<Boolean> route = setting(Setting.bool("secrets.route", "Show room route", true)
+	final Setting<Boolean> route = setting(Setting.bool("secrets.route", "Show room route", true).group("Route line")
 			.help("A line along the fastest clear of the room you're in."));
 	final Setting<Boolean> nextOnly = setting(Setting.bool("secrets.next", "Only the nearest secret", false)
 			.help("Highlight just the closest uncollected secret in your room instead of all of them."));
@@ -72,6 +72,22 @@ public final class SecretRoutes extends Feature {
 			.help("Secrets other players found, downloaded from the OFA GitHub repository (no account, nothing uploaded).")
 			.keywords("online community"));
 	final Setting<Boolean> note = setting(Setting.bool("secrets.note", "Tell me when a new secret is learned", false));
+	final io.github.donttemptfate.fatesofa.core.Highlight look = new io.github.donttemptfate.fatesofa.core.Highlight(this, "secrets.look", 0xFFAAAAAA);
+	final Setting<Boolean> kindColours = setting(Setting.bool("secrets.kindColours", "Colour by kind (chest, item, bat…)", true).group(io.github.donttemptfate.fatesofa.core.Highlight.GROUP)
+			.help("Off: every secret uses the Colour above."));
+	final Setting<Boolean> showDistance = setting(Setting.bool("secrets.distance", "Distance on the label", true).group(io.github.donttemptfate.fatesofa.core.Highlight.GROUP));
+	final Setting<String> kinds = setting(Setting.lines("secrets.kinds", "Kinds shown", io.github.donttemptfate.fatesofa.core.Display.lines(
+			"CHEST", "Chests", "ITEM", "Items", "BAT", "Bats", "ESSENCE", "Wither essence", "LEVER", "Levers", "OTHER", "Unsure (guessed)"),
+			List.of("CHEST", "ITEM", "BAT", "ESSENCE", "LEVER", "OTHER")).group(io.github.donttemptfate.fatesofa.core.Highlight.GROUP));
+	final java.util.Map<RoomStore.Kind, Setting<Integer>> kindColour = new java.util.EnumMap<>(RoomStore.Kind.class);
+	final Setting<Integer> routeColour = setting(Setting.color("secrets.route.colour", "Route colour", 0xFF55FFFF).rainbow().group("Route line"));
+	final Setting<Integer> routeWidth = setting(Setting.integer("secrets.route.width", "Route width", 3, 1, 8).group("Route line"));
+	final Setting<Boolean> routeWalls = setting(Setting.bool("secrets.route.walls", "Route visible through walls", true).group("Route line").advanced());
+	{
+		for (RoomStore.Kind k : RoomStore.Kind.values())
+			kindColour.put(k, setting(Setting.color("secrets.colour." + k.name().toLowerCase(java.util.Locale.ROOT), k.label + " colour", 0xFF000000 | k.rgb)
+					.group(io.github.donttemptfate.fatesofa.core.Highlight.GROUP).advanced()));
+	}
 
 	public static final String PACK_URL = "https://raw.githubusercontent.com/DontTemptFate/Fates_QoL/data/data/rooms/pack.json";
 	static final Pattern COUNT = Pattern.compile("(?<found>\\d+)/(?<total>\\d+) Secrets");
@@ -274,11 +290,13 @@ public final class SecretRoutes extends Feature {
 				Object[] nearest = null;
 				double best = Double.MAX_VALUE;
 				List<Object[]> shown = new ArrayList<>();
+				var kindsShown = io.github.donttemptfate.fatesofa.config.Values.lines(get(kinds), kinds.options);
 				for (RoomLearner.Placement p : placements.values()) {
 					if (Math.abs(p.cell().cx() - me.x) > 48 || Math.abs(p.cell().cz() - me.z) > 48) continue;
 					for (Object[] s : secretsIn(p)) {
 						double x = (double) s[0], y = (double) s[1], z = (double) s[2];
 						if (learner.found(x, y, z)) continue;
+						if (!kindsShown.contains(((RoomStore.Kind) s[3]).name()) || !look.inRange(Math.sqrt(me.distanceToSqr(x, y, z)))) continue;
 						shown.add(s);
 						if (p == herePl) {
 							double d = me.distanceToSqr(x, y, z);
@@ -301,12 +319,12 @@ public final class SecretRoutes extends Feature {
 	void drawSecret(Vec3 me, Object[] s, boolean nearest) {
 		double x = (double) s[0], y = (double) s[1], z = (double) s[2];
 		RoomStore.Kind k = (RoomStore.Kind) s[3];
-		int argb = 0xFF000000 | k.rgb;
+		int argb = on(kindColours) ? get(kindColour.get(k)) | 0xFF000000 : look.color(System.currentTimeMillis());
 		double half = k == RoomStore.Kind.OTHER ? 0.3 : 0.5;
 		AABB box = new AABB(x - half, y - half, z - half, x + half, y + half, z + half);
-		Gizmos.cuboid(box, GizmoStyle.strokeAndFill(argb, nearest ? 3f : 2f, (argb & 0x00FFFFFF) | (nearest ? 0x60000000 : 0x30000000))).setAlwaysOnTop();
+		io.github.donttemptfate.fatesofa.game.Draw.box(look, box, argb, nearest ? 1f : 0f);
 		double dist = Math.sqrt(me.distanceToSqr(x, y, z));
-		Gizmos.billboardText(k.label + " " + Math.round(dist) + "m", new Vec3(x, y + 0.9, z), TextGizmo.Style.forColorAndCentered(argb)).setAlwaysOnTop();
+		io.github.donttemptfate.fatesofa.game.Draw.label(look, k.label + (on(showDistance) ? " " + Math.round(dist) + "m" : ""), new Vec3(x, y + 0.9, z), argb);
 	}
 
 	void drawRoute(RoomLearner.Placement p) {
@@ -317,7 +335,10 @@ public final class SecretRoutes extends Feature {
 		for (double[] pt : rt.points()) {
 			double[] w = RoomGrid.toWorld(p.cell(), p.rotation(), pt[0], pt[2]);
 			Vec3 v = new Vec3(w[0], pt[1] + 0.1, w[1]);
-			if (prev != null) Gizmos.line(prev, v, 0xFF55FFFF, 3f).setAlwaysOnTop();
+			if (prev != null) {
+				var g = Gizmos.line(prev, v, io.github.donttemptfate.fatesofa.config.Values.color(get(routeColour), on(routeColour.rainbow), System.currentTimeMillis()), get(routeWidth));
+				if (on(routeWalls)) g.setAlwaysOnTop();
+			}
 			prev = v;
 		}
 	}

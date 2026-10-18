@@ -32,6 +32,31 @@ public final class Presets {
 		PRESETS.put("Everything", EnumSet.allOf(Category.class));
 	}
 
+	/** Options a preset also sets (on top of switching features on): the alerts that suit that kind of play. */
+	public static final Map<String, Map<String, Object>> TWEAKS = new LinkedHashMap<>();
+
+	static {
+		TWEAKS.put("Farming", Map.of("garden.visitorAlert.on", true, "garden.jacobAlert.on", true));
+		TWEAKS.put("Mining", Map.of("mining.doneAlert.on", true));
+		TWEAKS.put("Fishing", Map.of("fishing.trophy.on", true, "fishing.double.on", true));
+		TWEAKS.put("Combat & Slayer", Map.of("slayer.slain.on", true, "statbars.lowAlert.on", true, "kuudra.suppliesAlert.on", true));
+		TWEAKS.put("Dungeons", Map.of("dungeon.cryptsAlert.on", true));
+		TWEAKS.put("Everything", Map.of("events.soon.on", true, "garden.visitorAlert.on", true, "fishing.trophy.on", true));
+	}
+
+	/** Applies a preset's option tweaks; returns how many were set (unknown keys are skipped). */
+	@SuppressWarnings("unchecked")
+	public static int applyTweaks(String preset, Settings settings) {
+		int n = 0;
+		for (Map.Entry<String, Object> e : TWEAKS.getOrDefault(preset, Map.of()).entrySet()) {
+			Setting<?> s = settings.find(e.getKey());
+			if (s == null || s.def == null || !s.def.getClass().isInstance(e.getValue())) continue;
+			settings.set((Setting<Object>) s, e.getValue());
+			n++;
+		}
+		return n;
+	}
+
 	/** Categories a preset switches on. */
 	public static Set<Category> categories(String preset) {
 		Set<Category> extra = PRESETS.get(preset);

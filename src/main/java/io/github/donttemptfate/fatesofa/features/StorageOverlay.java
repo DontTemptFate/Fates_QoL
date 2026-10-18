@@ -42,7 +42,11 @@ import java.util.WeakHashMap;
 public final class StorageOverlay extends Feature {
 	public static StorageOverlay INSTANCE;
 
-	final Setting<Boolean> highlight = setting(Setting.bool("storageoverlay.highlight", "Highlight search matches in the page", true));
+	final Setting<Boolean> highlight = setting(Setting.bool("storageoverlay.highlight", "Highlight search matches in the page", true).group("Search highlight"));
+	final Setting<Integer> matchColour = setting(Setting.color("storageoverlay.matchColour", "Match outline colour", 0xFFFF55FF).rainbow().group("Search highlight"));
+	final Setting<Integer> dim = setting(Setting.integer("storageoverlay.dim", "Darken other items %", 63, 0, 95).group("Search highlight"));
+	final Setting<Boolean> showValues = setting(Setting.bool("storageoverlay.values", "Page values", true).group("Panel"));
+	final Setting<Boolean> showTotal = setting(Setting.bool("storageoverlay.total", "Total at the top", true).group("Panel"));
 
 	static final int W = 112;
 	private final Map<Screen, EditBox> boxes = new WeakHashMap<>();
@@ -160,7 +164,7 @@ public final class StorageOverlay extends Feature {
 		double all = 0;
 		for (StorageCache.Page p : pages) all += values.of(p);
 		Ui.draw(g, Ui.t("STORAGE", Ui.Role.LABEL, Ui.accent()), Ui.Role.LABEL, x + 6, y + 11);
-		if (all > 0) {
+		if (all > 0 && on(showTotal)) {
 			var t = Ui.t(Fmt.shortNum(all), Ui.Role.VALUE, Ui.GOLD);
 			Ui.draw(g, t, Ui.Role.VALUE, x + W - 6 - Ui.width(t, Ui.Role.VALUE), y + 12);
 		}
@@ -184,7 +188,7 @@ public final class StorageOverlay extends Feature {
 			String label = shortLabel(p.id());
 			int col = current ? Ui.WHITE : words != null && found == 0 ? Ui.DARK : over ? 0xFFDDDDDD : Ui.GRAY;
 			g.text(Minecraft.getInstance().font, label, r.x() + 3, r.y() + 2, col, false);
-			String right = words != null ? (found > 0 ? found + " found" : "") : valueText(p);
+			String right = words != null ? (found > 0 ? found + " found" : "") : on(showValues) ? valueText(p) : "";
 			if (!right.isEmpty()) {
 				int rc = words != null ? Ui.GREEN : Ui.GOLD;
 				g.text(Minecraft.getInstance().font, right, r.right() - 3 - Minecraft.getInstance().font.width(right), r.y() + 2, rc, false);
@@ -198,8 +202,9 @@ public final class StorageOverlay extends Feature {
 				if (sl.container instanceof Inventory || !sl.hasItem()) continue;
 				ItemStack st = sl.getItem();
 				int sx = a.fatesofa$leftPos() + sl.x, sy = a.fatesofa$topPos() + sl.y;
-				if (ItemListFeature.matches(st, words)) Ui.ring(g, sx - 1, sy - 1, 18, 18, 1, Ui.accent());
-				else g.fill(sx, sy, sx + 16, sy + 16, 0xA0101010);
+				if (ItemListFeature.matches(st, words))
+					Ui.ring(g, sx - 1, sy - 1, 18, 18, 1, io.github.donttemptfate.fatesofa.config.Values.color(get(matchColour), on(matchColour.rainbow), System.currentTimeMillis()));
+				else if (get(dim) > 0) g.fill(sx, sy, sx + 16, sy + 16, (Math.round(get(dim) * 2.55f) << 24) | 0x101010);
 			}
 		}
 		// tooltip for page rows

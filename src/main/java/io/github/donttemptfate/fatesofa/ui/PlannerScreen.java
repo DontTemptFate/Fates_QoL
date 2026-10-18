@@ -68,7 +68,19 @@ public final class PlannerScreen extends Screen {
 		mp = Accessories.missing(repo, pf == null ? java.util.Set.of() : pf.data().accessories(), Accessories.upgrades(misc), Accessories.ignored(misc),
 				this::value, trade);
 		Map<String, Double> owned = pf == null ? Map.of() : pf.owned();
-		crafts = Crafts.fromOwned(repo, owned, this::value, 40);
+		if (pf != null) {
+			double max = o.settings.get(pf.maxPriceM) * 1_000_000.0;
+			boolean craftOnly = o.settings.on(pf.craftableOnly);
+			mp = new ArrayList<>(mp);
+			mp.removeIf(s -> (craftOnly && !s.craftable()) || (max > 0 && !Double.isNaN(s.price()) && s.price() > max));
+		}
+		crafts = Crafts.fromOwned(repo, owned, this::value, pf == null ? 40 : o.settings.get(pf.craftsListed));
+		if (pf != null && o.settings.get(pf.minGainK) > 0) {
+			double min = o.settings.get(pf.minGainK) * 1000.0;
+			crafts = new ArrayList<>(crafts);
+			crafts.removeIf(c -> c.gain() < min);
+		}
+		double worthMin = pf == null ? 0 : o.settings.get(pf.worthMinK) * 1000.0;
 		worth = new ArrayList<>();
 		worthTotal = 0;
 		Map<String, Double> all = new java.util.HashMap<>(owned);
@@ -76,8 +88,8 @@ public final class PlannerScreen extends Screen {
 		for (Map.Entry<String, Double> e : all.entrySet()) {
 			double v = value(e.getKey());
 			if (Double.isNaN(v)) continue;
-			worth.add(new Object[] {e.getKey(), e.getValue(), v * e.getValue()});
 			worthTotal += v * e.getValue();
+			if (v * e.getValue() >= worthMin) worth.add(new Object[] {e.getKey(), e.getValue(), v * e.getValue()});
 		}
 		worth.sort(Comparator.comparingDouble((Object[] r) -> (Double) r[2]).reversed());
 	}

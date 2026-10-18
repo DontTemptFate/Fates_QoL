@@ -475,6 +475,23 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		check("Diagnostics".equals(diagPage), "couldn't reach the Diagnostics page from the (scrolling) sidebar: " + diagPage);
 		check(io.github.donttemptfate.fatesofa.core.Diagnostics.fps() > 0, "diagnostics measured no frames");
 
+		// Batch 5: every feature has its option bundles; presets only touch options that exist
+		long options = o.settings.all().stream().filter(st -> !st.hidden).count();
+		FatesOfaClient.LOG.info("[gametest] settings options: {}", options);
+		check(options >= 550, "fewer options than expected: " + options);
+		for (var e : io.github.donttemptfate.fatesofa.config.Presets.TWEAKS.entrySet())
+			for (String k : e.getValue().keySet()) check(o.settings.find(k) != null, "preset " + e.getKey() + " sets an unknown option " + k);
+		ctx.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null)));
+		ctx.waitTicks(3);
+		search(ctx, "Fishing tracker");
+		ctx.takeScreenshot("06a_fishing_all_groups");
+		search(ctx, "Slayer tracker");
+		ctx.takeScreenshot("06b_slayer_all_groups");
+		ctx.runOnClient(mc -> mc.gui.setScreen(new SettingsScreen(null, Category.DUNGEONS)));
+		ctx.waitTicks(3);
+		clickNamed(ctx, "group:dungeons/Map card", false);
+		ctx.takeScreenshot("06c_dungeon_map_group");
+
 		// put things back for the rest of the test
 		ctx.runOnClient(mc -> {
 			for (String k : new String[] {"location.lines", "location.show", "location.accent.rainbow", "chat.rules", "garden.pestAlert.sound"})

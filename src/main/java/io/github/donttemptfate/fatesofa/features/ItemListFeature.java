@@ -43,6 +43,9 @@ public final class ItemListFeature extends Feature {
 			.keywords("search find storage"));
 	final Setting<Boolean> startShown = setting(Setting.bool("itemlist.shown", "Show the item list", true)
 			.help("The list beside inventory windows. The item list key shows or hides it."));
+	final Setting<Integer> matchColour = setting(Setting.color("itemlist.matchColour", "Match outline colour", 0xFFFF55FF).rainbow().group("Search highlight"));
+	final Setting<Integer> dim = setting(Setting.integer("itemlist.dim", "Darken other items %", 70, 0, 95).group("Search highlight"));
+	final Setting<Boolean> showPages = setting(Setting.bool("itemlist.pageLine", "Page and result count line", true).advanced());
 	final Setting<Integer> maxCols = setting(Setting.integer("itemlist.cols", "Item list width (columns)", 12, 6, 24)
 			.help("The most columns the list may use. It sits against the right edge of the screen and uses fewer when there's less room."));
 
@@ -162,7 +165,7 @@ public final class ItemListFeature extends Feature {
 		String label = res.isEmpty() ? "no items" : (page + 1) + " / " + pages + " · " + res.size();
 		g.text(s.getFont(), "<", p.x() + 2, by, mx < p.x() + 14 && my >= by - 2 && my < by + 10 ? Ui.WHITE : Ui.GRAY, true);
 		g.text(s.getFont(), ">", p.x() + p.w() - 8, by, mx > p.x() + p.w() - 14 && my >= by - 2 && my < by + 10 ? Ui.WHITE : Ui.GRAY, true);
-		g.centeredText(s.getFont(), label, p.x() + p.w() / 2, by, Ui.GRAY);
+		if (on(showPages)) g.centeredText(s.getFont(), label, p.x() + p.w() / 2, by, Ui.GRAY);
 		if (hovered != null) g.setTooltipForNextFrame(s.getFont(), Stacks.of(hovered), mx, my);
 	}
 
@@ -231,11 +234,11 @@ public final class ItemListFeature extends Feature {
 			if (st.isEmpty()) continue;
 			if (matches(st, words)) {
 				int x = a.fatesofa$leftPos() + slot.x, y = a.fatesofa$topPos() + slot.y;
-				Ui.ring(g, x - 1, y - 1, 18, 18, 1, Ui.accent());
+				Ui.ring(g, x - 1, y - 1, 18, 18, 1, io.github.donttemptfate.fatesofa.config.Values.color(get(matchColour), on(matchColour.rainbow), System.currentTimeMillis()));
 				continue;
 			}
 			int x = a.fatesofa$leftPos() + slot.x, y = a.fatesofa$topPos() + slot.y;
-			g.fill(x, y, x + 16, y + 16, 0xB0101010);
+			if (get(dim) > 0) g.fill(x, y, x + 16, y + 16, (Math.round(get(dim) * 2.55f) << 24) | 0x101010);
 		}
 	}
 
