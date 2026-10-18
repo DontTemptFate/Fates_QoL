@@ -38,6 +38,9 @@ public final class WaypointFeature extends Feature {
 	public void init() {
 		Ofa o = Ofa.get();
 		waypoints.fromJson(o.settings.raw("waypoints.saved"));
+		o.settings.onChange(k -> {
+			if (k.equals("waypoints.saved")) waypoints.fromJson(o.settings.raw("waypoints.saved")); // imported
+		});
 		ChatBus.onChat(m -> guard(() -> {
 			if (!on(fromChat) || !o.state.onSkyBlock()) return;
 			Waypoints.Waypoint w = Waypoints.fromChat(m.plain(), island(), m.atMs(), get(keepMinutes) * 60_000L);

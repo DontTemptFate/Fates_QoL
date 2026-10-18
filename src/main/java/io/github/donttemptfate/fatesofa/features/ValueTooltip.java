@@ -35,7 +35,7 @@ public final class ValueTooltip extends Feature {
 	public void init() {
 		ItemTooltipCallback.EVENT.register((st, ctx, flag, lines) -> guard(() -> {
 			Ofa o = Ofa.get();
-			String key = Items.key(st);
+			String key = io.github.donttemptfate.fates.common.item.ItemFacts.of(st).key(); // cached per stack: no NBT copy per frame
 			if (key == null) return;
 			long now = System.currentTimeMillis();
 			PriceTables.Bz bz = on(bazaar) ? o.prices.bazaarQuote(key, now) : null;

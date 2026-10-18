@@ -111,6 +111,26 @@ public class DataTest {
 	}
 
 	@Test
+	public void publicPriceFileV029() {
+		String json = "{\"v\":1,\"generated_at\":1792192719895,\"window_h\":72,\"min_sales\":5,\"ah\":{"
+				+ "\"HYPERION\":{\"lbin\":500000000,\"median\":999000000,\"p25\":504000000,\"sales_day\":86.3,\"last_sale_at\":1792192719895},"
+				+ "\"GOLDEN_DRAGON;4\":{\"lbin\":606000000,\"median\":753200000,\"p25\":657999999,\"sales_day\":100.0,\"last_sale_at\":1,"
+				+ "\"lvl1\":{\"lbin\":606000000,\"median\":612800000,\"p25\":611944444,\"sales_day\":17.0,\"last_sale_at\":1},"
+				+ "\"lvl100\":{\"lbin\":677000000,\"median\":664999995,\"p25\":662992500,\"sales_day\":14.0,\"last_sale_at\":1},"
+				+ "\"lvl200\":{\"lbin\":970000000,\"median\":973000000,\"p25\":965000000,\"sales_day\":46.3,\"last_sale_at\":1}},"
+				+ "\"ODD\":{\"lbin\":null,\"median\":null}}}";
+		var ah = io.github.donttemptfate.fatesofa.data.PriceTables.ah(json);
+		assertEquals(504_000_000, ah.get("HYPERION").plain(), 1);
+		var dragon = ah.get("GOLDEN_DRAGON;4");
+		assertEquals(611_944_444, dragon.atLevel(1).p25(), 1);
+		assertEquals(965_000_000, dragon.atLevel(200).p25(), 1);
+		double mid = dragon.atLevel(150).p25(); // between level 100 and 200
+		assertTrue(mid > 662_992_500 && mid < 965_000_000);
+		assertNull(ah.get("HYPERION").atLevel(50)); // no level data for non-pets
+		assertTrue(Double.isNaN(ah.get("ODD").plain()) || !(ah.get("ODD").plain() > 0));
+	}
+
+	@Test
 	public void protection() {
 		Protection p = new Protection();
 		Protection.Facts hype = new Protection.Facts("u1", "HYPERION", "Hyperion", 1e9, 3);

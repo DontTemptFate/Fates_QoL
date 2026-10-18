@@ -25,6 +25,7 @@ public final class PetTooltip extends Feature {
 	@Override
 	public void init() {
 		ItemTooltipCallback.EVENT.register((st, ctx, flag, lines) -> guard(() -> {
+			if (!"PET".equals(io.github.donttemptfate.fates.common.item.ItemFacts.of(st).id())) return; // cheap check before reading NBT
 			JsonObject data = Items.data(st);
 			if (data == null || !"PET".equals(ItemKey.str(data, "id"))) return;
 			JsonObject pet = ItemKey.petInfo(data);

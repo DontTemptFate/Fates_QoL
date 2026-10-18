@@ -56,7 +56,7 @@ public final class KuudraFeature extends Feature {
 			else if (BUILD_DONE.matcher(t).matches()) buildAt = m.atMs();
 			else if (END.matcher(t).matches()) endAt = m.atMs();
 		}));
-		Hud.register(new HudElement("kuudra", "Kuudra", this, HudPos.at(Anchor.LEFT, 4, 0), 30, this::card, this::sample, () -> o.state.in(Island.KUUDRA)));
+		Hud.register(new HudElement("kuudra", "Kuudra", this, HudPos.at(Anchor.TOP_LEFT, 4, 60), 30, this::card, this::sample, () -> o.state.in(Island.KUUDRA)));
 	}
 
 	Card card() {

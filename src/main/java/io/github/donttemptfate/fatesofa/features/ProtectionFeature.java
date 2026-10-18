@@ -56,6 +56,7 @@ public final class ProtectionFeature extends Feature {
 		o.protection.fromJson(o.settings.raw("protect.locks"));
 		o.settings.onChange(k -> {
 			if (k.equals(confirmMillions.key)) o.protection.confirmValue = get(confirmMillions) * 1_000_000.0;
+			if (k.equals("protect.locks")) o.protection.fromJson(o.settings.raw("protect.locks")); // imported
 		});
 		o.protection.confirmValue = get(confirmMillions) * 1_000_000.0;
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {

@@ -39,6 +39,10 @@ public final class Hud {
 
 	public static void init(Settings s) {
 		settings = s;
+		s.onChange(k -> lastLayout = null); // any setting may change what a card shows
+		s.onChange(k -> {
+			if (k.startsWith("hud.") || k.startsWith("hudhide.")) invalidate();
+		});
 		HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, Identifier.fromNamespaceAndPath(FatesOfaClient.MOD_ID, "hud"), (g, delta) -> {
 			if (editing) return;
 			try {
@@ -53,22 +57,46 @@ public final class Hud {
 		editing = on;
 	}
 
+	/** Positions and hidden flags read once, not every frame; cleared when they change (editor, import). */
+	private static final Map<String, HudPos> POS = new java.util.concurrent.ConcurrentHashMap<>();
+	private static final Map<String, Boolean> HIDDEN = new java.util.concurrent.ConcurrentHashMap<>();
+	/** The last frame's layout, reused for a quarter second (cards are rebuilt 4×/s, not every frame). */
+	private static volatile List<Placed> lastLayout;
+	private static volatile long lastLayoutAt;
+	private static volatile int lastW, lastH;
+	static final long REBUILD_MS = 250;
+
 	public static HudPos pos(HudElement e) {
-		JsonElement j = settings == null ? null : settings.raw("hud." + e.id);
-		return j != null && j.isJsonObject() ? HudPos.fromJson(j.getAsJsonObject(), e.defaultPos) : e.defaultPos;
+		return POS.computeIfAbsent(e.id, id -> {
+			JsonElement j = settings == null ? null : settings.raw("hud." + id);
+			return j != null && j.isJsonObject() ? HudPos.fromJson(j.getAsJsonObject(), e.defaultPos) : e.defaultPos;
+		});
 	}
 
 	public static void setPos(HudElement e, HudPos p) {
 		settings.putRaw("hud." + e.id, p == null ? null : p.toJson());
+		POS.remove(e.id);
+		lastLayout = null;
 	}
 
 	public static boolean hidden(HudElement e) {
-		JsonElement j = settings == null ? null : settings.raw("hudhide." + e.id);
-		return j != null && j.isJsonPrimitive() && j.getAsBoolean();
+		return HIDDEN.computeIfAbsent(e.id, id -> {
+			JsonElement j = settings == null ? null : settings.raw("hudhide." + id);
+			return j != null && j.isJsonPrimitive() && j.getAsBoolean();
+		});
 	}
 
 	public static void setHidden(HudElement e, boolean hide) {
 		settings.putRaw("hudhide." + e.id, hide ? new com.google.gson.JsonPrimitive(true) : null);
+		HIDDEN.remove(e.id);
+		lastLayout = null;
+	}
+
+	/** Forget cached positions and the last layout (settings imported, a feature switched). */
+	public static void invalidate() {
+		POS.clear();
+		HIDDEN.clear();
+		lastLayout = null;
 	}
 
 	/** One placed element for this frame. */
@@ -119,7 +147,18 @@ public final class Hud {
 	static void draw(GuiGraphicsExtractor g, boolean sample) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.gui.hud.isHidden()) return;
-		for (Placed p : layout(g.guiWidth(), g.guiHeight(), sample)) {
+		long now = System.currentTimeMillis();
+		List<Placed> placed = lastLayout;
+		if (sample || placed == null || now - lastLayoutAt >= REBUILD_MS || lastW != g.guiWidth() || lastH != g.guiHeight()) {
+			placed = layout(g.guiWidth(), g.guiHeight(), sample);
+			if (!sample) {
+				lastLayout = placed;
+				lastLayoutAt = now;
+				lastW = g.guiWidth();
+				lastH = g.guiHeight();
+			}
+		}
+		for (Placed p : placed) {
 			p.element().owner.guard(() -> p.card().draw(g, p.rect().x(), p.rect().y(), p.scale()));
 		}
 	}
@@ -129,6 +168,7 @@ public final class Hud {
 		List<Rect> r = new ArrayList<>();
 		r.add(new Rect(w / 2 - 92, h - 50, 184, 50)); // hotbar, health, food, armour, xp
 		r.add(new Rect(w / 2 - 92, 0, 184, 20)); // boss bar
+		r.add(new Rect(w - 124, h / 2 - 84, 124, 168)); // the scoreboard sidebar (right, centred)
 		return r;
 	}
 

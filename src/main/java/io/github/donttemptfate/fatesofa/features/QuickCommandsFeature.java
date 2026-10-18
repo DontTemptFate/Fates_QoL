@@ -67,6 +67,12 @@ public final class QuickCommandsFeature extends Feature {
 	@Override
 	public void init() {
 		entries = QuickCommands.fromJson(Ofa.get().settings.raw("quick.entries"));
+		Ofa.get().settings.onChange(k -> {
+			if (k.equals("quick.entries")) { // imported
+				entries = QuickCommands.fromJson(Ofa.get().settings.raw("quick.entries"));
+				icons.clear();
+			}
+		});
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {
 			if (!(screen instanceof AbstractContainerScreen<?> acs)) return;
 			ScreenEvents.afterExtract(screen).register((s, g, mx, my, d) -> guard(() -> draw(acs, g, mx, my)));

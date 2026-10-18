@@ -21,7 +21,7 @@ public final class LocationHud extends Feature {
 
 	@Override
 	public void init() {
-		Hud.register(new HudElement("location", "Location", this, HudPos.at(Anchor.TOP_LEFT, 4, 4), 10,
+		Hud.register(new HudElement("location", "Location", this, HudPos.at(Anchor.BOTTOM_LEFT, 4, -4), 10,
 				this::card, () -> sample(), () -> Ofa.get().state.onSkyBlock()));
 	}
 

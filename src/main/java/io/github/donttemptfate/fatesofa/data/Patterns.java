@@ -68,8 +68,15 @@ public final class Patterns {
 		Pattern p = get(key);
 		if (p == null || groups.length == 0) return p;
 		if (p.namedGroups().keySet().containsAll(java.util.List.of(groups))) return p;
+		// the repo's pattern lacks a group OFA reads: use OFA's own (compiled once, kept with the repo's cache)
+		Map<String, Pattern> cache = compiled;
+		String ck = "\u0000fallback:" + key;
+		Pattern f = cache.get(ck);
+		if (f != null) return f;
 		String fb = fallback.get(key);
-		return fb == null ? null : compileColourless(fb);
+		f = fb == null ? null : compileColourless(fb);
+		if (f != null) cache.put(ck, f);
+		return f;
 	}
 
 	/** Removes Minecraft colour codes from a pattern so it matches plain text. */

@@ -7,6 +7,7 @@ public record Price(double value, Kind kind, long atMs) {
 		BAZAAR_SELL_OFFER("bazaar offer"),
 		BAZAAR_INSTANT_BUY("bazaar buy"),
 		AH_LOWEST_BIN("lowest BIN"),
+		AH_PLAIN("AH plain copy"),
 		AH_MEDIAN("AH median"),
 		NPC("NPC");
 

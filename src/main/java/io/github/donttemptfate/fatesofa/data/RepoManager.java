@@ -20,7 +20,9 @@ public final class RepoManager {
 	public static final GitRepo SKYHANNI = new GitRepo("hannibal002", "SkyHanni-REPO", "main",
 			p -> p.startsWith("constants/") || p.equals("LICENSE"));
 
-	static final long CHECK_EVERY = 3_600_000L;
+	static final long DAY = 86_400_000L;
+	/** How often to look for newer item data (daily by default; weekly; or never = manual only). */
+	public volatile long checkEvery = DAY;
 
 	private final Path root;
 	private final Executor io;
@@ -98,7 +100,13 @@ public final class RepoManager {
 		io.execute(() -> {
 			try {
 				loadLocal();
-				if (autoUpdate) update(false);
+				lastCheck = readLastCheck();
+				// download when there's nothing yet; otherwise only when the last check is older than the chosen interval
+				boolean nothing = state != State.READY;
+				if (autoUpdate && (nothing || System.currentTimeMillis() - lastCheck > checkEvery)) {
+					update(false);
+					writeLastCheck(System.currentTimeMillis());
+				}
 				if (state == State.LOADING) {
 					state = State.NOT_LOADED;
 					message = "item data not downloaded yet (online data is off)";
@@ -115,15 +123,34 @@ public final class RepoManager {
 		io.execute(() -> {
 			try {
 				update(true);
+				writeLastCheck(System.currentTimeMillis());
 			} finally {
 				busy.set(false);
 			}
 		});
 	}
 
-	/** Hourly check; cheap to call often. */
+	long readLastCheck() {
+		try {
+			return Long.parseLong(java.nio.file.Files.readString(root.resolve(".lastcheck")).trim());
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	void writeLastCheck(long t) {
+		lastCheck = t;
+		try {
+			java.nio.file.Files.createDirectories(root);
+			java.nio.file.Files.writeString(root.resolve(".lastcheck"), Long.toString(t));
+		} catch (Exception ignored) {
+			// checks again next start
+		}
+	}
+
+	/** Checks when the chosen interval has passed (also during a long session); cheap to call often. */
 	public void tick(long now) {
-		if (autoUpdate && now - lastCheck > CHECK_EVERY && state != State.LOADING && !busy.get()) {
+		if (autoUpdate && now - lastCheck > checkEvery && state != State.LOADING && !busy.get()) {
 			lastCheck = now;
 			checkNow();
 		}

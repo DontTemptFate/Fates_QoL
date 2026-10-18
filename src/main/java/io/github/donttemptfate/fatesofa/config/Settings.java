@@ -63,12 +63,20 @@ public final class Settings {
 		listeners.add(listener);
 	}
 
+	/** Parsed values by key, so reading a setting every frame never touches JSON or the lock. Cleared on any change. */
+	private final java.util.concurrent.ConcurrentHashMap<String, Object> cache = new java.util.concurrent.ConcurrentHashMap<>();
+	private static final Object DEFAULT = new Object();
+
 	@SuppressWarnings("unchecked")
-	public synchronized <T> T get(Setting<T> s) {
-		JsonElement e = values.get(s.key);
-		if (e == null) return s.def;
-		Object v = read(s, e);
-		return v == null ? s.def : (T) v;
+	public <T> T get(Setting<T> s) {
+		Object c = cache.get(s.key);
+		if (c != null) return c == DEFAULT ? s.def : (T) c;
+		synchronized (this) {
+			JsonElement e = values.get(s.key);
+			Object v = e == null ? null : read(s, e);
+			cache.put(s.key, v == null ? DEFAULT : v);
+			return v == null ? s.def : (T) v;
+		}
 	}
 
 	public boolean on(Setting<Boolean> s) {
@@ -85,6 +93,7 @@ public final class Settings {
 			if (e == null) return;
 			if (value.equals(s.def)) values.remove(s.key);
 			else values.add(s.key, e);
+			cache.remove(s.key);
 			dirty = true;
 		}
 		fire(s.key);
@@ -104,6 +113,7 @@ public final class Settings {
 	public void reset(Setting<?> s) {
 		synchronized (this) {
 			if (values.remove(s.key) == null) return;
+			cache.remove(s.key);
 			dirty = true;
 		}
 		fire(s.key);
@@ -122,6 +132,7 @@ public final class Settings {
 	public synchronized void putRaw(String key, JsonElement value) {
 		if (value == null) values.remove(key);
 		else values.add(key, value.deepCopy());
+		cache.remove(key);
 		dirty = true;
 	}
 
@@ -166,12 +177,14 @@ public final class Settings {
 	/** Loads the file; a missing or broken file means all defaults (a broken one is kept aside). */
 	public synchronized void load() {
 		values = new JsonObject();
+		cache.clear();
 		if (file == null || !Files.exists(file)) return;
 		try {
 			JsonObject root = JsonParser.parseString(Files.readString(file, StandardCharsets.UTF_8)).getAsJsonObject();
 			int version = root.has("version") ? root.get("version").getAsInt() : 0;
 			JsonObject v = root.has("values") && root.get("values").isJsonObject() ? root.getAsJsonObject("values") : new JsonObject();
 			values = migrate(v, version);
+			cache.clear();
 			dirty = version != VERSION;
 		} catch (IOException | RuntimeException e) {
 			try {
@@ -210,6 +223,19 @@ public final class Settings {
 
 	// ---- import / export -----------------------------------------------------------------------------
 
+	/** Raw (non-setting) keys an import may bring, with the shape each must have. */
+	static boolean rawImportable(String key, JsonElement v) {
+		if (key.length() > 80 || !key.matches("[a-z0-9_.\\-]+")) return false;
+		if (key.startsWith("hud.")) return v.isJsonObject() && v.getAsJsonObject().size() <= 8;
+		if (key.startsWith("hudhide.")) return v.isJsonPrimitive() && v.getAsJsonPrimitive().isBoolean();
+		return switch (key) {
+			case "quick.entries" -> v.isJsonArray() && v.getAsJsonArray().size() <= 64;
+			case "protect.locks" -> v.isJsonObject();
+			case "waypoints.saved" -> v.isJsonArray() || v.isJsonObject();
+			default -> false;
+		};
+	}
+
 	/** The player's changed settings as one copyable line ("OFA1:" + base64 JSON). */
 	public synchronized String export() {
 		JsonObject root = new JsonObject();
@@ -242,11 +268,21 @@ public final class Settings {
 		synchronized (this) {
 			for (Map.Entry<String, JsonElement> e : v.entrySet()) {
 				Setting<?> s = declared.get(e.getKey());
-				if (s == null || read(s, e.getValue()) == null) continue;
+				if (s == null) {
+					// layouts, quick commands, locks and waypoints travel too (shape checked; each feature re-validates)
+					if (rawImportable(e.getKey(), e.getValue())) {
+						values.add(e.getKey(), e.getValue().deepCopy());
+						changed.add(e.getKey());
+						applied++;
+					}
+					continue;
+				}
+				if (read(s, e.getValue()) == null) continue;
 				values.add(s.key, e.getValue().deepCopy());
 				changed.add(s.key);
 				applied++;
 			}
+			cache.clear();
 			if (applied > 0) dirty = true;
 		}
 		for (String k : changed) fire(k);

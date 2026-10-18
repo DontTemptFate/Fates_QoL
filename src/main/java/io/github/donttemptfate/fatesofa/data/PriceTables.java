@@ -17,7 +17,38 @@ public final class PriceTables {
 	}
 
 	/** Lowest BIN and recent median from the fatesflipper.com public price file. */
-	public record Ah(double lbin, double median, double salesPerDay, long lastSaleAt) {
+	/**
+	 * Auction prices for one item (fatesflipper.com public file). {@code p25} is the price of a plain copy (the 25th
+	 * percentile of sales; upgraded copies pull the median up). {@code levels}: pets priced at exactly level 1 / 100 / 200.
+	 */
+	public record Ah(double lbin, double median, double p25, double salesPerDay, long lastSaleAt, Map<Integer, Ah> levels) {
+		public Ah(double lbin, double median, double salesPerDay, long lastSaleAt) {
+			this(lbin, median, Double.NaN, salesPerDay, lastSaleAt, Map.of());
+		}
+
+		/** The price of a plain copy: p25 when known, else lowest BIN. */
+		public double plain() {
+			return p25 > 0 ? p25 : lbin;
+		}
+
+		/** A pet at {@code level}: between the level-1 and level-100 (or 100 and 200) prices; null without level data. */
+		public Ah atLevel(int level) {
+			if (levels.isEmpty() || level <= 0) return null;
+			Ah exact = levels.get(level);
+			if (exact != null) return exact;
+			int lo = level < 100 ? 1 : 100, hi = level < 100 ? 100 : 200;
+			Ah a = levels.get(lo), b = levels.get(hi);
+			if (a == null) return b;
+			if (b == null) return a;
+			double t = (level - lo) / (double) (hi - lo);
+			return new Ah(mix(a.lbin, b.lbin, t), mix(a.median, b.median, t), mix(a.p25, b.p25, t), a.salesPerDay, Math.max(a.lastSaleAt, b.lastSaleAt), Map.of());
+		}
+
+		static double mix(double x, double y, double t) {
+			if (!(x > 0)) return y;
+			if (!(y > 0)) return x;
+			return x + (y - x) * t;
+		}
 	}
 
 	/** {@code api.hypixel.net/v2/skyblock/bazaar} → product id → quote. */
@@ -60,7 +91,15 @@ public final class PriceTables {
 		for (Map.Entry<String, JsonElement> e : root.getAsJsonObject("ah").entrySet()) {
 			try {
 				JsonObject o = e.getValue().getAsJsonObject();
-				out.put(e.getKey(), new Ah(d(o, "lbin"), d(o, "median"), d(o, "sales_day"), (long) d(o, "last_sale_at")));
+				Map<Integer, Ah> levels = new HashMap<>();
+				for (int lv : new int[] {1, 100, 200}) {
+					if (o.has("lvl" + lv) && o.get("lvl" + lv).isJsonObject()) {
+						JsonObject l = o.getAsJsonObject("lvl" + lv);
+						levels.put(lv, new Ah(d(l, "lbin"), d(l, "median"), d(l, "p25"), d(l, "sales_day"), (long) d(l, "last_sale_at"), Map.of()));
+					}
+				}
+				out.put(e.getKey(), new Ah(d(o, "lbin"), d(o, "median"), d(o, "p25"), d(o, "sales_day"), (long) d(o, "last_sale_at"),
+						levels.isEmpty() ? Map.of() : Map.copyOf(levels)));
 			} catch (RuntimeException ignored) {
 				// skip
 			}

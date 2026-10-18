@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public final class PriceService {
 	public enum BazaarMode { INSTANT_SELL, SELL_OFFER }
 
-	public enum AhMode { LOWEST_BIN, MEDIAN }
+	public enum AhMode { PLAIN, LOWEST_BIN, MEDIAN }
 
 	static final String BAZAAR_URL = "https://api.hypixel.net/v2/skyblock/bazaar";
 	static final String ITEMS_URL = "https://api.hypixel.net/v2/resources/skyblock/items";
@@ -38,7 +38,8 @@ public final class PriceService {
 	public volatile boolean enabled = true;
 	public volatile boolean ahEnabled = true;
 	public volatile BazaarMode bazaarMode = BazaarMode.INSTANT_SELL;
-	public volatile AhMode ahMode = AhMode.LOWEST_BIN;
+	public volatile AhMode ahMode = AhMode.PLAIN;
+	private volatile String ahEtag;
 
 	public PriceService(Executor io, Consumer<String> log) {
 		this.io = io;
@@ -61,8 +62,7 @@ public final class PriceService {
 		PriceTables.Ah a = ah.get(key);
 		Price market = null;
 		if (a != null) {
-			double v = ahMode == AhMode.MEDIAN && a.median() > 0 ? a.median() : a.lbin();
-			if (v > 0) market = new Price(v, ahMode == AhMode.MEDIAN && a.median() > 0 ? Price.Kind.AH_MEDIAN : Price.Kind.AH_LOWEST_BIN, ahAt);
+			market = ahPrice(a);
 		}
 		Double n = npc.get(key);
 		Price npcP = n != null && n > 0 ? new Price(n, Price.Kind.NPC, npcAt) : null;
@@ -101,6 +101,27 @@ public final class PriceService {
 
 	public int ahCount() {
 		return ah.size();
+	}
+
+	/** An auction entry as a price in the chosen mode (plain copy, lowest BIN or median); null without a usable number. */
+	Price ahPrice(PriceTables.Ah a) {
+		if (a == null) return null;
+		return switch (ahMode) {
+			case MEDIAN -> a.median() > 0 ? new Price(a.median(), Price.Kind.AH_MEDIAN, ahAt) : a.lbin() > 0 ? new Price(a.lbin(), Price.Kind.AH_LOWEST_BIN, ahAt) : null;
+			case LOWEST_BIN -> a.lbin() > 0 ? new Price(a.lbin(), Price.Kind.AH_LOWEST_BIN, ahAt) : null;
+			case PLAIN -> a.p25() > 0 ? new Price(a.p25(), Price.Kind.AH_PLAIN, ahAt) : a.lbin() > 0 ? new Price(a.lbin(), Price.Kind.AH_LOWEST_BIN, ahAt) : null;
+		};
+	}
+
+	/** A pet's auction value at its level (level-priced data when the file has it, else the all-levels price). */
+	public Price petValue(String key, int level, long now) {
+		if (key == null || !enabled) return null;
+		refresh(now);
+		PriceTables.Ah a = ah.get(key);
+		if (a == null) return null;
+		PriceTables.Ah at = a.atLevel(level);
+		Price p = ahPrice(at != null ? at : a);
+		return p != null ? p : ahPrice(a);
 	}
 
 	/** Starts any refresh that is due. Cheap to call every frame. */
@@ -142,13 +163,18 @@ public final class PriceService {
 			ahTry = now;
 			io.execute(() -> {
 				try {
-					Http.Response r = Http.get(AH_URL, 32L * 1024 * 1024, null);
+					// "anything new?": the server answers 304 with no body when our copy is current
+					Http.Response r = Http.get(AH_URL, 32L * 1024 * 1024, ah.isEmpty() ? null : ahEtag);
 					if (r.ok()) {
 						ah = PriceTables.ah(r.text());
+						ahEtag = r.etag();
+						ahAt = System.currentTimeMillis();
+					} else if (r.status() == 304) {
 						ahAt = System.currentTimeMillis();
 					} else {
-						// 404 = the file isn't published yet: check again in 30 minutes; 429 = wait as told
-						long wait = r.status() == 404 ? 30 * 60_000L : r.status() == 429 ? Math.max(60, r.retryAfterS()) * 1000 : FAIL_BACKOFF;
+						// 404 = not published: check again in 30 minutes; 429 / 503 = wait as told, keep the last copy
+						long wait = r.status() == 404 ? 30 * 60_000L
+								: r.status() == 429 || r.status() == 503 ? Math.max(60, r.retryAfterS()) * 1000 : FAIL_BACKOFF;
 						ahBackoffUntil = System.currentTimeMillis() + wait;
 					}
 				} catch (Exception e) {
