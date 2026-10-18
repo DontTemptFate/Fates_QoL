@@ -447,7 +447,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		for (int i = 0; i < 15 && !found; i++) {
 			found = ctx.computeOnClient(mc -> ((SettingsScreen) mc.gui.screen()).point("key:key.fatesofa.hud_editor") != null);
 			if (!found) {
-				ctx.runOnClient(mc -> mc.gui.screen().mouseScrolled(100, 100, 0, -3));
+				ctx.runOnClient(mc -> mc.gui.screen().mouseScrolled(mc.gui.screen().width - 40, 100, 0, -3));
 				ctx.waitTicks(2);
 			}
 		}
@@ -471,6 +471,8 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 		ctx.getInput().pressMouse(com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT);
 		ctx.waitTicks(5);
 		ctx.takeScreenshot("05g_diagnostics");
+		String diagPage = ctx.computeOnClient(mc -> mc.gui.screen() instanceof SettingsScreen st ? st.pageLabel() : "?");
+		check("Diagnostics".equals(diagPage), "couldn't reach the Diagnostics page from the (scrolling) sidebar: " + diagPage);
 		check(io.github.donttemptfate.fatesofa.core.Diagnostics.fps() > 0, "diagnostics measured no frames");
 
 		// put things back for the rest of the test

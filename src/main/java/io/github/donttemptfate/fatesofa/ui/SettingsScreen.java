@@ -119,12 +119,27 @@ public final class SettingsScreen extends Screen {
 
 	/** For the in-game test: the centre of a sidebar entry, in GUI pixels (null if not listed). */
 	public double[] sidebarPoint(String label) {
-		int sy = cy;
-		for (Page p : pages) {
-			if (p.label().equals(label)) return new double[] {px + 8 + sideW / 2.0, sy + 7};
-			sy += 15;
+		for (int i = 0; i < pages.size(); i++) {
+			if (!pages.get(i).label().equals(label)) continue;
+			// scroll the sidebar so the entry is in view
+			int top = i * SIDE_ROW;
+			if (top < sideScroll) sideScroll = top;
+			if (top + SIDE_ROW > sideScroll + sideH()) sideScroll = top + SIDE_ROW - sideH();
+			return new double[] {px + 8 + sideW / 2.0, cy + top - sideScroll + 7};
 		}
 		return null;
+	}
+
+	static final int SIDE_ROW = 15;
+	/** How far the page list is scrolled (it scrolls when the window is too short for every page). */
+	private int sideScroll;
+
+	int sideH() {
+		return py + ph - 8 - cy;
+	}
+
+	int sideMax() {
+		return Math.max(0, pages.size() * SIDE_ROW - sideH());
 	}
 
 	String query() {
@@ -154,10 +169,16 @@ public final class SettingsScreen extends Screen {
 		Widgets.chip(g, font, chgR.x(), chgR.y(), chgR.w(), "Changed", changedOnly, chgR.contains(mouseX, mouseY));
 		if (advR.contains(mouseX, mouseY)) g.setTooltipForNextFrame(font, font.split(Component.literal("Show every option of every feature (otherwise the less common ones stay behind \"+N advanced\")."), 200), mouseX, mouseY);
 		if (chgR.contains(mouseX, mouseY)) g.setTooltipForNextFrame(font, font.split(Component.literal("Only list settings you changed from their defaults."), 200), mouseX, mouseY);
-		// sidebar
-		int sy = cy;
+		// sidebar (scrolls with the wheel when it doesn't fit)
+		sideScroll = Math.max(0, Math.min(sideMax(), sideScroll));
+		int sy = cy - sideScroll;
 		boolean searching = !query().isEmpty();
+		g.enableScissor(px + 6, cy, px + 10 + sideW, cy + sideH());
 		for (Page p : pages) {
+			if (sy + 14 < cy || sy > cy + sideH()) {
+				sy += SIDE_ROW;
+				continue;
+			}
 			boolean active = !searching && p == page;
 			Rect r = new Rect(px + 8, sy, sideW, 14);
 			boolean hover = r.contains(mouseX, mouseY);
@@ -171,9 +192,19 @@ public final class SettingsScreen extends Screen {
 				search.setValue("");
 				stopEditing();
 			}, null);
-			sy += 15;
-			if (sy > py + ph - 20) break;
+			sy += SIDE_ROW;
 		}
+		g.disableScissor();
+		if (sideMax() > 0) {
+			// a thin bar shows there's more below (or above)
+			int trackH = sideH();
+			int thumbH = Math.max(10, trackH * trackH / (pages.size() * SIDE_ROW));
+			int thumbY = cy + (trackH - thumbH) * sideScroll / sideMax();
+			g.fill(px + 10 + sideW, cy, px + 11 + sideW, cy + trackH, Ui.rule());
+			g.fill(px + 10 + sideW, thumbY, px + 11 + sideW, thumbY + thumbH, Ui.accent());
+		}
+		// sidebar entries scrolled out of view can't be clicked
+		hits.list.removeIf(h -> h.rect().x() == px + 8 && (h.rect().y() < cy - 1 || h.rect().bottom() > cy + sideH() + 1));
 		// content
 		g.enableScissor(cx - 2, cy, cx + cw + 2, cy + ch);
 		int y = cy - scroll;
@@ -1154,6 +1185,10 @@ public final class SettingsScreen extends Screen {
 
 	@Override
 	public boolean mouseScrolled(double x, double y, double h, double v) {
+		if (x < cx - 4) {
+			sideScroll = (int) Math.max(0, Math.min(sideMax(), sideScroll - v * SIDE_ROW));
+			return true;
+		}
 		int max = Math.max(0, contentH - ch);
 		scroll = (int) Math.max(0, Math.min(max, scroll - v * 20));
 		return true;
