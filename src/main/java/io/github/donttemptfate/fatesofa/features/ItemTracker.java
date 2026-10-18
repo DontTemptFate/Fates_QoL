@@ -100,7 +100,11 @@ public final class ItemTracker extends Feature {
 	static List<String> hovers(Component c) {
 		List<String> out = new ArrayList<>();
 		for (Component part : c.toFlatList()) {
-			if (part.getStyle().getHoverEvent() instanceof HoverEvent.ShowText st) out.add(io.github.donttemptfate.fates.common.text.Strip.clean(st.value().getString()));
+			if (!(part.getStyle().getHoverEvent() instanceof HoverEvent.ShowText st)) continue;
+			// clean line by line: the item list is one line per item
+			StringBuilder b = new StringBuilder();
+			for (String line : st.value().getString().split("\n")) b.append(io.github.donttemptfate.fates.common.text.Strip.clean(line)).append('\n');
+			out.add(b.toString());
 		}
 		return out;
 	}
