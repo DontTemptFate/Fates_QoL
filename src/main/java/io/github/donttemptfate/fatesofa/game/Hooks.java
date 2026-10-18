@@ -14,6 +14,7 @@ public final class Hooks {
 	private Hooks() {}
 
 	private static long lastSave;
+	private static boolean updateNoticed;
 
 	public static void register(Ofa o) {
 		Keys.register();
@@ -21,6 +22,8 @@ public final class Hooks {
 		ChatBus.register(); // before any feature's chat hook, so filters never hide a message from trackers
 		ModApi.register(o.state);
 		ClientCommandRegistrationCallback.EVENT.register((d, ctx) -> Commands.register(d));
+		if (o.settings.on(io.github.donttemptfate.fatesofa.features.General.UPDATES) && o.settings.on(io.github.donttemptfate.fatesofa.features.General.NETWORK))
+			o.updates.check(o.io, null);
 		ClientTickEvents.END_CLIENT_TICK.register(mc -> {
 			try {
 				tick(mc, o);
@@ -59,6 +62,14 @@ public final class Hooks {
 		io.github.donttemptfate.fatesofa.core.Diagnostics.tick(now);
 		o.repo.tick(now);
 		if (o.state.onSkyBlock()) o.prices.refresh(now);
+		if (!updateNoticed && o.updates.checked() && o.state.onSkyBlock()) {
+			updateNoticed = true;
+			var l = o.updates.latest();
+			boolean betas = o.settings.on(io.github.donttemptfate.fatesofa.features.General.BETAS);
+			if (l != null && (betas || !l.prerelease()) && io.github.donttemptfate.fatesofa.data.Updates.newer(l.version(), o.version)
+					&& o.settings.on(io.github.donttemptfate.fatesofa.features.General.UPDATES))
+				Game.info("Fates OFA " + l.version() + " is out (you have " + o.version.replaceAll("\\+.*", "") + "). Download: " + l.url());
+		}
 		if (now - lastSave > 30_000 && o.settings.dirty()) {
 			lastSave = now;
 			save(o);

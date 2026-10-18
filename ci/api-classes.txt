@@ -13,3 +13,5 @@ net.minecraft.client.sounds.SoundManager
 net.minecraft.client.resources.sounds.SimpleSoundInstance
 net.minecraft.util.ARGB
 net.minecraft.ChatFormatting
+net.minecraft.SystemReport
+net.minecraft.CrashReport

@@ -31,6 +31,11 @@ jobs:
       - name: Room pack builder tests
         run: python3 ci/rooms/test_rooms.py
 
+      - name: README lists every command; changelog readable
+        run: |
+          python3 ci/check_readme.py
+          python3 ci/release_notes.py "$(grep '^version=' gradle.properties | cut -d= -f2)" > /dev/null || python3 ci/release_notes.py 0.1.0-beta.1 > /dev/null
+
       - name: Build and test
         id: build
         run: |

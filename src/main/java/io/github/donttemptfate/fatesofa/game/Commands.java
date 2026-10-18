@@ -65,6 +65,7 @@ public final class Commands {
 						.then(ClientCommands.literal("export").executes(c -> rooms(r -> r.export())))
 						.then(ClientCommands.literal("import").executes(c -> rooms(r -> r.importAll())))
 						.then(ClientCommands.literal("update").executes(c -> rooms(r -> r.updatePack()))))
+				.then(ClientCommands.literal("version").executes(c -> version()))
 				.then(ClientCommands.literal("networth").executes(c -> {
 					var pf = io.github.donttemptfate.fatesofa.features.PlannerFeature.INSTANCE;
 					if (pf == null || !pf.active()) Game.warn("Switch on the Progression planner first (/ofa → Planner).");
@@ -169,8 +170,18 @@ public final class Commands {
 	}
 
 	static int help() {
-		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa networth · /ofa storage · /ofa find <text> · /ofa wp add|remove|clear · "
+		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa networth · /ofa version · /ofa storage · /ofa find <text> · /ofa wp add|remove|clear · "
 				+ "/ofa quick — quick buttons, hotkeys & aliases · /ofa rooms [export|import|update] · /ofa record [on|off] · /ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
+		return 1;
+	}
+
+	static int version() {
+		Ofa o = Ofa.get();
+		String mc = net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer("minecraft").map(m -> m.getMetadata().getVersion().getFriendlyString()).orElse("?");
+		var l = o.updates.latest();
+		String latest = !o.updates.checked() ? "not checked (update check off or offline)"
+				: l == null ? "unknown" : io.github.donttemptfate.fatesofa.data.Updates.newer(l.version(), o.version) ? l.version() + " is newer — " + l.url() : "you're up to date";
+		Game.info("Fates OFA " + o.version + " on Minecraft " + mc + " · latest: " + latest);
 		return 1;
 	}
 

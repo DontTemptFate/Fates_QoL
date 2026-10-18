@@ -118,4 +118,25 @@ public class ValuationTest {
 		assertEquals(io.github.donttemptfate.fatesofa.protect.Protection.Verdict.CONFIRM, p.decideAuction(item, 9_000e6, 800e6, 20_000).verdict());
 		assertEquals(io.github.donttemptfate.fatesofa.protect.Protection.Verdict.ALLOW, p.decideAuction(item, 850e6, 800e6, 30_000).verdict());
 	}
+
+	@Test
+	public void updateVersions() {
+		var U = io.github.donttemptfate.fatesofa.data.Updates.class;
+		assertTrue(io.github.donttemptfate.fatesofa.data.Updates.newer("0.1.0-beta.1", "0.1.0-alpha.1+mc26.3"));
+		assertTrue(io.github.donttemptfate.fatesofa.data.Updates.newer("0.1.0-beta.10", "0.1.0-beta.9"));
+		assertTrue(io.github.donttemptfate.fatesofa.data.Updates.newer("0.1.0", "0.1.0-beta.9"));
+		assertTrue(io.github.donttemptfate.fatesofa.data.Updates.newer("0.2.0-alpha.1", "0.1.9"));
+		assertTrue(!io.github.donttemptfate.fatesofa.data.Updates.newer("0.1.0-alpha.1", "0.1.0-alpha.1+mc26.2"));
+		assertTrue(!io.github.donttemptfate.fatesofa.data.Updates.newer("0.1.0-beta.1", "0.1.0"));
+		var l = io.github.donttemptfate.fatesofa.data.Updates.parse("{\"version\":\"0.1.0-beta.1\",\"url\":\"https://evil.example/x\",\"prerelease\":true}");
+		assertEquals("https://github.com/DontTemptFate/Fates_QoL/releases", l.url()); // links only ever point at the OFA repo
+		assertTrue(l.prerelease());
+		try {
+			io.github.donttemptfate.fatesofa.data.Updates.parse("{\"version\":\"1.0; rm -rf\"}");
+			throw new AssertionError("accepted a bad version");
+		} catch (IllegalArgumentException expected) {
+			// fine
+		}
+		assertNotNull(U);
+	}
 }

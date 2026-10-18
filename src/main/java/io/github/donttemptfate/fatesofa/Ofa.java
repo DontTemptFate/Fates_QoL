@@ -31,6 +31,8 @@ public final class Ofa {
 	public final io.github.donttemptfate.fatesofa.activity.Election election;
 	/** Item values with upgrades, shared by tooltips, chest value, storage, protection and networth. */
 	public final io.github.donttemptfate.fatesofa.items.Valuation valuation;
+	/** "Is there a newer OFA?" (notice only). */
+	public final io.github.donttemptfate.fatesofa.data.Updates updates = new io.github.donttemptfate.fatesofa.data.Updates();
 
 	public Ofa(Path dir, String version, Consumer<String> log) {
 		this.dir = dir;

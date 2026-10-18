@@ -142,6 +142,15 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.waitTicks(5);
 			ctx.takeScreenshot("08c_networth_chat");
 
+			// Batch 7: crash reports carry a Fates OFA line
+			ctx.runOnClient(mc -> {
+				var report = new net.minecraft.CrashReport("OFA test", new Throwable("test"));
+				mc.fillReport(report);
+				String txt = report.getSystemReport().toLineSeparatedString();
+				check(txt.contains("Fates OFA"), "no Fates OFA line in the crash report");
+				FatesOfaClient.LOG.info("[gametest] crash report line: {}", txt.lines().filter(l -> l.contains("Fates OFA")).findFirst().orElse("?"));
+			});
+
 			// trackers fed with real-looking messages
 			ctx.runOnClient(mc -> {
 				var slayer = io.github.donttemptfate.fatesofa.features.SlayerFeature.INSTANCE;

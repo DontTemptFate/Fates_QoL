@@ -32,6 +32,10 @@ public final class General {
 	public static final Setting<Boolean> REPO_AUTO = Setting.bool("general.repoAuto", "Update item data automatically", true)
 			.help("Check GitHub for newer item data once an hour.").keywords("neu repo").build();
 
+	public static final Setting<Boolean> UPDATES = Setting.bool("general.updates", "Tell me when a new version is out", true)
+			.help("Checks the OFA GitHub page once per game start and says so in chat. Nothing is downloaded or installed.").keywords("update version release").build();
+	public static final Setting<Boolean> BETAS = Setting.bool("general.betas", "Include test (beta) versions", true)
+			.help("Off: only full releases are announced.").keywords("update beta").build();
 	public static final Setting<Boolean> ADVANCED = Setting.bool("general.advanced", "Show advanced settings", false)
 			.help("Lists every option of every feature. Off: the less common ones stay behind \"+N advanced\" on each feature.").build();
 
@@ -40,11 +44,11 @@ public final class General {
 	}
 
 	public static List<Setting<?>> dataSettings() {
-		return List.of(NETWORK, AH_PRICES, BAZAAR_MODE, AH_MODE, REPO_AUTO, REPO_EVERY);
+		return List.of(NETWORK, AH_PRICES, BAZAAR_MODE, AH_MODE, REPO_AUTO, REPO_EVERY, UPDATES, BETAS);
 	}
 
 	public static List<Setting<?>> globals() {
-		return List.of(THEME, CHAKRA, NETWORK, AH_PRICES, BAZAAR_MODE, AH_MODE, REPO_AUTO, REPO_EVERY);
+		return List.of(THEME, CHAKRA, NETWORK, AH_PRICES, BAZAAR_MODE, AH_MODE, REPO_AUTO, REPO_EVERY, UPDATES, BETAS);
 	}
 
 	public static void declare(Ofa o) {
