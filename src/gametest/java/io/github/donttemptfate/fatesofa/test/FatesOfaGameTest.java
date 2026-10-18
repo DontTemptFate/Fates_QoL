@@ -173,6 +173,7 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				o.settings.set((io.github.donttemptfate.fatesofa.config.Setting<String>) o.settings.find("itemtracker.items"), "Enchanted Carrot\nWheat");
 				check(sk != null, "");
 			});
+			ctx.runOnClient(mc -> mc.gui.setScreen(null)); // pickups only count with no menu open
 			ctx.waitTicks(25);
 			ctx.runOnClient(mc -> mc.player.getInventory().setItem(7, sb(Items.DIAMOND, "ENCHANTED_DIAMOND", "§aEnchanted Diamond", "§a§lUNCOMMON", 32)));
 			ctx.waitTicks(25);
