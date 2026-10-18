@@ -37,6 +37,8 @@ public final class ContainerValue extends Feature {
 	final Setting<Integer> minK = setting(Setting.integer("chestvalue.min", "Ignore items worth less than (k coins)", 0, 0, 10_000));
 	final io.github.donttemptfate.fatesofa.core.Display display = new io.github.donttemptfate.fatesofa.core.Display(this, "chestvalue", 0xFFFF55FF, io.github.donttemptfate.fatesofa.core.Display.lines("total", "Total value", "items", "Most valuable items", "count", "How many items were valued"),
 			List.of("total", "items"));
+	final Setting<Boolean> upgrades = setting(Setting.bool("chestvalue.upgrades", "Count upgrades (enchants, stars, gems…)", true)
+			.help("Uses the same upgrade settings as the tooltip's \"Worth with upgrades\"."));
 	final Setting<Integer> nameLength = setting(Setting.integer("chestvalue.nameLength", "Longest item name (letters)", 22, 10, 40).group("Display").advanced());
 	final Setting<Boolean> stackCounts = setting(Setting.bool("chestvalue.counts", "Show stack sizes (3×)", true).group("Display").advanced());
 
@@ -83,7 +85,14 @@ public final class ContainerValue extends Feature {
 			ItemStack st = sl.getItem();
 			if (st.isEmpty()) continue;
 			var facts = io.github.donttemptfate.fates.common.item.ItemFacts.of(st);
-			Valuer.Valued v = Valuer.value(o.prices, facts.key(), facts.name(), st.getCount(), now);
+			Valuer.Valued v;
+			if (on(upgrades) && facts.key() != null) {
+				double t = o.valuation.total(io.github.donttemptfate.fates.common.item.Items.data(st), facts.key(), st.getCount(), now);
+				v = Double.isNaN(t) ? null : new Valuer.Valued(facts.key(), facts.name(), st.getCount(), t / Math.max(1, st.getCount()),
+						io.github.donttemptfate.fatesofa.data.Price.Kind.AH_PLAIN);
+			} else {
+				v = Valuer.value(o.prices, facts.key(), facts.name(), st.getCount(), now);
+			}
 			if (v != null && v.total() >= get(minK) * 1000.0) vals.add(v);
 		}
 		if (vals.isEmpty()) return null;

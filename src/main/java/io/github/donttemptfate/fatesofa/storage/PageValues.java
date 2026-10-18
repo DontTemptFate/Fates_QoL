@@ -11,6 +11,8 @@ public final class PageValues {
 	static final long FRESH_MS = 5000;
 
 	private final PriceService prices;
+	/** With upgrades when OFA knows them (null in tests: plain prices). */
+	public volatile io.github.donttemptfate.fatesofa.items.Valuation valuation;
 	private final Map<Object, Double> cache = new IdentityHashMap<>();
 	private long at;
 
@@ -31,8 +33,13 @@ public final class PageValues {
 		expire(now);
 		Double known = cache.get(it);
 		if (known != null) return known;
-		Valuer.Valued v = Valuer.value(prices, it.key(), it.name(), it.count(), now);
-		double d = v == null ? Double.NaN : v.total();
+		double d;
+		if (valuation != null && it.upgrades() != null) {
+			d = valuation.total(it.upgrades(), it.key(), it.count(), now);
+		} else {
+			Valuer.Valued v = Valuer.value(prices, it.key(), it.name(), it.count(), now);
+			d = v == null ? Double.NaN : v.total();
+		}
 		cache.put(it, d);
 		return d;
 	}

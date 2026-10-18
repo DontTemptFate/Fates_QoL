@@ -40,7 +40,8 @@ public final class Valuer {
 			if (v == null) continue;
 			for (int i = 0; i < merged.size(); i++) {
 				Valued m = merged.get(i);
-				if (m.key().equals(v.key()) && m.name().equals(v.name())) {
+				// same item at the same value (two upgraded copies of one item stay separate lines)
+				if (m.key().equals(v.key()) && m.name().equals(v.name()) && Math.abs(m.each() - v.each()) <= Math.abs(m.each()) * 1e-9) {
 					merged.set(i, new Valued(m.key(), m.name(), m.count() + v.count(), m.each(), m.kind()));
 					continue outer;
 				}

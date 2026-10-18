@@ -50,6 +50,19 @@ public final class ProtectionFeature extends Feature {
 	final Setting<String> confirmFor = setting(Setting.lines("protect.confirmFor", "Ask twice before", io.github.donttemptfate.fatesofa.core.Display.lines("DROP", "Dropping", "NPC_SELL", "Selling to an NPC", "SALVAGE", "Salvaging", "TRADE", "Trading", "AUCTION", "Listing on the auction house", "BAZAAR", "Selling on the bazaar"),
 			java.util.List.of("NPC_SELL", "SALVAGE", "DROP")).group("Valuable items"));
 	final Setting<Integer> confirmSeconds = setting(Setting.integer("protect.confirmSeconds", "Time for the second click (s)", 3, 1, 10).group("Valuable items").advanced());
+	final Setting<Integer> dropK = setting(Setting.integer("protect.dropValue", "Ask before dropping items worth (k coins)", 100, 0, 1_000_000)
+			.group("Valuable items").help("Separate from the sell threshold above, because a dropped item is gone for good. 0 = off."));
+	final Setting<Integer> npcShare = setting(Setting.integer("protect.npcShare", "Ask when an NPC pays under (% of value)", 5, 0, 50).group("NPC selling")
+			.help("Selling to an NPC for a tiny part of what the item is worth needs a second click. 0 = off."));
+	final Setting<Integer> npcMinK = setting(Setting.integer("protect.npcMin", "Only for items worth over (k coins)", 100, 0, 100_000).group("NPC selling"));
+	final Setting<Boolean> auctionGuard = setting(Setting.bool("protect.auction", "Check auction prices", true).group("Auction price check")
+			.help("Creating an auction for far below the lowest BIN, or with what looks like an extra zero, needs the same click twice."));
+	final Setting<Integer> auctionLow = setting(Setting.integer("protect.auctionLow", "Ask below (% of lowest BIN)", 50, 1, 100).group("Auction price check"));
+	final Setting<Integer> auctionHigh = setting(Setting.integer("protect.auctionHigh", "Ask above (× lowest BIN)", 10, 2, 100).group("Auction price check"));
+	final Setting<Boolean> tradeTotals = setting(Setting.bool("protect.trade", "Show trade totals", true).group("Trades")
+			.help("Beside the trade window: what you give, what you get (with upgrades), and a warning when it's lopsided."));
+	final Setting<Integer> tradeWarn = setting(Setting.integer("protect.tradeWarn", "Warn when you get less than (% of what you give)", 50, 0, 100)
+			.group("Trades"));
 	final Setting<String> blockSound = setting(Setting.sound("protect.sound", "Sound when something is stopped", "minecraft:entity.villager.no|0.6|1").group("When stopped"));
 	final Setting<Boolean> chatNote = setting(Setting.bool("protect.chat", "Say why in chat", true).group("When stopped"));
 	final Setting<Boolean> titleNote = setting(Setting.bool("protect.title", "Also a title on screen", false).group("When stopped").advanced());
@@ -74,7 +87,10 @@ public final class ProtectionFeature extends Feature {
 		apply(o);
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {
 			if (!(screen instanceof AbstractContainerScreen<?> acs)) return;
-			ScreenEvents.afterExtract(screen).register((s, g, mx, my, d) -> guard(() -> drawLocks(acs, g)));
+			ScreenEvents.afterExtract(screen).register((s, g, mx, my, d) -> guard(() -> {
+				drawLocks(acs, g);
+				if (on(tradeTotals)) drawTrade(acs, g);
+			}));
 			ScreenKeyboardEvents.allowKeyPress(screen).register((s, key) -> guard(() -> {
 				if (Keys.lock == null || !Keys.lock.matches(key)) return true;
 				toggleHovered(acs, Minecraft.getInstance().hasShiftDown());
@@ -86,6 +102,11 @@ public final class ProtectionFeature extends Feature {
 	/** Pushes the settings into the protection rules. */
 	void apply(Ofa o) {
 		o.protection.confirmValue = get(confirmMillions) * 1_000_000.0;
+		o.protection.dropConfirmValue = get(dropK) * 1000.0;
+		o.protection.npcMinShare = get(npcShare) / 100.0;
+		o.protection.npcMinValue = get(npcMinK) * 1000.0;
+		o.protection.auctionLowShare = on(auctionGuard) ? get(auctionLow) / 100.0 : 0;
+		o.protection.auctionHighTimes = on(auctionGuard) ? get(auctionHigh) : 0;
 		o.protection.confirmWindowMs = get(confirmSeconds) * 1000L;
 		o.protection.lockStops = actions(get(lockStops), lockStops.options);
 		o.protection.confirmFor = actions(get(confirmFor), confirmFor.options);
@@ -195,6 +216,7 @@ public final class ProtectionFeature extends Feature {
 		}
 		if (input == ContainerInput.THROW) return decide(Protection.Action.DROP, st, slotId);
 		Protection.Action a = menuAction(menu);
+		if (!own && a == Protection.Action.AUCTION && auctionClick(menu, st)) return true;
 		if (!own) {
 			// putting the item on your cursor into the window (an auction slot, a trade offer…)
 			ItemStack carried = menu.getCarried();
@@ -223,14 +245,96 @@ public final class ProtectionFeature extends Feature {
 		return Protection.actionFor(title, buttons);
 	}
 
+	static final java.util.regex.Pattern PRICE = java.util.regex.Pattern.compile("(?i)(?:item price|starting bid|bin price|price): ([\\d,.]+[kmb]?) coins?");
+	static final java.util.regex.Pattern COINS = java.util.regex.Pattern.compile("(?i)^([\\d,.]+[kmb]?) coins?$");
+
+	/** What an item is worth with its upgrades (0 when nothing prices it). */
+	static double worth(ItemStack st) {
+		String key = Items.key(st);
+		if (key == null) return 0;
+		double v = Ofa.get().valuation.total(Items.data(st), key, st.getCount(), System.currentTimeMillis());
+		return Double.isNaN(v) ? 0 : v;
+	}
+
+	/** Clicking "Create (BIN) Auction" / "Confirm": checks the price against the item's lowest BIN. True = stopped. */
+	boolean auctionClick(AbstractContainerMenu menu, ItemStack button) {
+		if (button.isEmpty()) return false;
+		String name = Items.plainName(button);
+		if (!(name.startsWith("Create BIN Auction") || name.startsWith("Create Auction") || name.equals("Confirm"))) return false;
+		double price = Double.NaN;
+		for (String l : Items.lorePlain(button)) {
+			java.util.regex.Matcher m = PRICE.matcher(l);
+			if (m.find()) {
+				price = Fmt.parse(m.group(1));
+				break;
+			}
+		}
+		if (!(price > 0) || menu.slots.size() <= 13) return false;
+		ItemStack item = menu.getSlot(13).getItem();
+		String key = Items.key(item);
+		if (key == null) return false;
+		var ah = Ofa.get().prices.ahQuote(key);
+		if (ah == null || !(ah.lbin() > 0)) return false;
+		Protection.Decision d = Ofa.get().protection.decideAuction(new Protection.Facts(Items.uuid(item), key, Items.plainName(item), worth(item), 13),
+				price, ah.lbin() * Math.max(1, item.getCount()), System.currentTimeMillis());
+		return d.verdict() != Protection.Verdict.ALLOW && note(d.reason() + " (" + Fmt.shortNum(price) + " vs " + Fmt.shortNum(ah.lbin()) + ")");
+	}
+
+	// ---- trade totals ---------------------------------------------------------------------------------
+
+	private Object tradeFor;
+	private long tradeAt;
+	private io.github.donttemptfate.fates.common.ui.Card tradeCard;
+
+	/** Hypixel's trade window: your offer in the left four columns, theirs in the right four. */
+	void drawTrade(AbstractContainerScreen<?> s, GuiGraphicsExtractor g) {
+		if (Protection.actionFor(Strip.clean(s.getTitle().getString()), java.util.List.of()) != Protection.Action.TRADE) return;
+		long now = System.currentTimeMillis();
+		if (s != tradeFor || now - tradeAt > 500) {
+			tradeFor = s;
+			tradeAt = now;
+			double mine = 0, theirs = 0;
+			for (Slot sl : s.getMenu().slots) {
+				if (sl.container instanceof Inventory || sl.index >= 36 || sl.getItem().isEmpty()) continue;
+				int col = sl.index % 9;
+				if (col == 4) continue;
+				ItemStack st = sl.getItem();
+				java.util.regex.Matcher cm = COINS.matcher(Items.plainName(st));
+				double v = cm.matches() ? Fmt.parse(cm.group(1)) : worth(st);
+				if (col < 4) mine += v;
+				else theirs += v;
+			}
+			tradeCard = null;
+			if (mine > 0 || theirs > 0) {
+				var c = new io.github.donttemptfate.fates.common.ui.Card(0.9f, 100, 170);
+				c.add(io.github.donttemptfate.fates.common.ui.Card.Line.of(io.github.donttemptfate.fates.common.ui.Card.seg("TRADE", Ui.Role.LABEL, Ui.accent())));
+				var kv = new io.github.donttemptfate.fates.common.ui.Card.KeyValues(1);
+				kv.row(io.github.donttemptfate.fates.common.ui.Card.seg("You give", Ui.Role.SMALL, Ui.GRAY), io.github.donttemptfate.fates.common.ui.Card.seg(Fmt.shortNum(mine), Ui.Role.SMALL, Ui.GOLD));
+				kv.row(io.github.donttemptfate.fates.common.ui.Card.seg("You get", Ui.Role.SMALL, Ui.GRAY), io.github.donttemptfate.fates.common.ui.Card.seg(Fmt.shortNum(theirs), Ui.Role.SMALL, Ui.GOLD));
+				c.add(kv);
+				if (mine > 0 && theirs < mine * get(tradeWarn) / 100.0)
+					c.add(io.github.donttemptfate.fates.common.ui.Card.Line.of(io.github.donttemptfate.fates.common.ui.Card.seg("You get only " + Math.round(theirs / mine * 100) + "% of what you give",
+							Ui.Role.SMALL, Ui.RED)));
+				c.add(io.github.donttemptfate.fates.common.ui.Card.Line.of(io.github.donttemptfate.fates.common.ui.Card.seg("Values from public prices; check before accepting.", Ui.Role.SMALL, Ui.DARK)));
+				tradeCard = c;
+			}
+		}
+		if (tradeCard == null) return;
+		AbstractContainerScreenAccessor a = (AbstractContainerScreenAccessor) s;
+		int reserve = QuickCommandsFeature.INSTANCE == null ? 0 : QuickCommandsFeature.INSTANCE.leftReserve(s);
+		int edge = a.fatesofa$leftPos() - reserve;
+		float scale = Math.min(1f, Math.max(0.5f, (edge - 8) / (float) tradeCard.width()));
+		tradeCard.draw(g, Math.max(2, edge - Math.round(tradeCard.width() * scale) - 6), a.fatesofa$topPos(), scale);
+	}
+
 	boolean decide(Protection.Action action, ItemStack st, int slot) {
 		if (st == null || st.isEmpty()) return false;
 		Ofa o = Ofa.get();
 		String key = Items.key(st);
-		Price p = key == null ? null : o.prices.value(key, System.currentTimeMillis());
-		double value = p == null ? 0 : p.value() * st.getCount();
-		Protection.Decision d = o.protection.decide(action, new Protection.Facts(Items.uuid(st), key, Items.plainName(st), value, slot),
-				System.currentTimeMillis());
+		double value = worth(st);
+		Double npcEach = key == null ? null : o.prices.npcPrice(key);
+		Protection.Decision d = o.protection.decide(action, new Protection.Facts(Items.uuid(st), key, Items.plainName(st), value, slot,
+				npcEach == null ? Double.NaN : npcEach * st.getCount()), System.currentTimeMillis());
 		return switch (d.verdict()) {
 			case ALLOW -> false;
 			case BLOCK -> note(d.reason());

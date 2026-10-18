@@ -29,6 +29,8 @@ public final class Ofa {
 	public final String version;
 	/** The current mayor and minister (Hypixel's public election data), shared by every feature. */
 	public final io.github.donttemptfate.fatesofa.activity.Election election;
+	/** Item values with upgrades, shared by tooltips, chest value, storage, protection and networth. */
+	public final io.github.donttemptfate.fatesofa.items.Valuation valuation;
 
 	public Ofa(Path dir, String version, Consumer<String> log) {
 		this.dir = dir;
@@ -44,6 +46,7 @@ public final class Ofa {
 		this.prices = new PriceService(io, log);
 		this.repo = new RepoManager(dir.resolve("repo"), io, log);
 		this.election = new io.github.donttemptfate.fatesofa.activity.Election(io);
+		this.valuation = new io.github.donttemptfate.fatesofa.items.Valuation(prices, repo);
 	}
 
 	public static Ofa get() {

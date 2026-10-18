@@ -109,6 +109,39 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("08_locked_item");
 
+			// Batch 6: value with upgrades, tooltip breakdown, networth, NPC-sell sanity
+			ctx.runOnClient(mc -> {
+				o.prices.load(Map.of("ENCHANTED_DIAMOND", new PriceTables.Bz(180, 170, 1, 1, 1, 1), "HOT_POTATO_BOOK", new PriceTables.Bz(90_000, 80_000, 1, 1, 1, 1),
+						"RECOMBOBULATOR_3000", new PriceTables.Bz(6e6, 5.9e6, 1, 1, 1, 1)),
+						Map.of("ENCHANTED_DIAMOND", 1280.0, "HYPERION", 50_000.0), Map.of("HYPERION", new PriceTables.Ah(1.1e9, 1.2e9, 4, 1)), System.currentTimeMillis());
+				ItemStack hype = sb(Items.IRON_SWORD, "HYPERION", "§6Hyperion", "§6§lLEGENDARY DUNGEON SWORD", 1);
+				CompoundTag t = hype.get(DataComponents.CUSTOM_DATA).copyTag();
+				t.putInt("hot_potato_count", 10);
+				t.putInt("rarity_upgrades", 1);
+				hype.set(DataComponents.CUSTOM_DATA, CustomData.of(t));
+				var b = o.valuation.of(io.github.donttemptfate.fates.common.item.Items.data(hype), "HYPERION", 1, System.currentTimeMillis());
+				check(b != null && b.parts().size() == 2, "upgrades not found: " + b);
+				double want = b.base() + 10 * 80_000 + 5.9e6;
+				check(Math.abs(b.total() - want) < 1, "worth with upgrades " + b.total() + " ≠ " + want);
+				var lines = new java.util.ArrayList<Component>();
+				net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.invoker().getTooltipLines(hype, net.minecraft.world.item.Item.TooltipContext.EMPTY,
+						net.minecraft.world.item.TooltipFlag.NORMAL, lines);
+				String text = String.join("\n", lines.stream().map(Component::getString).toList());
+				FatesOfaClient.LOG.info("[gametest] tooltip lines:\n{}", text);
+				check(text.contains("Worth") && text.contains("with upgrades"), "no worth-with-upgrades line in the tooltip");
+				// selling the Hyperion to an NPC for 50k: asks first
+				var sell = o.protection.decide(io.github.donttemptfate.fatesofa.protect.Protection.Action.NPC_SELL,
+						new io.github.donttemptfate.fatesofa.protect.Protection.Facts("x", "HYPERION", "Hyperion", b.total(), 1, 50_000), System.currentTimeMillis());
+				check(sell.verdict() == io.github.donttemptfate.fatesofa.protect.Protection.Verdict.CONFIRM, "NPC sell sanity didn't ask: " + sell);
+				mc.player.getInventory().setItem(5, hype);
+				io.github.donttemptfate.fatesofa.features.PlannerFeature.INSTANCE.networth();
+				var all = ((io.github.donttemptfate.fatesofa.mixin.ChatComponentAccessor) mc.gui.hud.getChat()).fatesofa$allMessages();
+				check(all.stream().limit(15).anyMatch(m -> m.content().getString().startsWith("Networth (what OFA has seen)")), "/ofa networth printed nothing");
+				mc.player.getInventory().setItem(5, ItemStack.EMPTY);
+			});
+			ctx.waitTicks(5);
+			ctx.takeScreenshot("08c_networth_chat");
+
 			// trackers fed with real-looking messages
 			ctx.runOnClient(mc -> {
 				var slayer = io.github.donttemptfate.fatesofa.features.SlayerFeature.INSTANCE;

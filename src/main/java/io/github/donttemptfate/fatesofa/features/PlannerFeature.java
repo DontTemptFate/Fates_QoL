@@ -44,6 +44,79 @@ public final class PlannerFeature extends Feature {
 		INSTANCE = this;
 	}
 
+	public final io.github.donttemptfate.fatesofa.config.Setting<Integer> networthTop = setting(io.github.donttemptfate.fatesofa.config.Setting
+			.integer("planner.networthTop", "Items listed by /ofa networth", 5, 0, 20).group("Networth"));
+	private io.github.donttemptfate.fatesofa.planner.Networth.History history;
+
+	/** /ofa networth: what OFA has seen, valued with upgrades, by category, with the change since the last day. */
+	public void networth() {
+		net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+		Ofa o = Ofa.get();
+		if (mc.player == null) return;
+		long now = System.currentTimeMillis();
+		java.util.List<io.github.donttemptfate.fatesofa.planner.Networth.Entry> entries = new java.util.ArrayList<>();
+		var inv = mc.player.getInventory();
+		for (int i = 0; i < 36; i++) add(entries, "Inventory", inv.getItem(i), now);
+		for (net.minecraft.world.entity.EquipmentSlot s : new net.minecraft.world.entity.EquipmentSlot[] {net.minecraft.world.entity.EquipmentSlot.HEAD,
+				net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET})
+			add(entries, "Armour", mc.player.getItemBySlot(s), now);
+		int pages = 0;
+		var cache = StorageFeature.INSTANCE == null ? null : StorageFeature.INSTANCE.cache();
+		if (cache != null) {
+			for (var p : cache.pages()) {
+				pages++;
+				for (var it : p.items()) {
+					if (it.key() == null) continue;
+					double v;
+					if (it.upgrades() != null) v = o.valuation.total(it.upgrades(), it.key(), it.count(), now);
+					else {
+						var pr = o.prices.value(it.key(), now);
+						v = pr == null ? Double.NaN : pr.value() * it.count();
+					}
+					entries.add(new io.github.donttemptfate.fatesofa.planner.Networth.Entry("Storage", it.key(),
+							io.github.donttemptfate.fates.common.text.Strip.clean(it.name()), it.count(), v));
+				}
+			}
+		}
+		int acc = 0;
+		if (data != null) {
+			for (String k : data.accessories()) {
+				var pr = o.prices.value(k, now);
+				acc++;
+				var repoItem = o.repo.items().get(k);
+				entries.add(new io.github.donttemptfate.fatesofa.planner.Networth.Entry("Accessories", k, repoItem == null ? k : repoItem.plainName(), 1,
+						pr == null ? Double.NaN : pr.value()));
+			}
+		}
+		var sb = o.state.scoreboard();
+		if (sb != null && sb.purse() != null) entries.add(new io.github.donttemptfate.fatesofa.planner.Networth.Entry("Purse", "COINS", "Purse", 1, sb.purse()));
+		var sum = io.github.donttemptfate.fatesofa.planner.Networth.summarise(entries, get(networthTop));
+		if (history == null) history = new io.github.donttemptfate.fatesofa.planner.Networth.History(o.dir.resolve("networth.json"));
+		java.time.LocalDate today = java.time.LocalDate.now();
+		double before = history.record(today, sum.total());
+		java.time.LocalDate prevDay = history.previousDay(today);
+		String change = Double.isNaN(before) ? "" : "  (" + io.github.donttemptfate.fates.common.text.Fmt.signedShort(sum.total() - before) + " since " + prevDay + ")";
+		io.github.donttemptfate.fatesofa.game.Game.send(net.minecraft.network.chat.Component.literal("Networth (what OFA has seen): ").withStyle(net.minecraft.ChatFormatting.GRAY)
+				.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fates.common.text.Fmt.shortNum(sum.total())).withStyle(net.minecraft.ChatFormatting.GOLD))
+				.append(net.minecraft.network.chat.Component.literal(change).withStyle(net.minecraft.ChatFormatting.DARK_GRAY)));
+		for (var e : sum.byCategory().entrySet())
+			io.github.donttemptfate.fatesofa.game.Game.send(net.minecraft.network.chat.Component.literal("  " + e.getKey() + " ").withStyle(net.minecraft.ChatFormatting.GRAY)
+					.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fates.common.text.Fmt.shortNum(e.getValue())).withStyle(net.minecraft.ChatFormatting.GOLD)));
+		for (var e : sum.top())
+			io.github.donttemptfate.fatesofa.game.Game.send(net.minecraft.network.chat.Component.literal("  · " + (e.count() > 1 ? e.count() + "× " : "") + e.name() + " ").withStyle(net.minecraft.ChatFormatting.DARK_GRAY)
+					.append(net.minecraft.network.chat.Component.literal(io.github.donttemptfate.fates.common.text.Fmt.shortNum(e.value())).withStyle(net.minecraft.ChatFormatting.YELLOW)));
+		io.github.donttemptfate.fatesofa.game.Game.send(net.minecraft.network.chat.Component.literal("  Seen: " + pages + " storage pages, " + acc
+				+ " accessories. Not counted: bank, sacks, pets menu, wardrobe, museum.").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+	}
+
+	void add(java.util.List<io.github.donttemptfate.fatesofa.planner.Networth.Entry> out, String cat, net.minecraft.world.item.ItemStack st, long now) {
+		if (st == null || st.isEmpty()) return;
+		String key = io.github.donttemptfate.fates.common.item.Items.key(st);
+		if (key == null) return;
+		double v = Ofa.get().valuation.total(io.github.donttemptfate.fates.common.item.Items.data(st), key, st.getCount(), now);
+		out.add(new io.github.donttemptfate.fatesofa.planner.Networth.Entry(cat, key, io.github.donttemptfate.fates.common.item.Items.plainName(st), st.getCount(), v));
+	}
+
 	public ProfileData data() {
 		return data;
 	}

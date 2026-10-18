@@ -102,7 +102,8 @@ public final class Stacks {
 		}
 		return new io.github.donttemptfate.fatesofa.storage.StoredItem(slot, BuiltInRegistries.ITEM.getKey(st.getItem()).toString(),
 				io.github.donttemptfate.fates.common.item.Items.key(st), Texts.legacy(io.github.donttemptfate.fates.common.item.Items.name(st)),
-				io.github.donttemptfate.fates.common.item.Items.loreLegacy(st), model, profile, st.getCount());
+				io.github.donttemptfate.fates.common.item.Items.loreLegacy(st), model, profile, st.getCount(),
+				ItemValue.trim(io.github.donttemptfate.fates.common.item.Items.data(st)));
 	}
 
 	private static final Map<String, Boolean> MODELS = new ConcurrentHashMap<>();

@@ -71,6 +71,7 @@ public final class StorageOverlay extends Feature {
 	@Override
 	public void init() {
 		values = new PageValues(Ofa.get().prices);
+		values.valuation = Ofa.get().valuation;
 		ScreenEvents.AFTER_INIT.register((mc, screen, w, h) -> {
 			if (!(screen instanceof AbstractContainerScreen<?> acs)) return;
 			guard(() -> attach(mc, acs));

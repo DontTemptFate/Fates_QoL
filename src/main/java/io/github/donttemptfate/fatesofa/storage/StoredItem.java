@@ -10,7 +10,13 @@ import java.util.List;
 import java.util.Locale;
 
 /** What OFA remembers about one stored item: enough to draw it, search it and value it. */
-public record StoredItem(int slot, String itemId, String key, String name, List<String> lore, String model, String profile, int count) {
+public record StoredItem(int slot, String itemId, String key, String name, List<String> lore, String model, String profile, int count,
+		JsonObject upgrades) {
+	/** Without upgrade data (plain items). */
+	public StoredItem(int slot, String itemId, String key, String name, List<String> lore, String model, String profile, int count) {
+		this(slot, itemId, key, name, lore, model, profile, count, null);
+	}
+
 	public String searchText() {
 		StringBuilder b = new StringBuilder(Strip.clean(name));
 		for (String l : lore) b.append(' ').append(Strip.clean(l));
@@ -30,6 +36,7 @@ public record StoredItem(int slot, String itemId, String key, String name, List<
 		if (model != null) o.addProperty("m", model);
 		if (profile != null) o.addProperty("p", profile);
 		o.addProperty("c", count);
+		if (upgrades != null) o.add("u", upgrades);
 		return o;
 	}
 
@@ -38,6 +45,7 @@ public record StoredItem(int slot, String itemId, String key, String name, List<
 		if (o.has("l")) for (JsonElement e : o.getAsJsonArray("l")) lore.add(e.getAsString());
 		return new StoredItem(o.get("s").getAsInt(), o.get("i").getAsString(), o.has("k") ? o.get("k").getAsString() : null,
 				o.get("n").getAsString(), List.copyOf(lore), o.has("m") ? o.get("m").getAsString() : null,
-				o.has("p") ? o.get("p").getAsString() : null, o.has("c") ? o.get("c").getAsInt() : 1);
+				o.has("p") ? o.get("p").getAsString() : null, o.has("c") ? o.get("c").getAsInt() : 1,
+				o.has("u") && o.get("u").isJsonObject() ? o.getAsJsonObject("u") : null);
 	}
 }

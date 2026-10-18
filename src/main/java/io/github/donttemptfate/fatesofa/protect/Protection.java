@@ -36,8 +36,22 @@ public final class Protection {
 	}
 
 	/** What protection needs to know about the item under the click. */
-	public record Facts(String uuid, String key, String name, double value, int slot) {
+	public record Facts(String uuid, String key, String name, double value, int slot, double npcValue) {
+		public Facts(String uuid, String key, String name, double value, int slot) {
+			this(uuid, key, name, value, slot, Double.NaN);
+		}
 	}
+
+	/** Ask before selling to an NPC for less than this share of the item's value (0 = off). */
+	public volatile double npcMinShare = 0.05;
+	/** ...only for items worth at least this much. */
+	public volatile double npcMinValue = 100_000;
+	/** Items worth at least this much ask for a second click before being dropped (0 = off; separate from the sell threshold). */
+	public volatile double dropConfirmValue = 0;
+	/** Auction prices under this share of the lowest BIN ask for a second click (0 = off). */
+	public volatile double auctionLowShare = 0.5;
+	/** Auction prices over this many times the lowest BIN ask too (a stray zero; 0 = off). */
+	public volatile double auctionHighTimes = 10;
 
 	private final Set<String> lockedUuids = new LinkedHashSet<>();
 	private final Set<String> lockedKeys = new LinkedHashSet<>();
@@ -65,19 +79,41 @@ public final class Protection {
 			if (action != Action.TRADE) return new Decision(Verdict.BLOCK, label(f) + " is locked — unlock it to " + action.verb + " it");
 			return new Decision(Verdict.BLOCK, label(f) + " is locked");
 		}
+		String token = action + "|" + (f.uuid() != null ? f.uuid() : f.key()) + "|" + f.slot();
 		boolean valuable = confirmValue > 0 && f.value() >= confirmValue;
-		if (valuable && confirmFor.contains(action)) {
-			String token = action + "|" + (f.uuid() != null ? f.uuid() : f.key()) + "|" + f.slot();
-			if (token.equals(pendingConfirm) && now - pendingAt <= confirmWindowMs) {
-				if (now - pendingAt < confirmMinGapMs) return new Decision(Verdict.CONFIRM, label(f) + " is valuable — click again (a moment apart) to " + action.verb + " it");
-				pendingConfirm = null;
-				return Decision.ALLOW;
-			}
-			pendingConfirm = token;
-			pendingAt = now;
-			return new Decision(Verdict.CONFIRM, label(f) + " is valuable — do it again within " + (confirmWindowMs / 1000.0) + "s to " + action.verb + " it");
+		if (valuable && confirmFor.contains(action)) return confirm(token, label(f) + " is valuable", action.verb + " it", now);
+		if (action == Action.DROP && dropConfirmValue > 0 && f.value() >= dropConfirmValue) return confirm(token, label(f) + " is worth keeping", "drop it", now);
+		if (action == Action.NPC_SELL && npcMinShare > 0 && f.value() >= npcMinValue && !Double.isNaN(f.npcValue()) && f.npcValue() < f.value() * npcMinShare) {
+			int pct = (int) Math.round(f.npcValue() / f.value() * 100);
+			return confirm(token, "The NPC pays only " + pct + "% of what " + label(f) + " is worth", "sell it anyway", now);
 		}
 		return Decision.ALLOW;
+	}
+
+	/**
+	 * Creating an auction: {@code price} against the item's lowest BIN. A price far under it, or ten times
+	 * over it (an extra zero), needs the same click a second time.
+	 */
+	public synchronized Decision decideAuction(Facts f, double price, double lowestBin, long now) {
+		if (!enabled || f == null || !(price > 0) || !(lowestBin > 0)) return Decision.ALLOW;
+		String token = "AUCTION_PRICE|" + (f.uuid() != null ? f.uuid() : f.key()) + "|" + Math.round(price);
+		if (auctionLowShare > 0 && price < lowestBin * auctionLowShare)
+			return confirm(token, "That price is only " + Math.round(price / lowestBin * 100) + "% of the lowest BIN", "list it anyway", now);
+		if (auctionHighTimes > 0 && price > lowestBin * auctionHighTimes)
+			return confirm(token, "That price is " + Math.round(price / lowestBin) + "× the lowest BIN (an extra zero?)", "list it anyway", now);
+		return Decision.ALLOW;
+	}
+
+	/** First time: CONFIRM with the reason; the same action again inside the window (not a double-click): ALLOW. */
+	Decision confirm(String token, String why, String what, long now) {
+		if (token.equals(pendingConfirm) && now - pendingAt <= confirmWindowMs) {
+			if (now - pendingAt < confirmMinGapMs) return new Decision(Verdict.CONFIRM, why + " — click again (a moment apart) to " + what);
+			pendingConfirm = null;
+			return Decision.ALLOW;
+		}
+		pendingConfirm = token;
+		pendingAt = now;
+		return new Decision(Verdict.CONFIRM, why + " — do it again within " + (confirmWindowMs / 1000.0) + "s to " + what);
 	}
 
 	/**

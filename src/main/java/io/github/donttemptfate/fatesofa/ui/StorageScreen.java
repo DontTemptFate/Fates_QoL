@@ -65,6 +65,7 @@ public final class StorageScreen extends Screen {
 			valuesAt = now;
 		}
 		return values.computeIfAbsent(it, i -> {
+			if (i.upgrades() != null) return Ofa.get().valuation.total(i.upgrades(), i.key(), i.count(), now);
 			Valuer.Valued v = Valuer.value(Ofa.get().prices, i.key(), i.name(), i.count(), now);
 			return v == null ? Double.NaN : v.total();
 		});
@@ -271,8 +272,9 @@ public final class StorageScreen extends Screen {
 			Ui.draw(g, Ui.t("MOST VALUABLE", Ui.Role.LABEL, Ui.GRAY), Ui.Role.LABEL, cx, gy + 6);
 			List<Valuer.Valued> merged = new ArrayList<>();
 			for (StoredItem it : ranked) {
-				Valuer.Valued v = Valuer.value(Ofa.get().prices, it.key(), it.name(), it.count(), System.currentTimeMillis());
-				if (v != null) merged.add(v);
+				double val = value(it);
+				if (!Double.isNaN(val) && it.key() != null)
+					merged.add(new Valuer.Valued(it.key(), it.name(), it.count(), val / Math.max(1, it.count()), io.github.donttemptfate.fatesofa.data.Price.Kind.AH_PLAIN));
 			}
 			int ry = gy + 11;
 			for (Valuer.Valued v : Valuer.top(merged, Math.min(5, rows + 1))) {
