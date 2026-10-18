@@ -57,6 +57,7 @@ are **off by default**. They only show hints; you do every click.
 | `/ofa recipe <item>` | Recipe page for an item |
 | `/ofa planner` | Progression planner |
 | `/ofa networth` | Networth from what OFA has seen, by category |
+| `/ofa runs` | Your dungeon runs: fastest, best score and average per floor |
 | `/ofa quick` | Edit quick buttons, hotkeys and aliases |
 | `/ofa wp add [name]` · `remove <name>` · `clear` | Your waypoints on this island |
 | `/ofa rooms` · `export` · `import` · `update` | Learned dungeon secrets: sharing and the shared pack |

@@ -256,6 +256,19 @@ public final class SecretRoutes extends Feature {
 		tracked.putAll(seen);
 	}
 
+	/** For the dungeon map: {known, collected} secrets of the room at grid cell (i, j), or null when the room isn't recognised. */
+	public int[] secretCount(int i, int j) {
+		if (!active()) return null;
+		for (RoomLearner.Placement p : placements.values()) {
+			if (p.cell().i() != i || p.cell().j() != j) continue;
+			List<Object[]> s = secretsIn(p);
+			int found = 0;
+			for (Object[] x : s) if (learner.found((double) x[0], (double) x[1], (double) x[2])) found++;
+			return new int[] {s.size(), found};
+		}
+		return null;
+	}
+
 	/** Known secrets of a cell in world positions (yours first, then the pack's that you don't already have). */
 	List<Object[]> secretsIn(RoomLearner.Placement p) {
 		List<Object[]> out = new ArrayList<>();

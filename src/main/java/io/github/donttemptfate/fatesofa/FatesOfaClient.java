@@ -78,5 +78,7 @@ public final class FatesOfaClient implements ClientModInitializer {
 		Features.add(new CollectionsFeature());
 		Features.add(new MinionHelper());
 		Features.add(new ChocolateFactoryHelper());
+		Features.add(new RewardChests());
+		Features.add(new PuzzleHelpers());
 	}
 }

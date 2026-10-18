@@ -66,6 +66,7 @@ public final class Commands {
 						.then(ClientCommands.literal("import").executes(c -> rooms(r -> r.importAll())))
 						.then(ClientCommands.literal("update").executes(c -> rooms(r -> r.updatePack()))))
 				.then(ClientCommands.literal("version").executes(c -> version()))
+				.then(ClientCommands.literal("runs").executes(c -> runs()))
 				.then(ClientCommands.literal("networth").executes(c -> {
 					var pf = io.github.donttemptfate.fatesofa.features.PlannerFeature.INSTANCE;
 					if (pf == null || !pf.active()) Game.warn("Switch on the Progression planner first (/ofa → Planner).");
@@ -170,8 +171,21 @@ public final class Commands {
 	}
 
 	static int help() {
-		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa networth · /ofa version · /ofa storage · /ofa find <text> · /ofa wp add|remove|clear · "
+		Game.info("/ofa — settings · /ofa hud — move HUD elements · /ofa recipe <item> · /ofa planner · /ofa networth · /ofa runs · /ofa version · /ofa storage · /ofa find <text> · /ofa wp add|remove|clear · "
 				+ "/ofa quick — quick buttons, hotkeys & aliases · /ofa rooms [export|import|update] · /ofa record [on|off] · /ofa status · /ofa repo [update] · /ofa feature <id> on|off · /ofa export / import (clipboard)");
+		return 1;
+	}
+
+	static int runs() {
+		var df = (io.github.donttemptfate.fatesofa.features.DungeonFeature) Features.get("dungeons");
+		if (df == null || df.runs == null || df.runs.all().isEmpty()) {
+			Game.info("No runs recorded yet. Finished dungeon runs are added automatically.");
+			return 1;
+		}
+		Game.info("Your dungeon runs (fastest · best score · average · runs):");
+		for (var s : df.runs.stats())
+			Game.info("  " + s.floor() + ": " + (s.fastestMs() > 0 ? io.github.donttemptfate.fates.common.text.Fmt.clock(s.fastestMs()) : "?") + " · " + s.bestScore()
+					+ " · " + (s.averageMs() > 0 ? io.github.donttemptfate.fates.common.text.Fmt.clock(s.averageMs()) : "?") + " · " + s.runs());
 		return 1;
 	}
 

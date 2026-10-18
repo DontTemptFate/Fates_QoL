@@ -207,6 +207,50 @@ public class FatesOfaGameTest implements FabricClientGameTest {
 				check(o.settings.raw("x") == null, "");
 			});
 
+			// Batch 8b: run history, reward chest profit, puzzle hints (built in the test world)
+			ctx.runOnClient(mc -> io.github.donttemptfate.fatesofa.game.ChatBus.inject(Component.literal("             Team Score: 301 (S+)"), false));
+			check(ctx.computeOnClient(mc -> ((io.github.donttemptfate.fatesofa.features.DungeonFeature) Features.get("dungeons")).runs.all().size()) >= 1,
+					"the finished run wasn't recorded");
+			SimpleContainer reward = new SimpleContainer(54);
+			reward.setItem(11, sb(Items.BONE, "NECRON_HANDLE", "§5Necron's Handle", "§5§lEPIC", 1));
+			reward.setItem(12, new ItemStack(Items.NETHER_STAR).copyWithCount(1));
+			reward.setItem(12, lore(reward.getItem(12), "x"));
+			reward.getItem(12).set(DataComponents.CUSTOM_NAME, Component.literal("Wither Essence x20"));
+			reward.setItem(31, lore(new ItemStack(Items.CHEST), "Open Reward Chest", "", "Cost", "2,000,000 Coins", "Dungeon Chest Key", "", "Click to open!"));
+			reward.getItem(31).set(DataComponents.CUSTOM_NAME, Component.literal("Open Reward Chest"));
+			ctx.runOnClient(mc -> mc.gui.setScreen(new ContainerScreen(ChestMenu.sixRows(0, mc.player.getInventory(), reward), mc.player.getInventory(), Component.literal("Bedrock Chest"))));
+			ctx.waitTicks(15);
+			ctx.takeScreenshot("08g_reward_chest");
+			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+			int[] p0 = ctx.computeOnClient(mc -> new int[] {mc.player.getBlockX(), mc.player.getBlockY(), mc.player.getBlockZ()});
+			int bx = p0[0], by = p0[1], bz = p0[2];
+			sp.getServer().runCommand("difficulty easy");
+			sp.getServer().runCommand("fill " + bx + " " + (by - 1) + " " + bz + " " + (bx + 2) + " " + (by - 1) + " " + (bz + 2) + " minecraft:ice");
+			int cx = bx + 12, cy = by + 1, cz = bz + 12;
+			sp.getServer().runCommand("summon minecraft:creeper " + cx + ".5 " + cy + " " + cz + ".5 {NoAI:1b,Silent:1b,PersistenceRequired:1b}");
+			sp.getServer().runCommand("setblock " + (cx - 8) + " " + (cy + 1) + " " + cz + " minecraft:sea_lantern");
+			sp.getServer().runCommand("setblock " + (cx + 8) + " " + (cy + 1) + " " + cz + " minecraft:sea_lantern");
+			sp.getServer().runCommand("setblock " + cx + " " + (cy + 1) + " " + (cz - 8) + " minecraft:sea_lantern");
+			sp.getServer().runCommand("setblock " + cx + " " + (cy + 1) + " " + (cz + 8) + " minecraft:sea_lantern");
+			sp.getServer().runCommand("setblock " + (cx - 7) + " " + (cy + 6) + " " + (cz - 7) + " minecraft:sea_lantern");
+			for (int i = 0; i < 3; i++)
+				sp.getServer().runCommand("summon minecraft:armor_stand " + (bx - 4 - i * 2) + " " + by + " " + (bz + 4) + " {NoGravity:1b,Invisible:1b,CustomNameVisible:1b,CustomName:\"[Lv15] Blaze " + (500 + i * 700) + "/2,000❤\"}");
+			ctx.runOnClient(mc -> o.settings.set(Features.get("puzzle_helpers").enabled, true));
+			ctx.waitTicks(40);
+			var ph = (io.github.donttemptfate.fatesofa.features.PuzzleHelpers) Features.get("puzzle_helpers");
+			int beams = ctx.computeOnClient(mc -> ph.beamCount()), path = ctx.computeOnClient(mc -> ph.icePathLength()), blazeN = ctx.computeOnClient(mc -> ph.blazeCount());
+			FatesOfaClient.LOG.info("[gametest] puzzles: {} beam pairs, ice path {} tiles, {} blazes", beams, path, blazeN);
+			ctx.runOnClient(mc -> {
+				mc.player.setYRot(-45f);
+				mc.player.setXRot(30f);
+			});
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("08h_puzzle_hints");
+			check(beams == 2, "creeper beam pairs: " + beams);
+			check(path == 9, "ice fill path length: " + path);
+			check(blazeN == 3, "blazes found: " + blazeN);
+			ctx.runOnClient(mc -> o.settings.set(Features.get("puzzle_helpers").enabled, false));
+
 			// a waypoint a few blocks ahead, drawn in the world
 			ctx.runOnClient(mc -> {
 				mc.gui.setScreen(null);

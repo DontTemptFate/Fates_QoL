@@ -49,8 +49,9 @@ public final class DungeonFeature extends Feature {
 	final Setting<Boolean> splits = setting(Setting.bool("dungeon.splits", "Run splits", true).group(SCORE));
 	final io.github.donttemptfate.fatesofa.core.Display scoreDisplay = new io.github.donttemptfate.fatesofa.core.Display(this, "dungeon.scorecard", SCORE,
 			0xFFFF55FF, io.github.donttemptfate.fatesofa.core.Display.lines("score", "Score and grade", "breakdown", "Skill / explore / speed / bonus",
-					"secrets", "Secrets", "crypts", "Crypts", "deaths", "Deaths", "puzzles", "Puzzles", "splits", "Splits", "time", "Run time"),
-			List.of("score", "breakdown", "secrets", "crypts", "deaths", "puzzles", "splits", "time"), false);
+					"secrets", "Secrets", "crypts", "Crypts", "deaths", "Deaths", "puzzles", "Puzzles", "splits", "Splits", "time", "Run time",
+					"pb", "Personal best on this floor"),
+			List.of("score", "breakdown", "secrets", "crypts", "deaths", "puzzles", "splits", "time", "pb"), false);
 
 	final io.github.donttemptfate.fatesofa.core.Alert s270 = new io.github.donttemptfate.fatesofa.core.Alert(this, "dungeon.alert270", "270 score alert",
 			"270 SCORE", "S reached", 0xFFFFAA00, "minecraft:entity.player.levelup|0.6|1.2");
@@ -62,6 +63,17 @@ public final class DungeonFeature extends Feature {
 			false, "5 CRYPTS", "all bonus crypts done", 0xFF55FF55, "minecraft:block.note_block.chime");
 	final io.github.donttemptfate.fatesofa.core.Alert puzzleFail = new io.github.donttemptfate.fatesofa.core.Alert(this, "dungeon.puzzleFail", "Puzzle failed alert",
 			true, "PUZZLE FAILED", "{puzzle}", 0xFFFF5555, "minecraft:entity.villager.no", "puzzle");
+	final Setting<Boolean> counts = setting(Setting.bool("dungeon.map.counts", "Secret counts in rooms", true).group(MAP)
+			.help("Collected / known secrets in each room OFA recognises (needs Secret waypoints & routes switched on)."));
+	final Setting<Boolean> mates = setting(Setting.bool("dungeon.map.mates", "Teammates on the map", true).group(MAP));
+	final Setting<Integer> mateColour = setting(Setting.color("dungeon.map.mateColour", "Teammate marker", 0xFF55FF55).group(MAP).advanced());
+	final Setting<Boolean> history = setting(Setting.bool("dungeon.history", "Keep a run history", true).group("Run history")
+			.help("Floor, time, score, deaths and secrets of every finished run; /ofa runs shows your bests."));
+	final io.github.donttemptfate.fatesofa.core.Alert pb = new io.github.donttemptfate.fatesofa.core.Alert(this, "dungeon.pbAlert", "Personal best alert",
+			true, "NEW PB", "{floor} in {time}", 0xFFFFAA00, "minecraft:ui.toast.challenge_complete", "floor", "time");
+	static final java.util.regex.Pattern TEAM_SCORE = java.util.regex.Pattern.compile("^\\s*Team Score: (?<s>\\d+) \\((?<g>[^)]+)\\).*");
+	public io.github.donttemptfate.fatesofa.dungeon.RunHistory runs;
+	private boolean recorded;
 	private final java.util.Set<String> failedSeen = new java.util.HashSet<>();
 	private boolean saidCrypts;
 
@@ -86,7 +98,7 @@ public final class DungeonFeature extends Feature {
 		o.state.onIslandChange(i -> {
 			if (i == Island.DUNGEON) {
 				run = new DungeonRun();
-				said270 = said300 = mapWarned = saidCrypts = false;
+				said270 = said300 = mapWarned = saidCrypts = recorded = false;
 				failedSeen.clear();
 			}
 		});
@@ -112,8 +124,11 @@ public final class DungeonFeature extends Feature {
 			for (Map.Entry<String, String> p : run.puzzles.entrySet())
 				if (p.getValue().equals("✖") && failedSeen.add(p.getKey())) puzzleFail.fire(Map.of("puzzle", p.getKey()), Island.DUNGEON, now);
 		}));
+		runs = new io.github.donttemptfate.fatesofa.dungeon.RunHistory(o.dir.resolve("dungeon_runs.json"));
 		ChatBus.onChat(m -> guard(() -> {
-			if (!o.state.in(Island.DUNGEON)) return;
+			if (!o.state.in(Island.DUNGEON) && !io.github.donttemptfate.fatesofa.game.Dev.test()) return;
+			java.util.regex.Matcher ts = TEAM_SCORE.matcher(m.plain());
+			if (ts.matches()) record(Integer.parseInt(ts.group("s")), ts.group("g"), m.atMs());
 			int before = run.keys.size();
 			run.chat(m.plain(), m.atMs());
 			if (run.keys.size() > before) key.fire(Map.of("key", run.keys.get(run.keys.size() - 1).toUpperCase()), Island.DUNGEON, m.atMs());
@@ -122,6 +137,17 @@ public final class DungeonFeature extends Feature {
 				() -> on(map) && o.state.in(Island.DUNGEON) && layout != null).display(mapDisplay));
 		Hud.register(new HudElement("dungeon_score", "Dungeon score", this, HudPos.at(Anchor.TOP_LEFT, 4, 110), 35, this::scoreCard, this::sampleScore,
 				() -> (on(score) || on(splits)) && o.state.in(Island.DUNGEON)).display(scoreDisplay));
+	}
+
+	/** A finished run: into the history; a faster time than any before on this floor is a personal best. */
+	void record(int score, String grade, long now) {
+		if (recorded || !on(history) || runs == null) return;
+		recorded = true;
+		String floor = run.floor == null ? "?" : run.floor;
+		long time = run.startedAt > 0 ? (run.endAt > 0 ? run.endAt : now) - run.startedAt : run.elapsedMs;
+		var before = runs.best(floor);
+		runs.add(new io.github.donttemptfate.fatesofa.dungeon.RunHistory.Run(floor, time, score, grade, run.deaths, run.secretsFound, Double.NaN, now));
+		if (time > 0 && before != null && time < before.timeMs()) pb.fire(Map.of("floor", floor, "time", Fmt.clock(time)), Island.DUNGEON, now);
 	}
 
 	/** Paul's EZPZ perk (+10 score) when he is mayor or minister, from Hypixel's election data. */
@@ -138,6 +164,7 @@ public final class DungeonFeature extends Feature {
 		MapItemSavedData data = mc.level.getMapData(id);
 		if (data == null) return null;
 		DungeonMap.Layout l = DungeonMap.parse(data.colors);
+		if (l != null) readExtras(data, l);
 		if (l == null && !mapWarned) {
 			// Hypixel may have changed the map's colours: say so once per run instead of silently showing nothing
 			mapWarned = true;
@@ -170,8 +197,30 @@ public final class DungeonFeature extends Feature {
 		return c;
 	}
 
+	/** Secret counts per room {i, j, known, found} and teammates' map positions {x, y} (map pixels), read with the map. */
+	volatile java.util.List<int[]> roomCounts = java.util.List.of();
+	volatile java.util.List<double[]> mateDots = java.util.List.of();
+
+	void readExtras(MapItemSavedData data, DungeonMap.Layout l) {
+		java.util.List<int[]> rc = new java.util.ArrayList<>();
+		var sr = SecretRoutes.INSTANCE;
+		if (on(counts) && sr != null) {
+			for (DungeonMap.Room r : l.rooms()) {
+				int[] n = sr.secretCount(r.gx(), r.gy());
+				if (n != null && n[0] > 0) rc.add(new int[] {r.gx(), r.gy(), n[0], n[1]});
+			}
+		}
+		roomCounts = rc;
+		java.util.List<double[]> dots = new java.util.ArrayList<>();
+		if (on(mates)) {
+			for (var d : data.getDecorations()) dots.add(new double[] {(d.x() + 128) / 2.0, (d.y() + 128) / 2.0});
+		}
+		mateDots = dots;
+	}
+
 	/** How the map is drawn, from the Map card settings. */
-	record Look(int cell, int gap, boolean ticks, boolean unexplored, int me, java.util.Map<DungeonMap.RoomType, Integer> colours) {
+	record Look(int cell, int gap, boolean ticks, boolean unexplored, int me, java.util.Map<DungeonMap.RoomType, Integer> colours,
+			java.util.List<int[]> counts, java.util.List<double[]> mates, int mate) {
 	}
 
 	Look look() {
@@ -181,7 +230,8 @@ public final class DungeonFeature extends Feature {
 			cols.put(t, st == null || store() == null ? colour(t) : get(st) | 0xFF000000);
 		}
 		int meC = store() == null ? 0xFFFFFFFF : io.github.donttemptfate.fatesofa.config.Values.color(get(meColour), on(meColour.rainbow), System.currentTimeMillis());
-		return store() == null ? new Look(14, 3, true, true, meC, cols) : new Look(get(cell), get(gap), on(ticks), on(unexplored), meC, cols);
+		if (store() == null) return new Look(14, 3, true, true, meC, cols, java.util.List.of(), java.util.List.of(), 0xFF55FF55);
+		return new Look(get(cell), get(gap), on(ticks), on(unexplored), meC, cols, roomCounts, mateDots, get(mateColour) | 0xFF000000);
 	}
 
 	double[] playerCell() {
@@ -210,6 +260,18 @@ public final class DungeonFeature extends Feature {
 				if (r.check() == DungeonMap.Check.WHITE) g.fill(rx + in, ry + in, rx + cellPx - in, ry + cellPx - in, 0xFFFFFFFF);
 				if (r.check() == DungeonMap.Check.GREEN) g.fill(rx + in, ry + in, rx + cellPx - in, ry + cellPx - in, 0xFF00CC00);
 				if (r.check() == DungeonMap.Check.FAILED) g.fill(rx + in, ry + in, rx + cellPx - in, ry + cellPx - in, 0xFFCC0000);
+			}
+			var font = net.minecraft.client.Minecraft.getInstance().font;
+			for (int[] rc : look.counts()) {
+				String t = rc[3] + "/" + rc[2];
+				int rx = x + rc[0] * (cellPx + gapPx), ry = y + rc[1] * (cellPx + gapPx);
+				g.text(font, t, rx + (cellPx - font.width(t)) / 2, ry + (cellPx - 8) / 2, rc[3] >= rc[2] ? 0xFF55FF55 : 0xFFFFFFFF, true);
+			}
+			double scale = (cellPx + gapPx) / (double) (l.roomSize() + l.gap());
+			for (double[] d : look.mates()) {
+				int px = x + (int) Math.round((d[0] - l.originX()) * scale), py = y + (int) Math.round((d[1] - l.originY()) * scale);
+				g.fill(px - 2, py - 2, px + 2, py + 2, 0xFF000000);
+				g.fill(px - 1, py - 1, px + 1, py + 1, look.mate());
 			}
 			if (me != null && me[0] >= 0 && me[1] >= 0 && me[0] < l.cols() && me[1] < l.rows()) {
 				int px = x + (int) (Math.floor(me[0]) * (cellPx + gapPx) + (me[0] % 1) * cellPx);
@@ -267,6 +329,10 @@ public final class DungeonFeature extends Feature {
 				},
 				"time", () -> {
 					if (on(splits) && run.endAt < 0 && run.elapsedMs >= 0) Trackers.row(sp, "Time", Fmt.clock(run.elapsedMs), Ui.GRAY);
+				},
+				"pb", () -> {
+					var best = runs == null || run.floor == null ? null : runs.best(run.floor);
+					if (best != null) Trackers.row(sp, "PB", Fmt.clock(best.timeMs()) + " · " + best.score(), Ui.GOLD);
 				}));
 		if (!kv.isEmpty()) c.add(kv);
 		if (!sp.isEmpty()) c.add(sp);
